@@ -1,10 +1,8 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
   "name": "WebCast-Reloaded",
   "short_name": "WebCast-Reloaded",
-  "version": "0.3.0",
-  "description": "Cast web videos to Google Chromecast from Chrome desktop browser",
+  "version": "0.3.1",
+  "description": "Cast web videos to Google Chromecast from Chrome desktop browser.",
   "icons": {
     "128": "data/icon128.png",
     "16": "data/icon16.png",
