@@ -37,7 +37,7 @@
   * is supported:
     * .webm
 * Google Chrome will prefer .webm to .mp4
-  * if a video tag has sourced for both formats
+  * if a video tag has sources for both formats
     * only the .webm video file will be requested
     * the Chrome extension won't detect the URL of this video file
 

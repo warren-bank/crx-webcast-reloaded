@@ -1,10 +1,10 @@
 {
 "update_url": "https://clients2.google.com/service/update2/crx",
 
-  "name": "WebCast",
-  "short_name": "WebCast",
-  "version": "0.2.1",
-  "description": "Finds videos in the web page you're on and allows to send them to Chromecast.",
+  "name": "WebCast-Reloaded",
+  "short_name": "WebCast-Reloaded",
+  "version": "0.3.0",
+  "description": "Cast web videos to Google Chromecast from Chrome desktop browser",
   "icons": {
     "128": "data/icon128.png",
     "16": "data/icon16.png",
