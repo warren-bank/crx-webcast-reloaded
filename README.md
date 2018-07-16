@@ -59,7 +59,7 @@
 
 #### Possible To-Dos:
 
-* add an option to the Chrome extension that allows the user to change the URL of the "external website"
+* ~~add an option to the Chrome extension that allows the user to change the URL of the "external website"~~
 * change the methodology used by the Chrome extension to detect matching video files
   * inspect the HTTP response "Content-Type" header
 

@@ -22,19 +22,24 @@ angular.module('project', [])
     );
 
     function addLinks(links) {
-        screenshots = chrome.extension.getBackgroundPage().tabScreenshots[tabId] || {};
-        for(v in links) {
-            var link = links[v].trim();
-            var title = link;
-            $scope.links.push({
-                'img': screenshots[link] ? screenshots[link] : "data/noimage.jpg",
-                'id': encodeLink(link),
-                'link': "http://web-cast.appspot.com/#/watch/" + encodeURIComponent(encodeLink(link)),
-                'title': title,
-                'original': link
+        if (links && links.length) {
+            chrome.storage.sync.get("external_website_url", function(items) {
+                var url = items.external_website_url
+                var screenshots = chrome.extension.getBackgroundPage().tabScreenshots[tabId] || {};
+                for(v in links) {
+                    var link = links[v].trim();
+                    var title = link;
+                    $scope.links.push({
+                        'img': screenshots[link] ? screenshots[link] : "data/noimage.jpg",
+                        'id': encodeLink(link),
+                        'link': url + "#/watch/" + encodeURIComponent(encodeLink(link)),
+                        'title': title,
+                        'original': link
+                    });
+                }
+                $scope.$digest();
             });
         }
-        $scope.$digest();
     }
 
     $scope.clearAll = function() {
