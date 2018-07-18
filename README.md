@@ -36,6 +36,7 @@
     * .mov
   * is supported:
     * .webm
+    * .m3u8
 * Chromium will prefer .webm to .mp4
   * if a video tag has sources for both formats
     * only the .webm video file will be requested
@@ -43,7 +44,7 @@
 
 #### Purpose for Fork:
 
-* support .webm
+* detect a larger subset of video formats supported by Chromecast, including: .webm, .m3u8
 * keep a backup of the "external website"
 
 #### Additional Notes:
