@@ -17,10 +17,10 @@ function save_options() {
 // stored in chrome.storage.
 function restore_options() {
   // Default value(s)
-  chrome.storage.sync.get({
-    "external_website_url": "http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html"
-  }, function(items) {
-    document.getElementById('external_website_url').value = items.external_website_url;
+  chrome.storage.sync.get(['external_website_url'], function(items) {
+    for (var key in items){
+      document.getElementById(key).value = items[key];
+    }
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

@@ -1,9 +1,14 @@
 var tabUrls={},tabLink={},tabScreenshots={},screenshotProcessQueue=[],videoEl=document.getElementById("video"),canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d"),TIME_STAMP=3;videoEl.Qsrc="";videoEl.src="";
 console.log=function(){};
 
-chrome.tabs.onRemoved.addListener(
-  function(a){
-    clearTabData(a)
+chrome.runtime.onInstalled.addListener(
+  function(details){
+    if (details.reason === "install"){
+      // initialize default value of option(s)
+      chrome.storage.sync.set({
+        "external_website_url": "http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html"
+      });
+    }
   }
 );
 
@@ -36,6 +41,12 @@ chrome.tabs.onUpdated.addListener(
       (clearTabData(a),chrome.pageAction.hide(a)):
       tabUrls[a]&&tabUrls[a].length&&chrome.pageAction.show(a);
     b.url&&(tabLink[a]=b.url)
+  }
+);
+
+chrome.tabs.onRemoved.addListener(
+  function(a){
+    clearTabData(a)
   }
 );
 
