@@ -18,7 +18,7 @@ function save_options() {
 function restore_options() {
   // Default value(s)
   chrome.storage.sync.get({
-    "external_website_url": "http://web-cast.appspot.com/"
+    "external_website_url": "http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html"
   }, function(items) {
     document.getElementById('external_website_url').value = items.external_website_url;
   });
