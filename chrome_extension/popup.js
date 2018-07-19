@@ -33,13 +33,19 @@ angular.module('project', [])
                         'img': screenshots[link] ? screenshots[link] : "data/noimage.jpg",
                         'id': encodeLink(link),
                         'link': url + "#/watch/" + encodeURIComponent(encodeLink(link)),
-                        'title': title,
-                        'original': link
+                        'title': title
                     });
                 }
                 $scope.$digest();
             });
         }
+    }
+
+    $scope.openLink = function(link) {
+        chrome.tabs.create({
+            windowId: chrome.windows.WINDOW_ID_CURRENT,
+            url: link
+        });
     }
 
     $scope.clearAll = function() {
