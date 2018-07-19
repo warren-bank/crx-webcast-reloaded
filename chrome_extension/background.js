@@ -1,4 +1,6 @@
 var tabUrls={},tabLink={},tabScreenshots={},screenshotProcessQueue=[],videoEl=document.getElementById("video"),canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d"),TIME_STAMP=3;videoEl.Qsrc="";videoEl.src="";
+var video_url_regex_pattern = /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i;
+
 console.log=function(){};
 
 chrome.runtime.onInstalled.addListener(
@@ -21,7 +23,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         tabUrls[a.tabId]||(tabUrls[a.tabId]=[]),
 
         // https://developers.google.com/cast/docs/media
-        /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i.test(a.url.trim()) &&
+        video_url_regex_pattern.test(a.url.trim()) &&
 
         -1==tabUrls[a.tabId].indexOf(a.url) &&
        (
