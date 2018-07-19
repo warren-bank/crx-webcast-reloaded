@@ -29,31 +29,42 @@
   * .mp4
   * .mov
 
-#### Issues:
-
-* [Supported Media for Google Cast](https://developers.google.com/cast/docs/media):
-  * not supported:
-    * .mov
-  * is supported:
-    * .webm
-    * .m3u8
-* Chromium will prefer .webm to .mp4
-  * if a video tag has sources for both formats
-    * only the .webm video file will be requested
-    * the Chromium extension won't detect the URL of this video file
-
 #### Purpose for Fork:
 
-* detect a larger subset of video formats supported by Chromecast, including: .webm, .m3u8
 * keep a backup of the "external website"
+* detect more types of video formats:
+  * .3gp
+  * .avi
+  * .m1v
+  * .m4v
+  * .mkv
+  * .mov
+  * .mp4
+  * .mp4v
+  * .mpeg
+  * .mpg
+  * .mpg2
+  * .mpv
+  * .ogm
+  * .ogv
+  * .webm
+  * .xvid
+  * .m3u8
+    * HLS: HTTP Live Streaming
+  * .mpd
+    * MPEG-DASH
+  * .ism, .ismv, .ismc, .ism/Manifest
+    * Microsoft Smooth Streaming
 
 #### Additional Notes:
 
+* not all of the videos detected ( see [above](#purpose-for-fork) ) will work in Chromecast
+  * the preference is to find too many video links, than too few
 * the "external website":
   * can be used without any Chromium extension
     * the URL to cast would need to be manually entered into a form field
   * can be loaded into the Chromium desktop web browser from the local filesystem
-    * ex: `file:///C:/PortableApps/webcast-reloaded/external_website/index.html#/watch/aHR0cDovL3RlY2hzbGlkZXMuY29tL2RlbW9zL3NhbXBsZS12aWRlb3Mvc21hbGwubXA0`
+    * ex: `file:///C:/path/to/external_website/index.html#/watch/:base64-encoded-URL`
     * no server is required
   * [link to canonical host](http://web-cast.appspot.com/)
   * [link to github mirror](http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)

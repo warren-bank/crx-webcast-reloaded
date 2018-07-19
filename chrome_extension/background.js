@@ -21,7 +21,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         tabUrls[a.tabId]||(tabUrls[a.tabId]=[]),
 
         // https://developers.google.com/cast/docs/media
-        /\.(?:mp4|webm|m3u8)(?:[\?#].*)?$/i.test(a.url.trim()) &&
+        /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i.test(a.url.trim()) &&
 
         -1==tabUrls[a.tabId].indexOf(a.url) &&
        (

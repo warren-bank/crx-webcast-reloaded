@@ -1,7 +1,7 @@
 {
   "name": "WebCast-Reloaded",
   "short_name": "WebCast-Reloaded",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Cast web videos to Google Chromecast from any Chromium-based desktop browser.",
   "icons": {
     "128": "data/icon128.png",
