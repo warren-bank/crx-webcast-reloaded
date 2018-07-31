@@ -31,7 +31,8 @@ var parse_location_hash = function() {
             URL_subtitle = window.atob( matches[2] );
 
             if (! share_common_origin( URL_video, URL_subtitle )) {
-                URL_subtitle = null;
+                console.log('WARNING: video and subtitles are hosted at different domains. This is likely to cause a problem.')
+//              URL_subtitle = null;
             }
         }
     }
