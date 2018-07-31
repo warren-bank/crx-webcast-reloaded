@@ -24,15 +24,6 @@ chromecastUI.initPlayer = function (config) {
 chromecastUI.onCastConnected = function(e) {
     this.vopRemoteDisplayText.innerText = 'Playing on ' + e.deviceName;
     this.vopRemoteDisplayContainer.style.display = 'block';
-
-    setTimeout(
-        function(){
-            if (chromecastUI.player_.isPaused()) {
-                chromecastUI.player_.play();
-            }
-        },
-        15000
-    )
 };
 
 chromecastUI.onCastDisconnected = function() {

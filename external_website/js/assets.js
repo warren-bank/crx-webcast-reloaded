@@ -1,7 +1,7 @@
 // Title: chromecast assets
 var Chromecast_config = {
     playback: {
-        autoPlay: false
+        autoPlay: true
     },
     analytics: {
         enable: false,
