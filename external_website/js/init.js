@@ -1,4 +1,8 @@
+var is_player_showing = false
+
 var show_player = function() {
+  is_player_showing = true
+
   document.querySelector('.URL-entry-form').style.display = 'none'
   document.querySelector('.player').style.display = 'block'
 }
@@ -16,14 +20,12 @@ var share_common_origin = function(url1, url2) {
   return same;
 }
 
-window.onload = function () {
+var parse_location_hash = function() {
     var hash_regex_pattern = new RegExp('^#/watch/([^/]+)(?:/subtitle/(.+))?$', 'i');
     var URL_video, URL_subtitle;
 
     var matches = hash_regex_pattern.exec(window.location.hash)
     if (matches && matches.length && matches[1]) {
-        show_player();
-
         URL_video = window.atob( matches[1] );
         if (matches.length > 2 && matches[2]) {
             URL_subtitle = window.atob( matches[2] );
@@ -32,7 +34,16 @@ window.onload = function () {
                 URL_subtitle = null;
             }
         }
-        initialize_videoplayer(URL_video, URL_subtitle);
+    }
+    return {URL_video, URL_subtitle}
+}
+
+var $DOMContentLoaded = function () {
+    var {URL_video, URL_subtitle} = parse_location_hash()
+
+    if (URL_video) {
+        show_player()
+        initialize_videoplayer(URL_video, URL_subtitle)
     }
     else {
         document.querySelector('.URL-entry-form button').onclick = function() {
@@ -45,4 +56,20 @@ window.onload = function () {
             }
         }
     }
-};
+}
+
+var $hashchange = function () {
+    var {URL_video, URL_subtitle} = parse_location_hash()
+
+    if (!is_player_showing && URL_video) {
+        show_player()
+        initialize_videoplayer(URL_video, URL_subtitle)
+    }
+    else if (!URL_video) {
+      destroy_videoplayer()
+    }
+}
+
+document.addEventListener("DOMContentLoaded", $DOMContentLoaded)
+
+window.addEventListener("hashchange", $hashchange, false)
