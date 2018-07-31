@@ -1,24 +1,101 @@
-<!doctype html>
-<html ng-app="webcastApp">
-  <head>
-    <title>WebCast-Reloaded</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="canonical" href="http://web-cast.appspot.com/">
-    <link rel="stylesheet" type="text/css" href="cssbin/main.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic-ext,greek-ext,latin-ext' rel='stylesheet' type='text/css'>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular-route.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
-    <script src="jsbin/app.js"></script>
-  </head>
-  <body>
-    <div class="view-container">
-      <div ng-view class="view-frame"></div>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>WebCast-Reloaded</title>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/material-icons.css" />
+  <link rel="stylesheet" href="css/chromecast.css" />
+
+  <!-- google chromecast lib -->
+  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js"></script>
+
+  <script src="js/voplayer.min.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/tool.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/chromecast.js"></script>
+  <script src="js/init.js"></script>
+</head>
+<body>
+  <div class="URL-entry-form">
+    <div>URL to video:</div>
+    <div><input type="text" id="URL_video" /></div>
+    <div>URL to external subtitles:</div>
+    <div><input type="text" id="URL_subtitle" /></div>
+    <button>Load Player</button>
+  </div>
+  <div class="player" style="display:none">
+    <div id="player-container" class="html5-video-player">
+      <div class="vop-remote-display-container">
+        <div class="vop-remote-display-status">
+          <div class="vop-remote-display-status-icon material-icons">cast</div>
+          <div class="vop-remote-display-status-text"></div>
+        </div>
+      </div>
+      <div class="vop-tooltip">
+          <div class="vop-tooltip-bg"></div>
+          <div class="vop-tooltip-text-wrapper">
+            <span class="vop-tooltip-text">00:00</span>
+          </div>
+      </div>
+      <div class="vop-popup vop-settings-menu">
+        <div class="vop-panel">
+          <div class="vop-panel-menu"></div>
+        </div>
+      </div>
+      <div class="vop-gradient-bottom"></div>
+      <div class="vop-control-bar">
+        <div class="vop-progress-bar">
+          <div class="vop-progress-list">
+              <div class="vop-load-progress"></div>
+              <div class="vop-play-progress"></div>
+              <div class="vop-hover-progress"></div>
+            </div>
+          <div class="vop-scrubber-container"></div>
+        </div>
+        <div class="vop-controls">
+            <div class="vop-left-controls">
+              <button class="vop-button material-icons vop-play-button"></button>
+              <button class="vop-button material-icons vop-mute-button" title="mute"></button>
+              <div class="vop-volume-panel">
+                <div class="vop-volume-slider">
+                  <div class="vop-volume-slider-handle">
+                  </div>
+                </div>
+              </div>
+              <div class="vop-time-display"><span class="vop-time-text">00:00/00:00</span></div>
+            </div>
+            <div class="vop-right-controls">
+              <button is="google-cast-button" id="castbutton" title="Chromecast"></button>
+              <div class="vop-button material-icons vop-subtitles-button" title="subtitles">subtitles</div>
+              <div class="vop-button material-icons vop-settings-button" title="settings">settings</div>
+              <button class="vop-button material-icons vop-fullscreen-button">fullscreen</button>
+          </div>
+        </div>
+      </div>
+      <div class="vop-spinner">
+        <div class="vop-spinner-container">
+          <div class="vop-spinner-rotator">
+            <div class="vop-spinner-left">
+              <div class="vop-spinner-circle">
+              </div>
+            </div>
+            <div class="vop-spinner-right">
+              <div class="vop-spinner-circle">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <footer>
-      <a href="#/about">About</a>
-      <a href="https://github.com/warren-bank/crx-webcast-reloaded/releases" target="_blank">WebCast-Reloaded Chromium Extension</a>
-    </footer>
-  </body>
+    <div class="player-info">
+      <i class="material-icons">highlight_off</i>
+      <span class="player-info-status"></span>
+    </div>
+  </div>
+</body>
 </html>
