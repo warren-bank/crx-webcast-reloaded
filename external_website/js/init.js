@@ -21,8 +21,11 @@ var share_common_origin = function(url1, url2) {
 }
 
 var parse_location_hash = function() {
-    var hash_regex_pattern = new RegExp('^#/watch/([^/]+)(?:/subtitle/(.+))?$', 'i');
-    var URL_video, URL_subtitle;
+    var b64, hash_regex_pattern, URL_video, URL_subtitle;
+
+    b64 = '[A-Za-z0-9+/=]';
+    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+))?$`;
+    hash_regex_pattern = new RegExp(hash_regex_pattern);
 
     var decode_URL = function(str) {
       var tail, done
