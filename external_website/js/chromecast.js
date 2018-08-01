@@ -44,9 +44,21 @@ chromecastUI.loadSubtitle = function (subtitleInfo) {
     }
 }
 
+var disconnect_chromecast = function() {
+    var cc_context = cast.framework['CastContext']['getInstance']();
+    var cc_session = cc_context && cc_context['getCurrentSession']();
+    var cc_state   = cc_session && cc_session['getSessionState']();
+    var cc_casting = cc_state && (cc_state !== cast.framework.SessionState.NO_SESSION) && (cc_state !== cast.framework.SessionState.SESSION_ENDING);
+    if (cc_casting) {
+        cc_session.endSession(true);
+    }
+}
+
 var destroy_videoplayer = function() {
     chromecastUI.player_.stop();
     chromecastUI.player_.close();
+
+    disconnect_chromecast();
 
     history.replaceState("", document.title, window.location.pathname)
     window.location.reload()
