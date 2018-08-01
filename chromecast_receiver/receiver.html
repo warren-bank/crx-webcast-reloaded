@@ -1,0 +1,73 @@
+<!--
+This sample demonstrates how to build your own Receiver for use with VisualOn
+receiver
+
+A receiver is typically an HTML5 application with a html, css, and JavaScript
+components.
+
+In this HTML5 page, we include our style sheet, the Receiver SDK, and our player
+JavaScript code.
+
+We Then define two layers within the player:
+
+1. The media layers
+2. The Overlay layers
+The overlay layer holds:
+   a. Logo for startup page
+   b. Media Artwork and information during loading
+   c. controls for Pause / Seek
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Change the title tag to your app's name to display as the details text on the Cast device picker -->
+  <title>Casting app name</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="receiver.css" />
+  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+<script type="text/javascript" src="libs/voreceiver.min.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</head>
+<body style="margin: 0">
+  <div id="player" class="player">
+    <div class="media">
+      <video></video>
+      <div class="spinner_large"></div>
+    </div>
+    <div class="logo"></div>
+    <div class="spinner"></div>
+    <div class="watermark"></div>
+    <div class="gradient"></div>
+    <div class="overlay">
+      <div class="media-info">
+        <div class="media-artwork"></div>
+        <div class="media-text">
+          <div class="media-title"></div>
+          <div class="media-subtitle"></div>
+        </div>
+      </div>
+      <div class="preview-mode-info">
+        <div class="preview-mode-artwork"></div>
+        <div class="preview-mode-text">
+          <div class="preview-mode-timer">
+            <div class="preview-mode-timer-starts">Up next in&nbsp;</div>
+            <div class="preview-mode-timer-countdown"></div>
+            <div class="preview-mode-timer-sec">&nbsp;secs...</div>
+          </div>
+          <div class="preview-mode-title"></div>
+          <div class="preview-mode-subtitle"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <span class="controls-play-pause"></span>
+        <span class="controls-cur-time"></span>
+        <span class="controls-total-time"></span>
+        <div class="controls-progress">
+          <div class="controls-progress-inner progressBar"></div>
+          <div class="controls-progress-thumb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

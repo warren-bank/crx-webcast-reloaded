@@ -1,0 +1,184 @@
+--2018-08-01 02:35:06--  https://css.visualon.info/files/SampleReceiver/receiver.html
+Resolving css.visualon.info (css.visualon.info)... 35.186.158.123
+Connecting to css.visualon.info (css.visualon.info)|35.186.158.123|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2507 (2.4K) [text/html]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.html'
+
+     0K ..                                                    100% 2.81M=0.001s
+
+2018-08-01 02:35:07 (2.81 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.html' saved [2507/2507]
+
+Loading robots.txt; please ignore errors.
+--2018-08-01 02:35:07--  https://css.visualon.info/robots.txt
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 404 Not Found
+2018-08-01 02:35:08 ERROR 404: Not Found.
+
+--2018-08-01 02:35:08--  https://css.visualon.info/files/SampleReceiver/receiver.css
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 20205 (20K) [text/css]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.css'
+
+     0K .......... .........                                  100% 97.4K=0.2s
+
+2018-08-01 02:35:08 (97.4 KB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.css' saved [20205/20205]
+
+--2018-08-01 02:35:08--  https://css.visualon.info/files/SampleReceiver/libs/voreceiver.min.js
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1835246 (1.8M) [application/javascript]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/libs/voreceiver.min.js'
+
+     0K .......... .......... .......... .......... ..........  2%  120K 15s
+    50K .......... .......... .......... .......... ..........  5%  246K 11s
+   100K .......... .......... .......... .......... ..........  8% 2.41M 7s
+   150K .......... .......... .......... .......... .......... 11% 2.37M 5s
+   200K .......... .......... .......... .......... .......... 13%  303K 5s
+   250K .......... .......... .......... .......... .......... 16% 2.33M 4s
+   300K .......... .......... .......... .......... .......... 19% 2.42M 4s
+   350K .......... .......... .......... .......... .......... 22% 4.83M 3s
+   400K .......... .......... .......... .......... .......... 25%  287K 3s
+   450K .......... .......... .......... .......... .......... 27% 2.09M 3s
+   500K .......... .......... .......... .......... .......... 30% 3.45M 2s
+   550K .......... .......... .......... .......... .......... 33%  310K 2s
+   600K .......... .......... .......... .......... .......... 36% 3.10M 2s
+   650K .......... .......... .......... .......... .......... 39% 1.86M 2s
+   700K .......... .......... .......... .......... .......... 41% 3.28M 2s
+   750K .......... .......... .......... .......... .......... 44%  302K 2s
+   800K .......... .......... .......... .......... .......... 47% 2.25M 2s
+   850K .......... .......... .......... .......... .......... 50% 2.99M 1s
+   900K .......... .......... .......... .......... .......... 53% 2.35M 1s
+   950K .......... .......... .......... .......... .......... 55%  322K 1s
+  1000K .......... .......... .......... .......... .......... 58% 3.11M 1s
+  1050K .......... .......... .......... .......... .......... 61% 2.60M 1s
+  1100K .......... .......... .......... .......... .......... 64% 2.68M 1s
+  1150K .......... .......... .......... .......... .......... 66%  356K 1s
+  1200K .......... .......... .......... .......... .......... 69%  197K 1s
+  1250K .......... .......... .......... .......... .......... 72% 7.07M 1s
+  1300K .......... .......... .......... .......... .......... 75% 10.2M 1s
+  1350K .......... .......... .......... .......... .......... 78% 9.17M 1s
+  1400K .......... .......... .......... .......... .......... 80% 6.14M 1s
+  1450K .......... .......... .......... .......... .......... 83%  261K 0s
+  1500K .......... .......... .......... .......... .......... 86% 1.61M 0s
+  1550K .......... .......... .......... .......... .......... 89% 5.15M 0s
+  1600K .......... .......... .......... .......... .......... 92%  292K 0s
+  1650K .......... .......... .......... .......... .......... 94% 1.28M 0s
+  1700K .......... .......... .......... .......... .......... 97% 2.46M 0s
+  1750K .......... .......... .......... .......... ..        100%  357K=2.7s
+
+2018-08-01 02:35:11 (654 KB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/libs/voreceiver.min.js' saved [1835246/1835246]
+
+--2018-08-01 02:35:11--  https://css.visualon.info/files/SampleReceiver/main.js
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 4600 (4.5K) [application/javascript]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/main.js'
+
+     0K ....                                                  100% 3.84M=0.001s
+
+2018-08-01 02:35:11 (3.84 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/main.js' saved [4600/4600]
+
+--2018-08-01 02:35:11--  https://css.visualon.info/files/SampleReceiver/assets/background.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 609391 (595K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/background.png'
+
+     0K .......... .......... .......... .......... ..........  8% 5.96M 0s
+    50K .......... .......... .......... .......... .......... 16% 11.2M 0s
+   100K .......... .......... .......... .......... .......... 25%  124K 1s
+   150K .......... .......... .......... .......... .......... 33% 3.29M 1s
+   200K .......... .......... .......... .......... .......... 42% 7.33M 1s
+   250K .......... .......... .......... .......... .......... 50% 6.12M 0s
+   300K .......... .......... .......... .......... .......... 58% 7.85M 0s
+   350K .......... .......... .......... .......... .......... 67%  116K 0s
+   400K .......... .......... .......... .......... .......... 75% 11.1M 0s
+   450K .......... .......... .......... .......... .......... 84% 11.3M 0s
+   500K .......... .......... .......... .......... .......... 92% 3.63M 0s
+   550K .......... .......... .......... .......... .....     100% 2.14M=0.9s
+
+2018-08-01 02:35:12 (643 KB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/background.png' saved [609391/609391]
+
+--2018-08-01 02:35:12--  https://css.visualon.info/files/SampleReceiver/assets/logo.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 7054 (6.9K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/logo.png'
+
+     0K ......                                                100% 6.71M=0.001s
+
+2018-08-01 02:35:13 (6.71 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/logo.png' saved [7054/7054]
+
+--2018-08-01 02:35:13--  https://css.visualon.info/files/SampleReceiver/assets/placeholder-audio.jpg
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 113279 (111K) [image/jpeg]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/placeholder-audio.jpg'
+
+     0K .......... .......... .......... .......... .......... 45% 3.49M 0s
+    50K .......... .......... .......... .......... .......... 90%  259K 0s
+   100K ..........                                            100% 1.76M=0.2s
+
+2018-08-01 02:35:13 (520 KB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/placeholder-audio.jpg' saved [113279/113279]
+
+--2018-08-01 02:35:13--  https://css.visualon.info/files/SampleReceiver/assets/watermark.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1494 (1.5K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/watermark.png'
+
+     0K .                                                     100% 1.86M=0.001s
+
+2018-08-01 02:35:13 (1.86 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/watermark.png' saved [1494/1494]
+
+--2018-08-01 02:35:13--  https://css.visualon.info/files/SampleReceiver/assets/buffering.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 2030 (2.0K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/buffering.png'
+
+     0K .                                                     100% 2.69M=0.001s
+
+2018-08-01 02:35:14 (2.69 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/buffering.png' saved [2030/2030]
+
+--2018-08-01 02:35:14--  https://css.visualon.info/files/SampleReceiver/assets/paused.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1281 (1.3K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/paused.png'
+
+     0K .                                                     100% 1.63M=0.001s
+
+2018-08-01 02:35:14 (1.63 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/paused.png' saved [1281/1281]
+
+--2018-08-01 02:35:14--  https://css.visualon.info/files/SampleReceiver/assets/done.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 169246 (165K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/done.png'
+
+     0K .......... .......... .......... .......... .......... 30% 2.07M 0s
+    50K .......... .......... .......... .......... .......... 60%  274K 0s
+   100K .......... .......... .......... .......... .......... 90% 1.23M 0s
+   150K .......... .....                                      100% 15.5M=0.2s
+
+2018-08-01 02:35:14 (670 KB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/done.png' saved [169246/169246]
+
+--2018-08-01 02:35:14--  https://css.visualon.info/files/SampleReceiver/assets/buffering_large.png
+Reusing existing connection to css.visualon.info:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 7537 (7.4K) [image/png]
+Saving to: 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/buffering_large.png'
+
+     0K .......                                               100% 6.96M=0.001s
+
+2018-08-01 02:35:14 (6.96 MB/s) - 'C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/assets/buffering_large.png' saved [7537/7537]
+
+FINISHED --2018-08-01 02:35:14--
+Total wall clock time: 8.2s
+Downloaded: 12 files, 2.6M in 4.3s (625 KB/s)
+Converting links in C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.html... 3-1
+Converting links in C:/_z/t14/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver.css... 13-0
+Converted links in 2 files in 0.009 seconds.
