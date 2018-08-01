@@ -24,11 +24,25 @@ var parse_location_hash = function() {
     var hash_regex_pattern = new RegExp('^#/watch/([^/]+)(?:/subtitle/(.+))?$', 'i');
     var URL_video, URL_subtitle;
 
+    var decode_URL = function(str) {
+      var tail, done
+
+      if (str) {
+        while (! done) {
+          tail = str
+          str  = decodeURIComponent(tail)
+          done = (tail === str)
+        }
+        str = window.atob(str)
+      }
+      return str
+    }
+
     var matches = hash_regex_pattern.exec(window.location.hash)
     if (matches && matches.length && matches[1]) {
-        URL_video = window.atob( matches[1] );
+        URL_video = decode_URL( matches[1] );
         if (matches.length > 2 && matches[2]) {
-            URL_subtitle = window.atob( matches[2] );
+            URL_subtitle = decode_URL( matches[2] );
 
             if (! share_common_origin( URL_video, URL_subtitle )) {
                 console.log('WARNING: video and subtitles are hosted at different domains. This is likely to cause a problem.')
