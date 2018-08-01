@@ -1,0 +1,8 @@
+https://cdn.theoplayer.com/dash/theoplayer/THEOplayer.js
+https://cdn.theoplayer.com/dash/theoplayer/theoplayer.d.js
+https://cdn.theoplayer.com/dash/theoplayer/theoplayer.e.js
+https://cdn.theoplayer.com/dash/theoplayer/theoplayer.p.js
+
+https://cdn.theoplayer.com/dash/theoplayer/ui.css
+
+https://cdn.theoplayer.com/dash/theoplayer/iframe.html

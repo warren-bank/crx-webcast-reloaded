@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>THEOplayer Chromecast Receiver App</title>
+    <script src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <script src="../release/THEOplayer-cast-receiver.js"></script>
+    <link rel="stylesheet" type="text/css" href="../release/ui.css">
+</head>
+<body>
+<div id="theoplayer"></div>
+
+<script>
+    var playerElement = document.getElementById('theoplayer');
+    var receiver = new THEOplayer.Player(playerElement, {libraryLocation: '../release/'});
+</script>
+</body>
+</html>

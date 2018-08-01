@@ -1,16 +1,21 @@
-https://clients3.google.com/cast/chromecast/device/app?a=B5BCD208
+https://clients3.google.com/cast/chromecast/device/app?a=1ADD53F3
 
 --------------------------------------------------------------------------------
 
 {
     "resolution_height": 0,
     "uses_ipc": true,
-    "display_name": "VisualOn default cast receiver",
-    "app_id": "B5BCD208",
-    "promo_assets": [{
-        "icon_url": "https://lh3.googleusercontent.com/nxgbUg_V1hyum4r06GSNYV4c0RiGd1udy_GmXQX6wbzeKw1n7x8iuvJi_wIJoHfB0-7rPi2QudDMJFho",
-        "description": "This app allows you to broadcast videos are on the web to the Chromecast.",
-        "display_name": "VisualOn default cast receiver"
-    }],
-    "url": "https://css.visualon.info/files/SampleReceiver/receiver.html"
+    "display_name": "THEOplayer",
+    "app_id": "1ADD53F3",
+    "url": "https://d3ojqkc95d8mrd.cloudfront.net/chromecast/receiver/index.html"
 }
+
+--------------------------------------------------------------------------------
+
+additional files (retrieved with ajax):
+
+https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.d.js
+https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.e.js
+https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.p.js
+
+--------------------------------------------------------------------------------
