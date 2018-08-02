@@ -1,23 +1,26 @@
 // --------------------------------------------------------- video player managment tasks:
 
+/*
 var connect_chromecast = function(player) {
-    if (player && player.cast && !player.cast.casting && player.cast.chromecast && !player.cast.chromecast.casting) {
-        if (player.cast.chromecast.state.toLowerCase() === 'unavailable') {
-            var $statechangeEventListener = function() {
-                if (player && player.cast && player.cast.chromecast) {
-                    if (player.cast.casting || player.cast.chromecast.casting) {
-                        player.cast.chromecast.removeEventListener('statechange', $statechangeEventListener)
-                    }
-                    else if (player.cast.chromecast.state.toLowerCase() === 'available') {
-                        player.cast.chromecast.removeEventListener('statechange', $statechangeEventListener)
-                        player.cast.chromecast.start()
+    if (player && player.cast && player.cast.chromecast) {
+        if (!player.cast.casting && !player.cast.chromecast.casting) {
+            if (player.cast.chromecast.state.toLowerCase() === 'unavailable') {
+                var $statechangeEventListener = function() {
+                    if (player && player.cast && player.cast.chromecast) {
+                        if (player.cast.casting || player.cast.chromecast.casting) {
+                            player.cast.chromecast.removeEventListener('statechange', $statechangeEventListener)
+                        }
+                        else if (player.cast.chromecast.state.toLowerCase() === 'available') {
+                            player.cast.chromecast.removeEventListener('statechange', $statechangeEventListener)
+                            player.cast.chromecast.start()
+                        }
                     }
                 }
+                player.cast.chromecast.addEventListener('statechange', $statechangeEventListener)
             }
-            player.cast.chromecast.addEventListener('statechange', $statechangeEventListener)
-        }
-        else {
-            player.cast.chromecast.start()
+            else {
+                player.cast.chromecast.start()
+            }
         }
     }
     else {
@@ -27,10 +30,13 @@ var connect_chromecast = function(player) {
         })
     }
 }
+*/
 
 var disconnect_chromecast = function(player) {
-    if (player && player.cast && player.cast.casting && player.cast.chromecast && player.cast.chromecast.casting) {
-        player.cast.chromecast.stop()
+    if (player && player.cast && player.cast.chromecast) {
+        if (player.cast.casting && player.cast.chromecast.casting) {
+            player.cast.chromecast.stop()
+        }
     }
     else {
         THEOplayer.cast.chromecast.endSession()
@@ -122,7 +128,7 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
     webcast_video_player.source   = settings
 
     // open the Chromecast connection dialog
-    connect_chromecast()
+//  connect_chromecast()
 //  connect_chromecast(webcast_video_player)
 
     // display direct links to the video stream and subtitle sources
