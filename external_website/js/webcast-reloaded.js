@@ -37,6 +37,17 @@ var disconnect_chromecast = function(player) {
     }
 }
 
+var toggle_chromecast_connection_state = function() {
+    if (webcast_video_player && webcast_video_player.cast && webcast_video_player.cast.chromecast) {
+        if (webcast_video_player.cast.casting && webcast_video_player.cast.chromecast.casting) {
+            webcast_video_player.cast.chromecast.stop()
+        }
+        else {
+            webcast_video_player.cast.chromecast.start()
+        }
+    }
+}
+
 var webcast_video_player
 
 var destroy_videoplayer = function(skip_cc, skip_reload) {
@@ -123,7 +134,9 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
 
     document.querySelector('.webcast-video-player .video-player-info .video-player-info-status').innerHTML = info
 
-    document.querySelector('.webcast-video-player .video-player-info i.material-icons').onclick = destroy_videoplayer
+    document.querySelector('.webcast-video-player .video-player-info i.material-icons#destroy_videoplayer').onclick = destroy_videoplayer
+
+    document.querySelector('.webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state').onclick = toggle_chromecast_connection_state
 }
 
 // --------------------------------------------------------- webpage initialization:
