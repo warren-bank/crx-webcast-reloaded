@@ -87,22 +87,24 @@ window.onload  = function() {
   }
 
   var change_player_selection = function(player_key) {
+    var default_player_key = '3-theoplayer'
     var $option
 
     try {
-      $option = document.querySelector(`select#players option[value="${player_key}"]`)
+      if (player_key) {
+        $option = document.querySelector(`select#players option[value="${player_key}"]`)
+      }
     }
     catch(e){}
 
     if (! $option) {
-      $option = document.querySelector('select#players option[value="3-theoplayer"]')
+      $option = document.querySelector(`select#players option[value="${default_player_key}"]`)
     }
 
     $option.setAttribute('selected', 'selected')
   }
 
-  var selected_player = get_cookie_value('player_key') || "3-theoplayer"
-  change_player_selection(selected_player)
+  change_player_selection( get_cookie_value('player_key') )
 
   $select.onchange = redirect_to_player
 
