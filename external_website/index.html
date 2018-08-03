@@ -59,6 +59,8 @@ window.onload  = function() {
     var url
 
     if (player) {
+      set_cookie_value('player_key', player_key)
+
       url = window.location.href.replace('/external_website/', `/external_website/${player.subdirectory || player_key}/`)
       if (! player.subtitles){
         url = url.replace(new RegExp('/subtitle/.*$', 'i'), '')
@@ -73,6 +75,34 @@ window.onload  = function() {
     }
     $counter.innerText = (time_remains / 1000).toString()
   }
+
+  var get_cookie_value = function(key) {
+    var pattern = new RegExp('(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$')
+    var cookies = document.cookie
+    return pattern.test(cookies) ? cookies.replace(pattern, "$1") : ""
+  }
+
+  var set_cookie_value = function(key, val) {
+    document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname.replace('index.html','')};max-age=${60*60*24*365}`
+  }
+
+  var change_player_selection = function(player_key) {
+    var $option
+
+    try {
+      $option = document.querySelector(`select#players option[value="${player_key}"]`)
+    }
+    catch(e){}
+
+    if (! $option) {
+      $option = document.querySelector('select#players option[value="3-theoplayer"]')
+    }
+
+    $option.setAttribute('selected', 'selected')
+  }
+
+  var selected_player = get_cookie_value('player_key') || "3-theoplayer"
+  change_player_selection(selected_player)
 
   $select.onchange = redirect_to_player
 
@@ -92,7 +122,7 @@ window.onload  = function() {
       <select id="players">
         <option value="1-webcast">WebCast</option>
         <option value="2-visualon">VisualOn</option>
-        <option value="3-theoplayer" selected>THEOplayer</option>
+        <option value="3-theoplayer">THEOplayer</option>
       </select>
       <button>Load Player</button>
     </div>
