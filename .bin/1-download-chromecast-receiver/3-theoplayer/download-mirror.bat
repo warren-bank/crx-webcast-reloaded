@@ -1,6 +1,6 @@
 @echo off
 
-set dst_dir="%~dp0..\..\chromecast_receiver"
+set dst_dir="%~dp0..\..\..\chromecast_receiver\3-theoplayer"
 set src_url="https://d3ojqkc95d8mrd.cloudfront.net/chromecast/receiver/index.html"
 set log="%~dpn0.log"
 

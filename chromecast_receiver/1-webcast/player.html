@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Cast Media Player</title>
+    <link rel="stylesheet" href="0012/player.css" />
+    <script type="text/javascript" src="0012/player.js"></script>
+    <script type="text/javascript" src="libs/receiver/2.0.0/cast_receiver.js"></script>
+    <script type="text/javascript" src="libs/mediaplayer/1.0.0/media_player.js"></script>
+  </head>
+  <body>
+    <div id="player"></div>
+    <script>
+      var playerDiv = document.querySelector("#player");
+      new castplayer.CastPlayer(playerDiv).start();
+    </script>
+  </body>
+</html>

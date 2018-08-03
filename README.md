@@ -59,15 +59,20 @@
 #### Additional Notes:
 
 * not all of the videos detected ( see [above](#purpose-for-fork) ) will work in Chromecast
-  * the preference is to find too many video links, than too few
+  * the preference is to find too many video links, rather than too few
 * the "external website":
   * can be used without any Chromium extension
     * the URL to cast would need to be manually entered into a form field
   * can be loaded into the Chromium desktop web browser from the local filesystem
     * ex: `file:///C:/path/to/external_website/index.html#/watch/:base64-encoded-URL`
+    * ex: `file:///C:/path/to/external_website/index.html#/watch/:base64-encoded-URL/subtitle/:base64-encoded-URL`
     * no server is required
-  * [link to canonical host](http://web-cast.appspot.com/)
-  * [link to github mirror](http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)
+  * hosted:
+    * [original WebCast player](http://web-cast.appspot.com/)
+    * [main entry-point belonging to this repo](http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)
+      * [mirror of WebCast player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/1-webcast/index.html)
+      * [VisualOn HTML5 Player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/2-visualon/index.html)
+      * [THEOplayer HTML5 Video Player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/3-theoplayer/index.html)
 
 #### Possible To-Dos:
 
@@ -82,5 +87,11 @@
 
 #### Legal:
 
-* copyright: original author of [WebCast](https://chrome.google.com/webstore/detail/webcast/gmenldaghgogpiajaipajaphcjbankna?hl=en)
-* license: unknown
+* copyright:
+  * [WebCast](https://chrome.google.com/webstore/detail/webcast/gmenldaghgogpiajaipajaphcjbankna?hl=en)
+  * [THEOplayer HTML5 Video Player](https://www.theoplayer.com/solutions/html5-video-player)
+  * [VisualOn HTML5 Player](https://www.visualon.com/index.php/html5-player/)
+  * [Warren Bank](https://github.com/warren-bank)
+* license:
+  * [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt)
+    * only applies to changes made to code in the original WebCast extension

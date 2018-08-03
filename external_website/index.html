@@ -3,34 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <title>WebCast-Reloaded</title>
-  <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="3-theoplayer/img/favicon.ico" type="image/x-icon" />
+  <style>
 
-  <link rel="stylesheet" href="lib/theoplayer-2.42.0/ui.css" x-href="https://cdn.theoplayer.com/dash/theoplayer/ui.css" />
-  <link rel="stylesheet" href="css/material-icons.css" />
-  <link rel="stylesheet" href="css/webcast-reloaded.css" />
+body {
+  margin: 0;
+  padding: 15px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+  color: #333;
+  text-align: center;
+}
 
-  <!-- google chromecast lib -->
-  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js"></script>
+select, button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  display: inline-block;
+  height: 2em;
+  margin: 1em 0;
+}
 
-  <script type="text/javascript" src="lib/theoplayer-2.42.0/THEOplayer.js" x-src="https://cdn.theoplayer.com/dash/theoplayer/THEOplayer.js"></script>
-  <script type="text/javascript" src="js/webcast-reloaded.js"></script>
+  </style>
+  <script>
+
+window.onload  = function() {
+  var $select  = document.querySelector('#players')
+  var $button  = document.querySelector('button')
+  var $counter = document.querySelector('#countdown')
+
+  var players  = {
+    "1-webcast": {
+      subdirectory: "1-webcast",
+      subtitles: false
+    },
+    "2-visualon": {
+      subdirectory: "2-visualon",
+      subtitles: true
+    },
+    "3-theoplayer": {
+      subdirectory: "3-theoplayer",
+      subtitles: true
+    }
+  }
+
+  var time_remains = (1000)*(10)  // 10 seconds
+  var timer
+
+  var redirect_to_player = function() {
+    clearTimeout(timer)
+
+    var player_key = $select.options[$select.selectedIndex].value
+    var player     = players[player_key]
+    var url
+
+    if (player) {
+      url = window.location.href.replace('/external_website/', `/external_website/${player.subdirectory || player_key}/`)
+      if (! player.subtitles){
+        url = url.replace(new RegExp('/subtitle/.*$', 'i'), '')
+      }
+      window.location = url
+    }
+  }
+
+  var reduce_counter = function(display_only) {
+    if (display_only !== true) {
+      time_remains -= 1000
+    }
+    $counter.innerText = (time_remains / 1000).toString()
+  }
+
+  $select.onchange = redirect_to_player
+
+  $button.onclick = redirect_to_player
+
+  timer = setTimeout(redirect_to_player, time_remains)
+
+  setInterval(reduce_counter, 1000) && reduce_counter(true)
+}
+
+  </script>
 </head>
 <body>
-  <div class="URL-entry-form">
-    <div>URL to video:</div>
-    <div><input type="text" id="URL_video" /></div>
-    <div>URL to external subtitles:</div>
-    <div><input type="text" id="URL_subtitle" /></div>
-    <button>Load Player</button>
-  </div>
-  <div class="webcast-video-player" style="display:none">
-    <div id="video-player" class="video-js vjs-fluid theoplayer theoplayer-skin theo-seekbar-above-controls"></div>
-    <div class="video-player-info">
-      <i class="material-icons" id="destroy_videoplayer">highlight_off</i>
-      <span class="video-player-info-status"></span>
-      <i class="material-icons" id="toggle_chromecast_connection_state">cast</i>
+  <div>
+    <div>Select an HTML5 Video Player:</div>
+    <div>
+      <select id="players">
+        <option value="1-webcast">WebCast</option>
+        <option value="2-visualon">VisualOn</option>
+        <option value="3-theoplayer" selected>THEOplayer</option>
+      </select>
+      <button>Load Player</button>
     </div>
+
+    <hr />
+    <div>The default player will load in <span id="countdown"></span> seconds..</div>
   </div>
 </body>
 </html>

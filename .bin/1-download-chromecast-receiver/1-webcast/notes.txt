@@ -1,0 +1,11 @@
+https://clients3.google.com/cast/chromecast/device/app?a=C157D242
+
+--------------------------------------------------------------------------------
+
+{
+    "resolution_height": 0,
+    "uses_ipc": true,
+    "display_name": "WebCast",
+    "app_id": "C157D242",
+    "url": "https://www.gstatic.com/eureka/player/player.html?skin"
+}

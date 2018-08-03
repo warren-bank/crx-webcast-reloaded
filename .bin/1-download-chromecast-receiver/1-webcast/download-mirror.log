@@ -1,0 +1,117 @@
+--2018-08-01 04:45:19--  https://www.gstatic.com/eureka/player/player.html?skin
+Resolving www.gstatic.com (www.gstatic.com)... 216.58.216.35
+Connecting to www.gstatic.com (www.gstatic.com)|216.58.216.35|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/player.html@skin'
+
+     0K                                                        3.67M=0s
+
+2018-08-01 04:45:19 (3.67 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/player.html@skin' saved [605]
+
+--2018-08-01 04:45:19--  https://www.gstatic.com/eureka/player/0012/player.css
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/css]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/player.css'
+
+     0K .......                                                2.30M=0.003s
+
+2018-08-01 04:45:19 (2.30 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/player.css' saved [7361]
+
+--2018-08-01 04:45:19--  https://www.gstatic.com/eureka/player/0012/player.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/player.js'
+
+     0K .......... .......... .......... ........               413K=0.09s
+
+2018-08-01 04:45:19 (413 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/player.js' saved [39673]
+
+--2018-08-01 04:45:19--  https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/libs/receiver/2.0.0/cast_receiver.js'
+
+     0K .......... .......... .......... .......... .......... 1.30M
+    50K .......... .......... .......... .......... .......... 1.21M
+   100K .......... .......... .......... .......... .......... 1.52M
+   150K .......... .......... .......... .......... .......... 3.68M
+   200K ..                                                     4.73M=0.1s
+
+2018-08-01 04:45:20 (1.59 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/libs/receiver/2.0.0/cast_receiver.js' saved [207121]
+
+--2018-08-01 04:45:20--  https://www.gstatic.com/cast/sdk/libs/mediaplayer/1.0.0/media_player.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/libs/mediaplayer/1.0.0/media_player.js'
+
+     0K .......... .......... .......... .......... .......... 3.51M
+    50K .......... .......... .......... .......... .......... 3.70M
+   100K .......... .......... .......... .......... .......... 3.90M
+   150K .......... .......... .......... ......                4.34M=0.05s
+
+2018-08-01 04:45:20 (3.80 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/libs/mediaplayer/1.0.0/media_player.js' saved [191285]
+
+--2018-08-01 04:45:20--  https://www.gstatic.com/eureka/player/0012/background.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 609391 (595K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/background.png'
+
+     0K .......... .......... .......... .......... ..........  8% 1.92M 0s
+    50K .......... .......... .......... .......... .......... 16% 2.33M 0s
+   100K .......... .......... .......... .......... .......... 25% 2.24M 0s
+   150K .......... .......... .......... .......... .......... 33% 1.46M 0s
+   200K .......... .......... .......... .......... .......... 42% 2.12M 0s
+   250K .......... .......... .......... .......... .......... 50% 2.68M 0s
+   300K .......... .......... .......... .......... .......... 58% 5.50M 0s
+   350K .......... .......... .......... .......... .......... 67%  907K 0s
+   400K .......... .......... .......... .......... .......... 75% 1.82M 0s
+   450K .......... .......... .......... .......... .......... 84%  953K 0s
+   500K .......... .......... .......... .......... .......... 92% 3.50M 0s
+   550K .......... .......... .......... .......... .....     100% 5.01M=0.3s
+
+2018-08-01 04:45:20 (1.88 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/background.png' saved [609391/609391]
+
+--2018-08-01 04:45:20--  https://www.gstatic.com/eureka/player/0012/placeholder-audio.jpg
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 105118 (103K) [image/jpeg]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/placeholder-audio.jpg'
+
+     0K .......... .......... .......... .......... .......... 48% 1.83M 0s
+    50K .......... .......... .......... .......... .......... 97% 2.18M 0s
+   100K ..                                                    100% 12.3G=0.05s
+
+2018-08-01 04:45:20 (2.04 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/placeholder-audio.jpg' saved [105118/105118]
+
+--2018-08-01 04:45:20--  https://www.gstatic.com/eureka/player/0012/buffering.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 2030 (2.0K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/buffering.png'
+
+     0K .                                                     100% 1.80M=0.001s
+
+2018-08-01 04:45:20 (1.80 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/buffering.png' saved [2030/2030]
+
+--2018-08-01 04:45:20--  https://www.gstatic.com/eureka/player/0012/paused.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1281 (1.3K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/paused.png'
+
+     0K .                                                     100%  483K=0.003s
+
+2018-08-01 04:45:20 (483 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/paused.png' saved [1281/1281]
+
+FINISHED --2018-08-01 04:45:20--
+Total wall clock time: 1.6s
+Downloaded: 9 files, 1.1M in 0.6s (1.76 MB/s)
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/player.html@skin... 4-0
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/1-webcast/../../../chromecast_receiver/1-webcast/0012/player.css... 5-1
+Converted links in 2 files in 0.003 seconds.

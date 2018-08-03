@@ -3,17 +3,17 @@ Resolving d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)... 52.85
 Connecting to d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)|52.85.80.103|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 544 [text/html]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver/index.html'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/receiver/index.html'
 
      0K                                                       100% 1.47M=0s
 
-2018-08-01 15:17:36 (1.47 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver/index.html' saved [544/544]
+2018-08-01 15:17:36 (1.47 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/receiver/index.html' saved [544/544]
 
 --2018-08-01 15:17:36--  https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/THEOplayer-cast-receiver.js
 Reusing existing connection to d3ojqkc95d8mrd.cloudfront.net:443.
 HTTP request sent, awaiting response... 200 OK
 Length: 843714 (824K) [application/javascript]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/THEOplayer-cast-receiver.js'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/THEOplayer-cast-receiver.js'
 
      0K .......... .......... .......... .......... ..........  6% 1.18M 1s
     50K .......... .......... .......... .......... .......... 12% 1.80M 0s
@@ -33,24 +33,24 @@ Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../ch
    750K .......... .......... .......... .......... .......... 97% 2.09M 0s
    800K .......... .......... ...                             100% 17.5M=0.4s
 
-2018-08-01 15:17:36 (2.18 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/THEOplayer-cast-receiver.js' saved [843714/843714]
+2018-08-01 15:17:36 (2.18 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/THEOplayer-cast-receiver.js' saved [843714/843714]
 
 --2018-08-01 15:17:36--  https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/ui.css
 Reusing existing connection to d3ojqkc95d8mrd.cloudfront.net:443.
 HTTP request sent, awaiting response... 200 OK
 Length: 68924 (67K) [text/css]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/ui.css'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/ui.css'
 
      0K .......... .......... .......... .......... .......... 74% 2.49M 0s
     50K .......... .......                                    100% 33.9M=0.02s
 
-2018-08-01 15:17:37 (3.27 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/ui.css' saved [68924/68924]
+2018-08-01 15:17:37 (3.27 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/ui.css' saved [68924/68924]
 
 FINISHED --2018-08-01 15:17:37--
 Total wall clock time: 0.8s
 Downloaded: 3 files, 892K in 0.4s (2.24 MB/s)
-Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/receiver/index.html... 2-1
-Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/ui.css... nothing to do.
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/receiver/index.html... 2-1
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/ui.css... nothing to do.
 Converted links in 2 files in 0.003 seconds.
 
 
@@ -59,11 +59,11 @@ Resolving d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)... 52.85
 Connecting to d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)|52.85.80.248|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 36734 (36K) [application/javascript]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.d.js'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.d.js'
 
      0K .......... .......... .......... .....                100%  131K=0.3s
 
-2018-08-01 15:29:29 (131 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.d.js' saved [36734/36734]
+2018-08-01 15:29:29 (131 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.d.js' saved [36734/36734]
 
 
 --2018-08-01 15:29:29--  https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.e.js
@@ -71,12 +71,12 @@ Resolving d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)... 52.85
 Connecting to d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)|52.85.80.248|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 62591 (61K) [application/javascript]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.e.js'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.e.js'
 
      0K .......... .......... .......... .......... .......... 81%  126K 0s
     50K .......... .                                          100% 37.3M=0.4s
 
-2018-08-01 15:29:30 (154 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.e.js' saved [62591/62591]
+2018-08-01 15:29:30 (154 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.e.js' saved [62591/62591]
 
 
 --2018-08-01 15:29:30--  https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.p.js
@@ -84,8 +84,8 @@ Resolving d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)... 52.85
 Connecting to d3ojqkc95d8mrd.cloudfront.net (d3ojqkc95d8mrd.cloudfront.net)|52.85.80.248|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 33126 (32K) [application/javascript]
-Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.p.js'
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.p.js'
 
      0K .......... .......... .......... ..                   100%  237K=0.1s
 
-2018-08-01 15:29:31 (237 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/../../chromecast_receiver/release/theoplayer.p.js' saved [33126/33126]
+2018-08-01 15:29:31 (237 KB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/3-theoplayer/../../../chromecast_receiver/3-theoplayer/release/theoplayer.p.js' saved [33126/33126]
