@@ -56,14 +56,11 @@ var toggle_chromecast_connection_state = function() {
 
 var webcast_video_player
 
-var destroy_videoplayer = function(skip_cc, skip_reload) {
+var destroy_videoplayer = function(skip_reload) {
     if (webcast_video_player) {
         webcast_video_player.stop()
-        webcast_video_player.destroy()
-
-        if (skip_cc !== true) {
-            disconnect_chromecast()
-        }
+        webcast_video_player.destroy()  // also: disconnects from Chromecast
+        disconnect_chromecast()         // todo: remove redundant call?
 
         if (skip_reload !== true) {
             history.replaceState("", document.title, window.location.pathname)
@@ -111,7 +108,7 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
     types = undefined
 
     // cleanup
-    destroy_videoplayer(true, true)
+    destroy_videoplayer(true)
 
     webcast_video_player = new THEOplayer.Player(
         document.querySelector('#video-player'),
@@ -222,7 +219,3 @@ var $hashchange = function () {
 document.addEventListener("DOMContentLoaded", $DOMContentLoaded)
 
 window.addEventListener("hashchange", $hashchange, false)
-
-window.onunload = function() {
-    destroy_videoplayer(true, true)
-}
