@@ -111,7 +111,7 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
     destroy_videoplayer(true)
 
     webcast_video_player = new THEOplayer.Player(
-        document.querySelector('#video-player'),
+        document.querySelector('.webcast-video-player > div.video-js'),
         {
             fluid: true,
             libraryLocation: 'lib/theoplayer-2.42.0/',
