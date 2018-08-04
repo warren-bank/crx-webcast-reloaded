@@ -207,12 +207,12 @@ var $DOMContentLoaded = function () {
 var $hashchange = function () {
     var {URL_video, URL_subtitle} = parse_location_hash()
 
-    if (!is_player_showing && URL_video) {
-        show_player()
+    if (URL_video) {
+        if (!is_player_showing) show_player()
         initialize_videoplayer(URL_video, URL_subtitle)
     }
-    else if (!URL_video) {
-      destroy_videoplayer()
+    else {
+        destroy_videoplayer()
     }
 }
 
