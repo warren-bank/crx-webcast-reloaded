@@ -224,5 +224,5 @@ document.addEventListener("DOMContentLoaded", $DOMContentLoaded)
 window.addEventListener("hashchange", $hashchange, false)
 
 window.onunload = function() {
-    destroy_videoplayer(false, true)
+    destroy_videoplayer(true, true)
 }
