@@ -1,13 +1,12 @@
 {
   "name": "WebCast-Reloaded",
   "short_name": "WebCast-Reloaded",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "description": "Cast web videos to Google Chromecast from any Chromium-based desktop browser.",
   "icons": {
     "128": "data/icon128.png",
     "16": "data/icon16.png",
     "48": "data/icon48.png"
-
   },
   "background": {
     "page": "background.html"
@@ -32,6 +31,6 @@
     "open_in_tab": false
   },
   "content_security_policy": "default-src 'self'; media-src http://*:* https://*:*; img-src 'self' 'unsafe' 'unsafe-inline' data: ;style-src 'self' 'unsafe-inline' http://fonts.googleapis.com; script-src 'self'; connect-src 'self' http://*:* https://*:* ws://*:*; font-src http://themes.googleusercontent.com; object-src 'none'",
-  "web_accessible_resources" : ["castApp.js", "popup.html", "popup.js", "/data/noimage.jpg"],                     
+  "web_accessible_resources" : ["castApp.js", "popup.html", "popup.js", "/data/noimage.jpg", "/data/proxy.png"],
   "manifest_version": 2
 }

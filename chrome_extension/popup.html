@@ -13,7 +13,8 @@
   <div id="links">
   	<div data-ng-repeat="link in links" class="video-item">
   	  <img src="{{link.img}}" class="video-preview" id="{{link.id}}" >
-      <a href data-ng-click="openLink(link.link)" class="video-link" title="{{link.title}}">{{link.title}}</a>
+      <a href="{{link.proxy}}" data-ng-click="openLink(link.proxy); $event.stopPropagation();" class="proxy"      title="HLS-Proxy"><img src="data/proxy.png" /></a>
+      <a href="{{link.link}}"  data-ng-click="openLink(link.link);  $event.stopPropagation();" class="video-link" title="{{link.title}}">{{link.title}}</a>
   	</div>
   </div>
   <div><button data-ng-click="clearAll()">Clear videos list</button></div>

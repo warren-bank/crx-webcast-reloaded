@@ -75,3 +75,21 @@ button {
 button:hover {
 	border: 1px #B2B2B2 solid;
 }
+
+.video-item {
+  position: relative;
+  z-index: 0;
+}
+.video-item a.proxy,
+.video-item a.proxy > img {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+.video-item a.proxy {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left:0;
+  text-decoration: none;
+}

@@ -26,14 +26,19 @@ angular.module('project', [])
             chrome.storage.sync.get("external_website_url", function(items) {
                 var url = items.external_website_url
                 var screenshots = chrome.extension.getBackgroundPage().tabScreenshots[tabId] || {};
+                var payload, base64_payload, screenshot;
+
                 for(v in links) {
-                    var link = links[v].trim();
-                    var title = link;
+                    payload        = links[v].trim();
+                    base64_payload = encodeLink(payload);
+                    screenshot     = screenshots[payload] ? screenshots[payload] : "data/noimage.jpg";
+
                     $scope.links.push({
-                        'img': screenshots[link] ? screenshots[link] : "data/noimage.jpg",
-                        'id': encodeLink(link),
-                        'link': url + "#/watch/" + encodeURIComponent(encodeLink(link)),
-                        'title': title
+                        'img':   screenshot,
+                        'id':    base64_payload,
+                        'link':  url + "#/watch/" + base64_payload,
+                        'proxy': url.replace(/\/(index\.html)?$/, '/proxy.html') + "#/watch/" + base64_payload,
+                        'title': payload
                     });
                 }
                 $scope.$digest();
@@ -54,7 +59,6 @@ angular.module('project', [])
     }
 
     function encodeLink(str) {
-        return encodeURIComponent(
-        window.btoa(unescape(encodeURIComponent( str ))));
+        return encodeURIComponent( window.btoa(str) );
     }  
 });
