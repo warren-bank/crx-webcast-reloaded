@@ -11,6 +11,8 @@ usage:
 ======
 * npm run http -- "192.168.0.100" "8080"
 
+---------------------------------------------------------------------- the manual way:
+
 URLs:
 =====
 let payload                       = 'https://XXX/video.m3u8'
@@ -40,3 +42,25 @@ wth?:
   - just need to make sure that:
     * the proxy server was started with the IP of the computer on the LAN
     * the Chromecast is on the same LAN.. so it can communicate with the computer running the proxy server
+
+---------------------------------------------------------------------- the automated way:
+
+the "WebCast-Reloaded" Chromium extension:
+==========================================
+let payload                       = 'https://XXX/video.m3u8'
+let base64_payload                = btoa(payload)
+let webcast                       = 'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html#/watch/' + base64_payload
+
+"proxy.html" helper:
+====================
+let webcast                       = 'https://warren-bank.github.io/crx-webcast-reloaded/external_website/proxy.html#/watch/' + base64_payload
+
+window.location = webcast
+
+"proxy.html" summary:
+=====================
+* extracts "base64_payload" from #hash
+* performs all the same URL juggling as illustrated above (manually)
+* redirects from "proxy.html" to "index.html" with a proxied URL encoded in its #hash
+
+----------------------------------------------------------------------
