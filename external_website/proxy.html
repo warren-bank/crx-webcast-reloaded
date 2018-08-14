@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>WebCast-Reloaded via HLS-Proxy</title>
+  <link rel="icon" href="3-theoplayer/img/favicon.ico" type="image/x-icon" />
+  <style>
+
+body {
+  margin: 0;
+  padding: 15px;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.5em;
+  color: #333;
+  text-align: center;
+}
+
+body .contents {
+  margin 0 auto;
+  display: inline-block;
+}
+
+body .contents > div {
+  height: 2em;
+  line-height: 2em;
+  vertical-align: middle;
+  margin-bottom: 1em;
+}
+
+body .contents > div.left {
+  text-align: left;
+}
+
+body .contents > div:last-child {
+  margin-bottom: 0;
+}
+
+input, button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  display: inline-block;
+  margin: 0;
+}
+
+input[type="text"] {
+  padding: 0 0.5em;
+}
+
+  </style>
+  <script>
+
+window.onload  = function() {
+  var $host   = document.querySelector('input#host')
+  var $port   = document.querySelector('input#port')
+  var $tls    = document.querySelector('input#tls')
+  var $button = document.querySelector('button')
+
+  var encoded_urls = {
+    video: null,
+    subtitle: null
+  }
+  var get_encoded_video_url = function() {
+    var b64, hash_regex_pattern, matches
+
+    b64 = '[A-Za-z0-9+/=%]'
+    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+))?$`
+    hash_regex_pattern = new RegExp(hash_regex_pattern)
+
+    matches = hash_regex_pattern.exec(window.location.hash)
+    if (matches && matches.length && matches[1]) {
+        encoded_urls.video = matches[1]
+        if (matches.length > 2 && matches[2]) {
+            encoded_urls.subtitle = matches[2]
+        }
+    }
+  }
+  get_encoded_video_url()
+
+  if (! encoded_urls.video) {
+    alert('ERROR: the location #hash does not contain an encoded video URL to proxy')
+    $button.disabled = true
+    return true
+  }
+
+  var decode_URL = function(str) {
+    var tail, done
+
+    if (str) {
+      while (! done) {
+        tail = str
+        str  = decodeURIComponent(tail)
+        done = (tail === str)
+      }
+      str = window.atob(str)
+    }
+    return str
+  }
+
+  var sanitize_encoded_video_url = function() {
+    let base64_payload = encoded_urls.video
+    let payload        = decode_URL(base64_payload)
+
+    // validate that the decoded video URL contains an .m3u8 file extension
+    let pattern = /\.m3u8(?:[#\?]|$)/i
+    if (! pattern.test(payload)) {
+      return false
+    }
+
+    encoded_urls.video = btoa(payload)
+    return true
+  }
+  if (! sanitize_encoded_video_url()) {
+    alert('ERROR: the location #hash contains an encoded URL that does not contain an .m3u8 file extension')
+    $button.disabled = true
+    return true
+  }
+
+  var redirect_to_player = function() {
+    var host, port, tls
+
+    host = $host.value
+    port = $port.value
+    tls  = $tls.checked
+
+    if (!host || !port) {
+      alert('Please enter values for: "host" and "port"')
+      return true
+    }
+
+    var get_proxied_url = function(base_url) {
+    /*
+      let payload                       = 'https://XXX/video.m3u8'
+      let base64_payload                = btoa(payload)
+      let base64_payload_with_extension = base64_payload + '.m3u8'
+      let proxy_server                  = 'http://192.168.0.100:8080/' + base64_payload_with_extension
+      let base64_proxy_server           = btoa(proxy_server)
+      let webcast                       = 'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html#/watch/' + base64_proxy_server
+    */
+
+      let base64_payload                = encoded_urls.video
+      let base64_payload_with_extension = base64_payload + '.m3u8'
+      let proxy_server                  = `${ tls ? 'https' : 'http' }://${host}:${port}/${base64_payload_with_extension}`
+      let base64_proxy_server           = btoa(proxy_server)
+      let webcast                       = `${base_url}#/watch/${base64_proxy_server}${ encoded_urls.subtitle ? `/subtitle/${encoded_urls.subtitle}` : '' }`
+
+      return webcast
+    }
+
+    window.location = get_proxied_url('index.html')
+  }
+
+  $button.onclick = redirect_to_player
+}
+
+  </script>
+</head>
+<body>
+  <div class="contents">
+    <h3>HLS-Proxy Configuration:</h3>
+    <div class="left">
+      <label for="host">Host:</label>
+      <input id="host" type="text" required size="15" placeholder="192.168.0.100" />
+    </div>
+    <div class="left">
+      <label for="port">Port:</label>
+      <input id="port" type="text" required size="6" placeholder="8080" />
+    </div>
+    <div>
+      <label for="tls">HTTPS:</label>
+      <input id="tls" type="checkbox" />
+    </div>
+    <div>
+      <button>Load Player</button>
+    </div>
+  </div>
+</body>
+</html>
