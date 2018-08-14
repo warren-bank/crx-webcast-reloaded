@@ -1,0 +1,42 @@
+https://github.com/warren-bank/HLS-proxy
+https://github.com/warren-bank/HLS-proxy/archive/master.zip
+
+installation:
+=============
+* download
+* unzip
+* npm install
+
+usage:
+======
+* npm run http -- "192.168.0.100" "8080"
+
+URLs:
+=====
+let payload                       = 'https://XXX/video.m3u8'
+let base64_payload                = btoa(payload)
+let base64_payload_with_extension = base64_payload + '.m3u8'
+let proxy_server                  = 'http://192.168.0.100:8080/' + base64_payload_with_extension
+let base64_proxy_server           = btoa(proxy_server)
+let webcast                       = 'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html#/watch/' + base64_proxy_server
+
+window.location = webcast
+
+wth?:
+=====
+* webcast will decode "base64_proxy_server" and obtain "proxy_server"
+* webcast will try to load the .m3u8 from the proxy server
+* the proxy server will strip the file extension off "base64_payload_with_extension" to obtain "base64_payload"
+* the proxy server will decode "base64_payload" to obtain "payload"
+* the proxy server will:
+  - download "payload"
+  - modify its contents, such that all the .ts URLs it contains are formatted in a way similar to "proxy_server"
+  - send the modified response to webcast
+
+* when webcast casts the HLS video stream to a Chromecast:
+  - the "proxy_server" URL is handed off
+  - the Chromecast will try to load the .m3u8 from the proxy server
+  - everything else continues as before
+  - just need to make sure that:
+    * the proxy server was started with the IP of the computer on the LAN
+    * the Chromecast is on the same LAN.. so it can communicate with the computer running the proxy server

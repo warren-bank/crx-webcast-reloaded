@@ -1,0 +1,50 @@
+* encountered an .m3u8 HLS stream that cannot be played as-is in any of the "WebCast" HTML5 video players
+  * the stream is not encrypted
+  * error message in console:
+      Failed to load https://XXX/video.m3u8:
+      Response to preflight request doesn't pass access control check:
+      The 'Access-Control-Allow-Origin' header has a value 'https://YYY' that is not equal to the supplied origin.
+      Origin 'https://warren-bank.github.io' is therefore not allowed access.
+
+* workaround #1:
+  * edit `hosts` file
+      127.0.0.1 YYY
+  * start an HTTP/HTTPS web server
+      * network interface = 127.0.0.1
+      * ports = 80, 443
+  * load a "WebCast" HTML5 video player into a Chromium web browser from the local web server:
+      https://YYY/crx-webcast-reloaded/external_website/index.html#/watch/aHR0cHM6Ly9YWFgvdmlkZW8ubTN1OA==
+  * results:
+      * the video plays perfectly in the web browser
+      * the video cannot be played on Chromecast,
+        because of the restrictive 'Access-Control-Allow-Origin' header
+
+* workaround #2:
+  * use a web service to:
+    * proxy the request to the .m3u8 HLS stream
+    * modify the CORS response headers inflight
+  * request the .m3u8 HLS stream via the web service using any of the publicly hosted "WebCast" HTML5 video players
+    * ex #1:
+      * URLs:
+        * https://cors-anywhere.herokuapp.com/https://XXX/video.m3u8
+        * https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html#/watch/aHR0cHM6Ly9jb3JzLWFueXdoZXJlLmhlcm9rdWFwcC5jb20vaHR0cHM6Ly9YWFgvdmlkZW8ubTN1OA==
+      * results:
+        * error message in console:
+            Failed to load https://XXX/chunk-001.ts:
+            The 'Access-Control-Allow-Origin' header has a value 'https://YYY' that is not equal to the supplied origin.
+            Origin 'https://warren-bank.github.io' is therefore not allowed access.
+      * conclusions:
+        * the .m3u8 file is retrieved correctly, bypassing CORS restrictions
+        * the .m3u8 file is a playlist that contains URL links to short segments of video content (.ts)
+        * the referenced URL links are also protected by restrictive CORS headers
+        * the content of the .m3u8 file (which is repeatedly downloaded at an interval) would need to be modified inflight,
+          such that the URLs (to .ts segments) are rewritten to pass through the same web service
+            * ex: https://cors-anywhere.herokuapp.com/https://XXX/chunk-001.ts
+      * considerations:
+        * the web service would need to proxy all the short segments of video content (.ts)
+        * it wouldn't be very nice to push this traffic through a free public web service (if one were available)
+        * it would be fairly simple to write a server that runs in the LAN to proxy and intelligently modify this traffic
+        * "WebCast" players could be directed to the address of this server on the LAN;
+          Chromecast would work, as well.
+      * references:
+        * https://tools.ietf.org/html/rfc8216
