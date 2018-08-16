@@ -30,7 +30,7 @@ angular.module('project', [])
 
                 for(v in links) {
                     payload        = links[v].trim();
-                    base64_payload = encodeLink(payload);
+                    base64_payload = encodeLink(payload, true);
                     screenshot     = screenshots[payload] ? screenshots[payload] : "data/noimage.jpg";
 
                     $scope.links.push({
@@ -58,7 +58,14 @@ angular.module('project', [])
         window.close();
     }
 
-    function encodeLink(str) {
-        return encodeURIComponent( window.btoa(str) );
+    function encodeLink(str, double_urlencode) {
+        str = window.btoa(str)
+        str = encodeURIComponent(str)
+        if (double_urlencode) {
+          // note: workaround for bug in Angular JS $routeProvider
+          // link: https://stackoverflow.com/questions/16630912
+          str = encodeURIComponent(str)
+        }
+        return str
     }  
 });
