@@ -117,6 +117,35 @@ window.onload  = function() {
     return true
   }
 
+  var get_cookie_value = function(key) {
+    var pattern = new RegExp('(?:^|;)\\s*' + key + '\\s*=\\s*([^;]+)(?:;|$)')
+    var cookies = document.cookie
+    var matches = pattern.exec(cookies)
+    return (matches && matches.length) ? matches[1] : ''
+  }
+
+  var set_cookie_value = function(key, val) {
+    document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname};max-age=${60*60*24*365}`
+  }
+
+  var prepopulate_form_fields = function() {
+    var host, port, tls
+
+    host = get_cookie_value('hlsd_host')
+    port = get_cookie_value('hlsd_port')
+    tls  = get_cookie_value('hlsd_tls')
+
+    if (host) $host.value = host
+    if (port) $port.value = port
+    if (tls === '1') $tls.checked = true
+  }
+
+  var persist_form_fields = function (host, port, tls) {
+    set_cookie_value('hlsd_host', host)
+    set_cookie_value('hlsd_port', port)
+    set_cookie_value('hlsd_tls',  (tls ? '1' : '0'))
+  }
+
   var redirect_to_player = function() {
     var host, port, tls
 
@@ -128,6 +157,8 @@ window.onload  = function() {
       alert('Please enter values for: "host" and "port"')
       return true
     }
+
+    persist_form_fields(host, port, tls)
 
     var get_proxied_url = function(base_url) {
     /*
@@ -150,6 +181,8 @@ window.onload  = function() {
 
     window.location = get_proxied_url('index.html')
   }
+
+  prepopulate_form_fields()
 
   $button.onclick = redirect_to_player
 }

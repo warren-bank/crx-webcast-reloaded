@@ -77,9 +77,10 @@ window.onload  = function() {
   }
 
   var get_cookie_value = function(key) {
-    var pattern = new RegExp('(?:(?:^|.*;\s*)' + key + '\s*\=\s*([^;]*).*$)|^.*$')
+    var pattern = new RegExp('(?:^|;)\\s*' + key + '\\s*=\\s*([^;]+)(?:;|$)')
     var cookies = document.cookie
-    return pattern.test(cookies) ? cookies.replace(pattern, "$1") : ""
+    var matches = pattern.exec(cookies)
+    return (matches && matches.length) ? matches[1] : ''
   }
 
   var set_cookie_value = function(key, val) {
