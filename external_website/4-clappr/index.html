@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>WebCast-Reloaded</title>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+
+  <link rel="stylesheet" href="css/material-icons.css" />
+  <link rel="stylesheet" href="css/webcast-reloaded.css" />
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr.level-selector/latest/level-selector.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/clappr.chromecast-plugin/latest/clappr-chromecast-plugin.js"></script>
+  <script type="text/javascript" src="js/webcast-reloaded.js"></script>
+</head>
+<body>
+  <div class="URL-entry-form">
+    <div>URL to video:</div>
+    <div><input type="text" id="URL_video" /></div>
+    <div>URL to external subtitles:</div>
+    <div><input type="text" id="URL_subtitle" /></div>
+    <button>Load Player</button>
+  </div>
+  <div class="webcast-video-player" style="display:none">
+    <div id="video-player"></div>
+    <div class="video-player-info">
+      <i class="material-icons" id="destroy_videoplayer">highlight_off</i>
+      <span class="video-player-info-status"></span>
+      <i class="material-icons" id="toggle_chromecast_connection_state">cast</i>
+    </div>
+  </div>
+</body>
+</html>

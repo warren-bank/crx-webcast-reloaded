@@ -1,0 +1,39 @@
+https://clients3.google.com/cast/chromecast/device/app?a=9DFB77C0
+
+--------------------------------------------------------------------------------
+
+{
+    "resolution_height": 0,
+    "uses_ipc": true,
+    "display_name": "Clappr",
+    "app_id": "9DFB77C0",
+    "promo_assets": [{
+        "description": "Clappr simple application for Chromecast.",
+        "display_name": "Clappr"
+    }],
+    "url": "https://www.gstatic.com/eureka/player/player.html?skin\u003dhttps://www.googledrive.com/host/0BwPC8pnYMHozZThjZmhHUDN5d2M"
+}
+
+--------------------------------------------------------------------------------
+
+notes:
+======
+* "\u003d" is the unicode equivalent of: "="
+* eureka player is ubiquitous
+  - it is designed to be shared and reskinned
+* eureka player inspects "location.search" for a "skin" querystring value
+  - if found, it adds the css URL to the DOM:
+      <link rel="stylesheet" href="" />
+* the css URL for Clappr is 404
+
+observations:
+=============
+* "1-webcast" also uses eureka player
+  - I don't see any reason why they would perform any differently, and yet..
+    * Clappr  plays MLB on Chromecast perfectly
+    * Webcast plays MLB on Chromecast horribly
+      * the m3u8 manifest contains 1000+ .ts files
+      * the video player always plays from the beginning,
+        rather than loading the newest segments from the end
+
+--------------------------------------------------------------------------------

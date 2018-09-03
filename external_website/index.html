@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>WebCast-Reloaded</title>
-  <link rel="icon" href="3-theoplayer/img/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="4-clappr/img/favicon.ico" type="image/x-icon" />
   <style>
 
 body {
@@ -44,6 +44,14 @@ window.onload  = function() {
     },
     "3-theoplayer": {
       subdirectory: "3-theoplayer",
+      subtitles: true
+    },
+    "4-clappr": {
+      subdirectory: "4-clappr",
+      subtitles: true
+    },
+    "5-clappr-npm": {
+      subdirectory: "5-clappr-npm",
       subtitles: true
     }
   }
@@ -88,7 +96,7 @@ window.onload  = function() {
   }
 
   var change_player_selection = function(player_key) {
-    var default_player_key = '3-theoplayer'
+    var default_player_key = '4-clappr'
     var $option
 
     try {
@@ -126,6 +134,8 @@ window.onload  = function() {
         <option value="1-webcast">WebCast</option>
         <option value="2-visualon">VisualOn</option>
         <option value="3-theoplayer">THEOplayer</option>
+        <option value="4-clappr">Clappr</option>
+        <option value="5-clappr-npm">Clappr (npm)</option>
       </select>
       <button>Load Player</button>
     </div>

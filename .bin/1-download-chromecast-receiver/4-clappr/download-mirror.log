@@ -1,0 +1,125 @@
+--2018-09-03 00:03:30--  https://www.gstatic.com/eureka/player/player.html
+Resolving www.gstatic.com (www.gstatic.com)... 172.217.4.163
+Connecting to www.gstatic.com (www.gstatic.com)|172.217.4.163|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/player.html'
+
+     0K                                                        3.76M=0s
+
+2018-09-03 00:03:30 (3.76 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/player.html' saved [605]
+
+--2018-09-03 00:03:30--  https://www.gstatic.com/eureka/player/0012/player.css
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/css]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/player.css'
+
+     0K .......                                                2.10M=0.003s
+
+2018-09-03 00:03:30 (2.10 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/player.css' saved [7361]
+
+--2018-09-03 00:03:30--  https://www.gstatic.com/eureka/player/0012/player.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/player.js'
+
+     0K .......... .......... .......... ........              1.01M=0.04s
+
+2018-09-03 00:03:30 (1.01 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/player.js' saved [39673]
+
+--2018-09-03 00:03:30--  https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/cast/sdk/libs/receiver/2.0.0/cast_receiver.js'
+
+     0K .......... .......... .......... .......... .......... 2.45M
+    50K .......... .......... .......... .......... .......... 1.44M
+   100K .......... .......... .......... .......... .......... 1.93M
+   150K .......... .......... .......... .......... .......... 2.94M
+   200K .......... ......                                      3.82M=0.1s
+
+2018-09-03 00:03:31 (2.11 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/cast/sdk/libs/receiver/2.0.0/cast_receiver.js' saved [221268]
+
+--2018-09-03 00:03:31--  https://www.gstatic.com/cast/sdk/libs/mediaplayer/1.0.0/media_player.js
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/javascript]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/cast/sdk/libs/mediaplayer/1.0.0/media_player.js'
+
+     0K .......... .......... .......... .......... .......... 2.11M
+    50K .......... .......... .......... .......... .......... 5.47M
+   100K .......... .......... .......... .......... .......... 3.81M
+   150K .......... .......... .......... .......               3.24M=0.06s
+
+2018-09-03 00:03:31 (3.26 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/cast/sdk/libs/mediaplayer/1.0.0/media_player.js' saved [191895]
+
+--2018-09-03 00:03:31--  https://www.gstatic.com/eureka/player/0012/background.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 609391 (595K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/background.png'
+
+     0K .......... .......... .......... .......... ..........  8% 2.55M 0s
+    50K .......... .......... .......... .......... .......... 16% 3.86M 0s
+   100K .......... .......... .......... .......... .......... 25% 3.41M 0s
+   150K .......... .......... .......... .......... .......... 33%  553K 0s
+   200K .......... .......... .......... .......... .......... 42% 3.47M 0s
+   250K .......... .......... .......... .......... .......... 50% 3.44M 0s
+   300K .......... .......... .......... .......... .......... 58% 6.57M 0s
+   350K .......... .......... .......... .......... .......... 67% 9.56M 0s
+   400K .......... .......... .......... .......... .......... 75% 2.54M 0s
+   450K .......... .......... .......... .......... .......... 84% 1.70M 0s
+   500K .......... .......... .......... .......... .......... 92% 2.44M 0s
+   550K .......... .......... .......... .......... .....     100% 4.77M=0.3s
+
+2018-09-03 00:03:31 (2.28 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/background.png' saved [609391/609391]
+
+--2018-09-03 00:03:31--  https://www.gstatic.com/eureka/player/0012/placeholder-audio.jpg
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 105118 (103K) [image/jpeg]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/placeholder-audio.jpg'
+
+     0K .......... .......... .......... .......... .......... 48% 3.87M 0s
+    50K .......... .......... .......... .......... .......... 97% 3.25M 0s
+   100K ..                                                    100% 12.3G=0.03s
+
+2018-09-03 00:03:31 (3.63 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/placeholder-audio.jpg' saved [105118/105118]
+
+--2018-09-03 00:03:31--  https://www.gstatic.com/eureka/player/0012/buffering.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 2030 (2.0K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/buffering.png'
+
+     0K .                                                     100% 6.54M=0s
+
+2018-09-03 00:03:31 (6.54 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/buffering.png' saved [2030/2030]
+
+--2018-09-03 00:03:31--  https://www.gstatic.com/eureka/player/0012/paused.png
+Reusing existing connection to www.gstatic.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1281 (1.3K) [image/png]
+Saving to: 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/paused.png'
+
+     0K .                                                     100% 4.38M=0s
+
+2018-09-03 00:03:31 (4.38 MB/s) - 'C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/paused.png' saved [1281/1281]
+
+FINISHED --2018-09-03 00:03:31--
+Total wall clock time: 1.3s
+Downloaded: 9 files, 1.1M in 0.5s (2.34 MB/s)
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/player.html... 4-0
+Converting links in C:/crx-webcast-reloaded/.bin/1-download-chromecast-receiver/4-clappr/../../../chromecast_receiver/4-clappr/eureka/player/0012/player.css... 5-1
+Converted links in 2 files in 0.005 seconds.
+
+--2018-09-03 00:03:31--  https://www.googledrive.com/host/0BwPC8pnYMHozZThjZmhHUDN5d2M
+Resolving www.googledrive.com (www.googledrive.com)... 172.217.4.161
+Connecting to www.googledrive.com (www.googledrive.com)|172.217.4.161|:443... connected.
+HTTP request sent, awaiting response... 404 Not Found
+2018-09-03 00:03:32 ERROR 404: Not Found.
+
+Converted links in 0 files in 0 seconds.

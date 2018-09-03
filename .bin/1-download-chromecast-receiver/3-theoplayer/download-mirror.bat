@@ -8,7 +8,7 @@ wget -p -k -nH --cut-dirs=1 --no-check-certificate -e robots=off -P %dst_dir% %s
 
 rem :: -----------------------------------------------------
 
-set dst_dir="%~dp0..\..\chromecast_receiver\release"
+set dst_dir="%~dp0..\..\..\chromecast_receiver\3-theoplayer\release"
 
 call :dl_additional_file "https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.d.js"
 call :dl_additional_file "https://d3ojqkc95d8mrd.cloudfront.net/chromecast/release/theoplayer.e.js"
