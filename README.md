@@ -69,10 +69,20 @@
     * no server is required
   * hosted:
     * [original WebCast player](http://web-cast.appspot.com/)
-    * [main entry-point belonging to this repo](http://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)
-      * [mirror of WebCast player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/1-webcast/index.html)
-      * [VisualOn HTML5 Player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/2-visualon/index.html)
-      * [THEOplayer HTML5 Video Player](http://warren-bank.github.io/crx-webcast-reloaded/external_website/3-theoplayer/index.html)
+    * GitHub Pages (HTTPS)
+      * [main entry-point belonging to this repo](https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)
+        * [mirror of WebCast player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/1-webcast/index.html)
+        * [VisualOn HTML5 Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/2-visualon/index.html)
+        * [THEOplayer HTML5 Video Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/3-theoplayer/index.html)
+        * [Clappr HTML5 Video Player - stable release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/4-clappr/index.html)
+        * [Clappr HTML5 Video Player - npm development build](https://warren-bank.github.io/crx-webcast-reloaded/external_website/5-clappr-npm/index.html)
+    * mirror: GitCDN (HTTP)
+      * [main entry-point belonging to this repo](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/index.html)
+        * [mirror of WebCast player](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/1-webcast/index.html)
+        * [VisualOn HTML5 Player](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/2-visualon/index.html)
+        * [THEOplayer HTML5 Video Player](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/3-theoplayer/index.html)
+        * [Clappr HTML5 Video Player - stable release](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/4-clappr/index.html)
+        * [Clappr HTML5 Video Player - npm development build](http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/5-clappr-npm/index.html)
 
 #### Possible To-Dos:
 
