@@ -44,9 +44,7 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
         controls:    false,
     //  crossOrigin: 'anonymous',
         parentId:    '#video-player',
-        plugins: {
-            core:    [ChromecastPlugin, LevelSelector]
-        },
+        plugins:    [ChromecastPlugin, LevelSelector],
         chromecast: {
             appId:   '9DFB77C0'
         },
