@@ -105,6 +105,13 @@
 
 #### Links to Related Apps for Android:
 
+* [WebCast for Android](https://github.com/warren-bank/Android-WebCast)
+  * minimal app
+    - [apk size](https://github.com/warren-bank/Android-WebCast/releases) is around 3.5 MB
+    - only does what it says it will do
+      * open source, no ads, no data collection, no communication with any 3rd-party server
+      * uses the same methodology to detect video formats (as the [WebCast-Reloaded](https://github.com/warren-bank/crx-webcast-reloaded) Chromium extension)
+    - not perfect, but works pretty darn good
 * [EZ Web Video Cast](https://play.google.com/store/apps/details?id=com.hecorat.videocast)
   * a minimal app that doesn't have ads and works great
 
