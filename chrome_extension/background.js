@@ -8,7 +8,7 @@ chrome.runtime.onInstalled.addListener(
     if (details.reason === "install"){
       // initialize default value of option(s)
       chrome.storage.sync.set({
-        "external_website_url": "http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/index.html"
+        "external_website_url": "https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html"
       });
     }
   }
