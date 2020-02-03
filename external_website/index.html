@@ -73,7 +73,7 @@ window.onload  = function() {
     if (player) {
       set_cookie_value('player_key', player_key)
 
-      url = window.location.href.replace('/external_website/', `/external_website/${player.subdirectory || player_key}/`)
+      url = window.location.href.replace(/(\/index\.html)/i, `/${player.subdirectory || player_key}$1`)
       if (! player.subtitles){
         url = url.replace(new RegExp('/subtitle/.*$', 'i'), '')
       }
