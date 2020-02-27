@@ -9,14 +9,19 @@ angular.module('project', [])
     }
 ])
 .controller('WebCast', function($scope) {
-    var tabId = undefined;
+    var nonsecure_external_website_url = "http://webcast-reloaded.surge.sh/airplay_sender.html";
+    var tabId          = undefined;
+    var tabUrl         = undefined;
+    var base64_referer = undefined;
     $scope.links = [];
 
     chrome.tabs.query(
         {active: true, lastFocusedWindow: true},
         function(array_of_Tabs) {
             var tab = array_of_Tabs[0];
-            tabId = tab.id;
+            tabId          = tab.id;
+            tabUrl         = tab.url;
+            base64_referer = tabUrl ? encodeLink(tabUrl, true) : undefined;
             addLinks(chrome.extension.getBackgroundPage().tabUrls[tab.id]);
         }
     );
@@ -34,11 +39,12 @@ angular.module('project', [])
                     screenshot     = screenshots[payload] ? screenshots[payload] : "data/noimage.jpg";
 
                     $scope.links.push({
-                        'img':   screenshot,
-                        'id':    base64_payload,
-                        'link':  url + "#/watch/" + base64_payload,
-                        'proxy': url.replace(/\/(index\.html)?$/, '/proxy.html') + "#/watch/" + base64_payload,
-                        'title': payload
+                        "img":     screenshot,
+                        "id":      base64_payload,
+                        "link":    url + "#/watch/" + base64_payload,
+                        "proxy":   url.replace(/\/(index\.html)?$/, '/proxy.html') + "#/watch/" + base64_payload,
+                        "airplay": nonsecure_external_website_url + "#/watch/" + base64_payload + (tabUrl ? ("/referer/" + base64_referer) : ""),
+                        "title":   payload
                     });
                 }
                 $scope.$digest();

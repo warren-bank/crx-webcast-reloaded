@@ -81,15 +81,23 @@ button:hover {
   z-index: 0;
 }
 .video-item a.proxy,
-.video-item a.proxy > img {
+.video-item a.proxy > img,
+.video-item a.airplay,
+.video-item a.airplay > img {
   display: block;
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
 }
-.video-item a.proxy {
+.video-item a.proxy,
+.video-item a.airplay {
   position: absolute;
   z-index: 1;
   top: 0;
-  left:0;
   text-decoration: none;
+}
+.video-item a.proxy {
+  left: 0;
+}
+.video-item a.airplay {
+  left: 75px; /* 100 (width of video-preview) - 25 (width of airplay) */
 }
