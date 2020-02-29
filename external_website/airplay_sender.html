@@ -22,11 +22,11 @@ body .contents {
 }
 
 body .contents > h3 {
-  margin-block-start: 0.75em;
-  margin-block-end:   0.75em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 body .contents > h3:first-child {
-  margin-block-start: 0;
+  margin-top: 0;
 }
 
 body .contents > div {
@@ -57,6 +57,16 @@ body .contents div.right {
   text-align: right;
 }
 
+body .contents div.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+body .contents div.flex > div {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
 input, button {
   font-family: inherit;
   font-size: inherit;
@@ -72,57 +82,85 @@ input[type="url"] {
   font-family: monospace;
 }
 
+input[type="file"] {
+  display: none;
+}
+
+select {
+  text-align: center;
+  text-align-last: center;
+}
+select > option {
+  text-align: left;
+}
+
   </style>
   <script>
 
-window.onload  = function() {
+window.onload  = () => {
 
   // ===============================================================================================
   // form fields
 
-  const $airplay_host  = document.querySelector('input#airplay_host')
-  const $airplay_port  = document.querySelector('input#airplay_port')
-  const $airplay_tls   = document.querySelector('input#airplay_tls')
-  const $video_url     = document.querySelector('input#video_url')
-  const $referer_url   = document.querySelector('input#referer_url')
-  const $play          = document.querySelector('button#play')
-  const $queue         = document.querySelector('button#queue')
-  const $pause         = document.querySelector('button#pause')
-  const $resume        = document.querySelector('button#resume')
-  const $stop          = document.querySelector('button#stop')
-  const $seek_hours    = document.querySelector('input#seek_hours')
-  const $seek_minutes  = document.querySelector('input#seek_minutes')
-  const $seek_seconds  = document.querySelector('input#seek_seconds')
-  const $seek          = document.querySelector('button#seek')
-  const $rate_factor   = document.querySelector('input#rate_factor')
-  const $rate          = document.querySelector('button#rate')
-  const $volume_factor = document.querySelector('input#volume_factor')
-  const $volume        = document.querySelector('button#volume')
-  const $previous      = document.querySelector('button#previous')
-  const $next          = document.querySelector('button#next')
-  const $sample_videos = document.querySelector('select#sample_videos')
+  const $airplay_host            = document.querySelector('input#airplay_host')
+  const $airplay_port            = document.querySelector('input#airplay_port')
+  const $airplay_tls             = document.querySelector('input#airplay_tls')
+  const $video_url               = document.querySelector('input#video_url')
+  const $caption_url             = document.querySelector('input#caption_url')
+  const $referer_url             = document.querySelector('input#referer_url')
+  const $play                    = document.querySelector('button#play')
+  const $queue                   = document.querySelector('button#queue')
+  const $pause                   = document.querySelector('button#pause')
+  const $resume                  = document.querySelector('button#resume')
+  const $captions_on             = document.querySelector('button#captions_on')
+  const $captions_off            = document.querySelector('button#captions_off')
+  const $stop                    = document.querySelector('button#stop')
+  const $seek_hours              = document.querySelector('input#seek_hours')
+  const $seek_minutes            = document.querySelector('input#seek_minutes')
+  const $seek_seconds            = document.querySelector('input#seek_seconds')
+  const $seek                    = document.querySelector('button#seek')
+  const $set_txt_offset_minutes  = document.querySelector('input#set_txt_offset_minutes')
+  const $set_txt_offset_seconds  = document.querySelector('input#set_txt_offset_seconds')
+  const $set_txt_offset_ms       = document.querySelector('input#set_txt_offset_ms')
+  const $set_txt_offset          = document.querySelector('button#set_txt_offset')
+  const $add_txt_offset_minutes  = document.querySelector('input#add_txt_offset_minutes')
+  const $add_txt_offset_seconds  = document.querySelector('input#add_txt_offset_seconds')
+  const $add_txt_offset_ms       = document.querySelector('input#add_txt_offset_ms')
+  const $add_txt_offset          = document.querySelector('button#add_txt_offset')
+  const $rate_factor             = document.querySelector('input#rate_factor')
+  const $rate                    = document.querySelector('button#rate')
+  const $volume_factor           = document.querySelector('input#volume_factor')
+  const $volume                  = document.querySelector('button#volume')
+  const $previous                = document.querySelector('button#previous')
+  const $next                    = document.querySelector('button#next')
+  const $sample_videos           = document.querySelector('select#sample_videos')
+  const $image_file              = document.querySelector('input#image_file')
 
   // ===============================================================================================
   // extract data from URL #hash
 
   const encoded_urls = {
     video:   null,
+    caption: null,
     referer: null
   }
 
-  var get_encoded_video_url = function() {
-    var b64, hash_regex_pattern, matches
+  const get_encoded_video_url = () => {
+    let b64, hash_regex_pattern, matches
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/referer/(${b64}+))?$`
+    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+?))?(?:/referer/(${b64}+?))?$`
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     matches = hash_regex_pattern.exec(window.location.hash)
     if (matches && matches.length && matches[1]) {
-        encoded_urls.video = matches[1]
-        if (matches.length > 2 && matches[2]) {
-            encoded_urls.referer = matches[2]
-        }
+      encoded_urls.video = matches[1]
+
+      if (matches[2])
+        encoded_urls.caption = matches[2]
+
+      if (matches[3])
+        encoded_urls.referer = matches[3]
     }
   }
 
@@ -131,18 +169,18 @@ window.onload  = function() {
   // ===============================================================================================
   // cookie management
 
-  var get_cookie_value = function(key) {
-    var pattern = new RegExp('(?:^|;)\\s*' + key + '\\s*=\\s*([^;]+)(?:;|$)')
-    var cookies = document.cookie
-    var matches = pattern.exec(cookies)
+  const get_cookie_value = (key) => {
+    const pattern = new RegExp('(?:^|;)\\s*' + key + '\\s*=\\s*([^;]+)(?:;|$)')
+    const cookies = document.cookie
+    const matches = pattern.exec(cookies)
     return (matches && matches.length) ? matches[1] : ''
   }
 
-  var set_cookie_value = function(key, val) {
+  const set_cookie_value = (key, val) => {
     document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname};max-age=${60*60*24*365}`
   }
 
-  var persist_form_fields = function (airplay_host, airplay_port, airplay_tls) {
+  const persist_form_fields = (airplay_host, airplay_port, airplay_tls) => {
     set_cookie_value('airplay_host', airplay_host)
     set_cookie_value('airplay_port', airplay_port)
     set_cookie_value('airplay_tls',  (airplay_tls ? '1' : '0'))
@@ -151,8 +189,8 @@ window.onload  = function() {
   // ===============================================================================================
   // pre-populate some form fields with data extracted from either URL #hash or cookies
 
-  var decode_URL = function(str) {
-    var tail, done
+  const decode_URL = (str) => {
+    let tail, done
 
     if (str) {
       while (! done) {
@@ -165,8 +203,8 @@ window.onload  = function() {
     return str
   }
 
-  var prepopulate_form_fields = function() {
-    var airplay_host, airplay_port, airplay_tls
+  const prepopulate_form_fields = () => {
+    let airplay_host, airplay_port, airplay_tls
 
     airplay_host = get_cookie_value('airplay_host')
     airplay_port = get_cookie_value('airplay_port')
@@ -179,6 +217,9 @@ window.onload  = function() {
     if (encoded_urls.video)
       $video_url.value = decode_URL(encoded_urls.video)
 
+    if (encoded_urls.caption)
+      $caption_url.value = decode_URL(encoded_urls.caption)
+
     if (encoded_urls.referer)
       $referer_url.value = decode_URL(encoded_urls.referer)
   }
@@ -188,11 +229,11 @@ window.onload  = function() {
   // ===============================================================================================
   // XHR helper
 
-  var POST_message = function(path, data) {
-    var host = $airplay_host.value
-    var port = $airplay_port.value || '8192'
-    var tls  = $airplay_tls.checked
-    var url = `${ tls ? 'https' : 'http' }://${host}:${port}${path}`
+  const POST_message = (path, data) => {
+    const host = $airplay_host.value
+    const port = $airplay_port.value || '8192'
+    const tls  = $airplay_tls.checked
+    const url = `${ tls ? 'https' : 'http' }://${host}:${port}${path}`
 
     if (!host) {
       alert('AirPlay "host" is required')
@@ -203,7 +244,7 @@ window.onload  = function() {
       return
     }
 
-    var xhr = new XMLHttpRequest()
+    const xhr = new XMLHttpRequest()
     xhr.open("POST", url, true, null, null)
 
     if (data) {
@@ -221,18 +262,18 @@ window.onload  = function() {
   // ===============================================================================================
   // form field validation helper
 
-  var get_value = function(field, default_value) {
-    var val = field.value
+  const get_value = (field, default_value) => {
+    let val = field.value
 
     if (!val) {
       val = default_value
     }
     else if (field.getAttribute('x-type') === 'range') {
-      var min  = field.getAttribute('x-min')
-      var max  = field.getAttribute('x-max')
-      var step = field.getAttribute('x-step')
+      let min  = field.getAttribute('x-min')
+      let max  = field.getAttribute('x-max')
+      let step = field.getAttribute('x-step')
 
-      var isFloat = (step.indexOf('.') >= 0)
+      const isFloat = (step.indexOf('.') >= 0)
 
       if (!isFloat && (val.indexOf('.') >= 0)) {
         alert(`'${field.id}' requires an Integer value`)
@@ -264,8 +305,8 @@ window.onload  = function() {
         alert(`'${field.id}' value ("${val}") is larger than the maximum value allowed ("${max}")`)
         return
       }
-      var threshold = 1.0e-10
-      var steps = (val / step)
+      const threshold = 1.0e-10
+      const steps = (val / step)
       if ((steps !== parseInt(steps)) && (Math.abs(Math.round(steps) - steps) > threshold)) {
         alert(`'${field.id}' value ("${val}") is not a multiple of the step increment ("${step}")`)
         return
@@ -277,132 +318,420 @@ window.onload  = function() {
   }
 
   // ===============================================================================================
-  // add event listeners to form fields
+  // form field data collection helper
 
-  $play.onclick = function(event) {
-    event.preventDefault()
-    event.stopPropagation()
+/* =================================================================================================
+ * the following functionality has been entirely re-implemented directly in the ExoAirPlay receiver.
+ * no special tooling is needed for the sender to "cast" audio playlists in the formats:
+ *  - .m3u  (audio/x-mpegurl)
+ *  - .html (text/html)
+ * =================================================================================================
 
-    var url = $video_url.value
+  const get_fetch_response = async (url) => {
+    let response, proxied_url
 
-    if (!url) {
-      alert('Video URL is required')
-      return
+    try {
+      response = await fetch(url)
+      if (response.status !== 200) throw 'bad response'
     }
+    catch(error) {
+      // -----------------------------------------
+      // CORS is probably not allowed; attempt a workaround..
+      // -----------------------------------------
+      // options:
+      //   * https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
+      // winner:
+      //   * https://ovsoinc.github.io/yacdn.org/
+      // runner up:
+      //   * https://codetabs.com/cors-proxy/cors-proxy.html
+      // -----------------------------------------
+      proxied_url = `https://yacdn.org/proxy/${url}`
 
-    var path = '/play'
-    var data = `Content-Location: ${url}\nStart-Position: 0`
+      try {
+        response = await fetch(proxied_url)
+        if (response.status !== 200) throw 'bad response'
+      }
+      catch(error) {
+        proxied_url = `https://api.codetabs.com/v1/proxy?quest=${url}`
 
-    POST_message(path, data)
+        try {
+          response = await fetch(proxied_url)
+          if (response.status !== 200) throw 'bad response'
+        }
+        catch(error) {
+          window.alert("Error: Unable to download playlist. Aborting operation.")
+          return false
+        }
+      }
+    }
+    return response
   }
 
-  $queue.onclick = function(event) {
-    event.preventDefault()
-    event.stopPropagation()
+  const get_text_from_fetch_response = async (response) => {
+    const buffer   = await response.arrayBuffer()
+    const mimetype = response.headers.get("content-type") || ''
 
-    var url = $video_url.value
-    var ref = $referer_url.value
+    let encoding = 'ascii'
+    const encoding_regex = /^.*;\s*charset=(\S+)/i
+    if (encoding_regex.test(mimetype))
+      encoding = mimetype.replace(encoding_regex, '$1').toLowerCase()
+
+    //console.log('MIME:', mimetype)
+    //console.log('ENCODING:', encoding)
+
+    const decoder = new TextDecoder(encoding)
+    const text    = decoder.decode(buffer)
+    return text
+  }
+
+  const playlist_regex = /\.(?:m3u)(?:[\?#]|$)/i
+
+  const expand_playlist = async () => {
+    let url, text
+
+    url = $video_url.value
+    if (!url)
+      return null
+    if (!playlist_regex.test(url))
+      return null
+    if (false === window.confirm("Is this URL an audio playlist?\n\nIf yes, this page will download and individually queue each file."))
+      return null
+
+    text = await get_fetch_response(url)
+    if (false === text)
+      return false
+
+    text = await get_text_from_fetch_response(text)
+    text = text.split(/[\r\n]+/g)
+
+    if (!Array.isArray(text) || !text.length)
+      return null
+
+    // remove whitespace
+    text = text.map(line => line.trim())
+
+    // not sure if this is a good idea.. convert Windows path separators
+    text = text.map(line => line.replace(/[\\]/g, '/'))
+
+    // remove empty lines and comments
+    text = text.filter(line => (line.length && (line[0] !== '#')))
+    if (!text.length)
+      return null
+
+    // resolve relative URL paths
+    text = text.map(path => (new URL(path, url)).href)
+
+    return text
+  }
+
+  const htmlpage_regex = /(?:\/|\.s?html?)(?:[\?#]|$)/i
+  const linkhref_regex  = /href="([^"]+\.)(mp3|m4a|ogg|wav|flac)"/ig
+  const format_priority = ['mp3','m4a','ogg','wav','flac']
+
+  const expand_htmlpage = async () => {
+    let url, text, url_chunks, matches, urls
+
+    url = $video_url.value
+    if (!url)
+      return null
+    if (!htmlpage_regex.test(url))
+      return null
+    if (false === window.confirm("Is this URL an html page that contains links to audio files?\n\nIf yes, this page will download and individually queue each file."))
+      return null
+
+    text = await get_fetch_response(url)
+    if (false === text)
+      return false
+
+    text = await get_text_from_fetch_response(text)
+    text = text.replace(/[\r\n]+/g, ' ')
+
+    url_chunks = {}
+    while ((matches = linkhref_regex.exec(text)) != null) {
+      let m1 = matches[1]
+      let m2 = matches[2]
+
+      let lm1 = m1.toLowerCase()
+      let lm2 = m2.toLowerCase()
+
+      if (url_chunks[lm1]) {
+        let old = url_chunks[lm1] // lm1 => [m1, m2]
+        let lo2 = old[1].toLowerCase()
+
+        let po = format_priority.indexOf(lo2)
+        let pm = format_priority.indexOf(lm2)
+
+        if ((pm >=0) && (pm < po))
+          url_chunks[lm1] = [m1, m2]
+      }
+      else {
+        url_chunks[lm1] = [m1, m2]
+      }
+    }
+
+    urls = []
+    for (let key in url_chunks) {
+      let old = url_chunks[key]
+      let url = old[0] + old[1]
+      urls.push(url)
+    }
+
+    if (!Array.isArray(urls) || !urls.length)
+      return null
+
+    // resolve relative URL paths
+    urls = urls.map(path => (new URL(path, url)).href)
+
+    return urls
+  }
+
+ * =================================================================================================
+ */
+
+  const get_video_POST_data = (url) => {
+    if (!url)
+          url = $video_url.value
+    const txt = $caption_url.value
+    const ref = $referer_url.value
 
     if (!url) {
       alert('Video URL is required')
       return
     }
 
-    var path = '/queue'
-    var data = `Content-Location: ${url}\nStart-Position: 0`
-
+    let data = `Content-Location: ${url}\nStart-Position: 0`
+    if (txt) {
+      data += `\nCaption-Location: ${txt}`
+    }
     if (ref) {
       data += `\nReferer: ${ref}`
     }
+    return data
+  }
+
+  // ===============================================================================================
+  // form field submission helper
+
+/* =================================================================================================
+ * the following functionality has been entirely re-implemented directly in the ExoAirPlay receiver.
+ * no special tooling is needed for the sender to "cast" audio playlists in the formats:
+ *  - .m3u  (audio/x-mpegurl)
+ *  - .html (text/html)
+ * =================================================================================================
+
+  const request_delay = (delay_ms) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, delay_ms)
+    })
+  }
+
+  const send_video_POST_data = async (initial_path) => {
+    let urls = null
+
+    if (urls == null)
+      urls = await expand_playlist()
+    if (urls == null)
+      urls = await expand_htmlpage()
+
+    // special return value to indicate that operation is aborted.
+    if (urls === false) return
+
+    let path, data
+    if (Array.isArray(urls) && urls.length) {
+      for (let i = 0; i < urls.length; i++) {
+        path = (i === 0) ? initial_path : '/queue'
+        data = get_video_POST_data(urls[i])
+
+        POST_message(path, data)
+
+        await request_delay(2500)  // 2.5 seconds between each request is high, but there's no rush since the URLs are being added to a queue and won't be used immediately; better to allow the receiver time to process each request, so they are queued in the correct order.
+      }
+    }
+    else {
+      path = initial_path
+      data = get_video_POST_data()
+
+      POST_message(path, data)
+    }
+  }
+
+ * =================================================================================================
+ */
+
+  const send_video_POST_data = async (initial_path) => {
+    path = initial_path
+    data = get_video_POST_data()
 
     POST_message(path, data)
   }
 
-  $pause.onclick = function(event) {
+  // ===============================================================================================
+  // add event listeners to form fields
+
+  $play.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const path = '/play'
+    send_video_POST_data(path)
+  }
+
+  $queue.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const path = '/queue'
+    send_video_POST_data(path)
+  }
+
+  $pause.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
     POST_message('/rate?value=0.0', null)
   }
 
-  $resume.onclick = function(event) {
+  $resume.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
     POST_message('/rate?value=1.0', null)
   }
 
-  $stop.onclick = function(event) {
+  $captions_on.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    POST_message('/show-captions?toggle=1', null)
+  }
+
+  $captions_off.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    POST_message('/show-captions?toggle=0', null)
+  }
+
+  $stop.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
     POST_message('/stop', null)
   }
 
-  $seek.onclick = function(event) {
+  $seek.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    var hrs = get_value($seek_hours,   0)    // var hrs = parseInt($seek_hours.value,   10) || 0
-    var min = get_value($seek_minutes, 0)    // var min = parseInt($seek_minutes.value, 10) || 0
-    var sec = get_value($seek_seconds, 0)    // var sec = parseInt($seek_seconds.value, 10) || 0
+    const hrs = get_value($seek_hours,   0)    // const hrs = parseInt($seek_hours.value,   10) || 0
+    const min = get_value($seek_minutes, 0)    // const min = parseInt($seek_minutes.value, 10) || 0
+    const sec = get_value($seek_seconds, 0)    // const sec = parseInt($seek_seconds.value, 10) || 0
 
-    var offset = (sec) + (min * 60) + (hrs * 60 * 60)
+    const offset = (sec) + (min * 60) + (hrs * 60 * 60)
 
-    var path = `/scrub?position=${offset}`
-    var data = null
+    const path = `/scrub?position=${offset}`
+    const data = null
 
     POST_message(path, data)
   }
 
-  $rate.onclick = function(event) {
+  $set_txt_offset.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    var rate = get_value($rate_factor, 0.0)  // var rate = parseFloat($rate_factor.value) || 0.0
-    var path = `/rate?value=${rate}`
-    var data = null
+    const min = get_value($set_txt_offset_minutes, 0)    // const min = parseInt($set_txt_offset_minutes.value, 10) || 0
+    const sec = get_value($set_txt_offset_seconds, 0)    // const sec = parseInt($set_txt_offset_seconds.value, 10) || 0
+    const ms  = get_value($set_txt_offset_ms,      0)    // const ms  = parseInt($set_txt_offset_ms.value,      10) || 0
+
+    const offset = (ms * 1000) + (sec * 1000 * 1000) + (min * 60 * 1000 * 1000)
+
+    const path = `/set-captions-offset?value=${offset}`
+    const data = null
 
     POST_message(path, data)
   }
 
-  $volume.onclick = function(event) {
+  $add_txt_offset.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    var vol = get_value($volume_factor, 0.0) // var vol  = parseFloat($volume_factor.value) || 0.0
-    var path = `/volume?value=${vol}`
-    var data = null
+    const min = get_value($add_txt_offset_minutes, 0)    // const min = parseInt($add_txt_offset_minutes.value, 10) || 0
+    const sec = get_value($add_txt_offset_seconds, 0)    // const sec = parseInt($add_txt_offset_seconds.value, 10) || 0
+    const ms  = get_value($add_txt_offset_ms,      0)    // const ms  = parseInt($add_txt_offset_ms.value,      10) || 0
+
+    const offset = (ms * 1000) + (sec * 1000 * 1000) + (min * 60 * 1000 * 1000)
+
+    const path = `/add-captions-offset?value=${offset}`
+    const data = null
 
     POST_message(path, data)
   }
 
-  $previous.onclick = function(event) {
+  $rate.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const rate = get_value($rate_factor, 0.0)  // const rate = parseFloat($rate_factor.value) || 0.0
+    const path = `/rate?value=${rate}`
+    const data = null
+
+    POST_message(path, data)
+  }
+
+  $volume.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const vol = get_value($volume_factor, 0.0) // const vol  = parseFloat($volume_factor.value) || 0.0
+    const path = `/volume?value=${vol}`
+    const data = null
+
+    POST_message(path, data)
+  }
+
+  $previous.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
     POST_message('/previous', null)
   }
 
-  $next.onclick = function(event) {
+  $next.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
     POST_message('/next', null)
   }
 
-  $sample_videos.onchange = function(event) {
+  $sample_videos.onchange = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    var item = $sample_videos.selectedOptions[0]
-    var url  = item.getAttribute('x-video-url')
-    var ref  = item.getAttribute('x-referer-url')
+    const item = $sample_videos.selectedOptions[0]
+    const url  = item.getAttribute('x-video-url')
+    const txt  = item.getAttribute('x-caption-url')
+    const ref  = item.getAttribute('x-referer-url')
 
     if (url) {
       $video_url.value   = url
+      $caption_url.value = (txt) ? txt : ''
       $referer_url.value = (ref) ? ref : ''
     }
+  }
+
+  $image_file.onchange = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (!$image_file.files || !$image_file.files.length)
+      return
+
+    const path = '/photo'
+    const data = $image_file.files[0]
+
+    POST_message(path, data)
+
+    $image_file.value = null
   }
 
 }
@@ -434,6 +763,10 @@ window.onload  = function() {
         <input id="video_url" type="url" size="100" placeholder="https://example.com/master.m3u8" />
       </div>
       <div class="oneline right">
+        <label for="caption_url">Caption URL:</label>
+        <input id="caption_url" type="url" size="100" placeholder="https://example.com/subtitles.srt" />
+      </div>
+      <div class="oneline right">
         <label for="referer_url">Referer URL:</label>
         <input id="referer_url" type="url" size="100" placeholder="https://example.com/videos.html" />
       </div>
@@ -450,6 +783,10 @@ window.onload  = function() {
         <button id="resume">Resume</button>
       </div>
       <div class="oneline">
+        <button id="captions_on">CC On</button>
+        <button id="captions_off">CC Off</button>
+      </div>
+      <div class="oneline">
         <button id="previous">Previous</button>
         <button id="next">Next</button>
       </div>
@@ -463,6 +800,18 @@ window.onload  = function() {
         <button id="seek">Seek to Position</button>
       </div>
       <div class="oneline">
+        <input id="set_txt_offset_minutes" type="number" x-type="range" x-min="-59"  x-max="59"  x-step="1" size="3" placeholder="min" /> : 
+        <input id="set_txt_offset_seconds" type="number" x-type="range" x-min="-59"  x-max="59"  x-step="1" size="3" placeholder="sec" /> : 
+        <input id="set_txt_offset_ms"      type="number" x-type="range" x-min="-999" x-max="999" x-step="1" size="3" placeholder="ms" />
+        <button id="set_txt_offset">Set CC Offset</button>
+      </div>
+      <div class="oneline">
+        <input id="add_txt_offset_minutes" type="number" x-type="range" x-min="-59"  x-max="59"  x-step="1" size="3" placeholder="min" /> : 
+        <input id="add_txt_offset_seconds" type="number" x-type="range" x-min="-59"  x-max="59"  x-step="1" size="3" placeholder="sec" /> : 
+        <input id="add_txt_offset_ms"      type="number" x-type="range" x-min="-999" x-max="999" x-step="1" size="3" placeholder="ms" />
+        <button id="add_txt_offset">Add CC Offset</button>
+      </div>
+      <div class="oneline">
         <input id="rate_factor" type="number" x-type="range" x-min="0" x-max="1000" x-step="0.001" size="3" placeholder="1.0" />
         <button id="rate">Change Speed</button>
       </div>
@@ -472,15 +821,25 @@ window.onload  = function() {
       </div>
     </div>
     <hr />
-    <h3>Sample Videos:</h3>
-    <div>
-      <select id="sample_videos">
-        <option value="0">-- video --</option>
-        <option value="1" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8" x-referer-url="https://players.akamai.com/hls/">Big Buck Bunny</option>
-        <option value="2" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/hdworld/hdworld_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8" x-referer-url="https://players.akamai.com/hls/">HD World</option>
-        <option value="3" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/cctv/cctv_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8" x-referer-url="https://players.akamai.com/hls/">CCTV</option>
-        <option value="4" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8" x-referer-url="https://players.akamai.com/hls/">Sintel</option>
-      </select>
+    <div class="flex">
+      <div>
+        <h3>Sample Videos:</h3>
+        <select id="sample_videos">
+          <option value="0">-- video --</option>
+          <option value="1" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8" x-caption-url="" x-referer-url="https://players.akamai.com/hls/">Big Buck Bunny (vid:hls, subs:none)</option>
+          <option value="2" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8" x-caption-url="https://durian.blender.org/wp-content/content/subtitles/sintel_en.srt" x-referer-url="https://players.akamai.com/hls/">Sintel (vid:hls, subs:srt)</option>
+          <option value="3" x-video-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest" x-caption-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt" x-referer-url="http://ampdemo.azureedge.net/ams_samplestreams.html">Tears Of Steel (vid:dash, subs:vtt)</option>
+          <option value="4" x-video-url="https://html5demos.com/assets/dizzy.mp4" x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ttml/netflix_ttml_sample.xml#captions.ttml" x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L598">Dizzy (vid:mp4, subs:ttml)</option>
+          <option value="5" x-video-url="https://storage.googleapis.com/exoplayer-test-media-1/gen-3/screens/dash-vod-single-segment/video-avc-baseline-480.mp4" x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ssa/test-subs-position.ass" x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L605">Sample (vid:mp4, subs:ssa)</option>
+          <option value="6" x-video-url="https://archive.org/download/Mozart_Vesperae_Solennes_de_Confessore/Mozart%20-%20Vesper%C3%A6%20Solennes%20de%20Confessore%20%28Cooke%29.m3u" x-caption-url="" x-referer-url="https://archive.org/details/Mozart_Vesperae_Solennes_de_Confessore">Audio Playlist (list:m3u, files:mp3) - Mozart - Vesperæ Solennes de Confessore</option>
+          <option value="7" x-video-url="https://archive.org/download/tntvillage_455310/S%26G/Live/1967%20-%20Live%20From%20New%20York%20City%20%40320/" x-caption-url="" x-referer-url="https://archive.org/details/tntvillage_455310">Audio Playlist (list:html, files:mp3) - Simon &amp; Garfunkel - (1967) Live From New York City</option>
+        </select>
+      </div>
+      <div>
+        <h3>Display Image:</h3>
+        <button><label for="image_file">Choose File</label></button>
+        <input id="image_file" type="file" accept="image/bmp, image/gif, image/jpeg, image/png, image/webp, image/heic, image/heif" />
+      </div>
     </div>
 
   </div>
