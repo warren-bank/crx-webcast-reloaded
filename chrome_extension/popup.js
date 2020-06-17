@@ -9,7 +9,6 @@ angular.module('project', [])
     }
 ])
 .controller('WebCast', function($scope) {
-    var nonsecure_external_website_url = "http://webcast-reloaded.surge.sh/airplay_sender.html";
     var tabId          = undefined;
     var tabUrl         = undefined;
     var base64_referer = undefined;
@@ -31,20 +30,22 @@ angular.module('project', [])
             chrome.storage.sync.get("external_website_url", function(items) {
                 var url = items.external_website_url
                 var screenshots = chrome.extension.getBackgroundPage().tabScreenshots[tabId] || {};
-                var payload, base64_payload, screenshot;
+                var payload, screenshot, base64_payload, hash;
 
                 for(v in links) {
                     payload        = links[v].trim();
-                    base64_payload = encodeLink(payload, true);
                     screenshot     = screenshots[payload] ? screenshots[payload] : "data/noimage.jpg";
+                    base64_payload = encodeLink(payload, true);
+                    hash           = "#/watch/" + base64_payload + (tabUrl ? ("/referer/" + base64_referer) : "");
 
                     $scope.links.push({
-                        "img":     screenshot,
-                        "id":      base64_payload,
-                        "link":    url + "#/watch/" + base64_payload,
-                        "proxy":   url.replace(/\/(index\.html)?$/, '/proxy.html') + "#/watch/" + base64_payload,
-                        "airplay": nonsecure_external_website_url + "#/watch/" + base64_payload + (tabUrl ? ("/referer/" + base64_referer) : ""),
-                        "title":   payload
+                        "img":        screenshot,
+                        "id":         base64_payload,
+                        "video_link": payload,
+                        "entrypoint": url + hash,
+                        "chromecast": url.replace(/\/(index\.html)?$/, '/chromecast_sender.html') + hash,
+                        "airplay":    url.replace(/\/(index\.html)?$/, '/airplay_sender.html')    + hash,
+                        "proxy":      url.replace(/\/(index\.html)?$/, '/proxy.html')             + hash
                     });
                 }
                 $scope.$digest();

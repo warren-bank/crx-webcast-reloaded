@@ -8,14 +8,18 @@
   <script src="popup.js"></script>
 </head>
 <body ng-controller="WebCast">
-  <div class="page-summary">Videos detected on the page #{{links.length}}</div>
-  <div>Click on a video link to play it or send to Chromecast.</div>
+  <div class="page-summary">{{links.length}} videos detected on page.</div>
+  <div>Click link to transfer video to external website in a new tab.</div>
   <div id="links">
   	<div data-ng-repeat="link in links" class="video-item">
   	  <img src="{{link.img}}" class="video-preview" id="{{link.id}}" >
-      <a href="{{link.proxy}}"   data-ng-click="openLink(link.proxy);   $event.stopPropagation();" class="proxy"      title="HLS-Proxy"><img src="data/proxy.png" /></a>
-      <a href="{{link.airplay}}" data-ng-click="openLink(link.airplay); $event.stopPropagation();" class="airplay"    title="AirPlay sender"><img src="data/airplay.png" /></a>
-      <a href="{{link.link}}"    data-ng-click="openLink(link.link);    $event.stopPropagation();" class="video-link" title="{{link.title}}">{{link.title}}</a>
+
+      <a href="{{link.entrypoint}}" data-ng-click="openLink(link.entrypoint); $event.stopPropagation();" class="entrypoint" title="{{link.video_link}}">{{link.video_link}}</a>
+
+      <a href="{{link.chromecast}}" data-ng-click="openLink(link.chromecast); $event.stopPropagation();" class="chromecast" title="Chromecast sender"><img src="data/chromecast.png" /></a>
+      <a href="{{link.airplay}}"    data-ng-click="openLink(link.airplay);    $event.stopPropagation();" class="airplay"    title="AirPlay sender"><img src="data/airplay.png" /></a>
+      <a href="{{link.proxy}}"      data-ng-click="openLink(link.proxy);      $event.stopPropagation();" class="proxy"      title="HLS-Proxy configuration"><img src="data/proxy.png" /></a>
+      <a href="{{link.video_link}}" data-ng-click="openLink(link.video_link); $event.stopPropagation();" class="video-link" title="direct link to video"><img src="data/video_link.png" /></a>
   	</div>
   </div>
   <div><button data-ng-click="clearAll()">Clear videos list</button></div>

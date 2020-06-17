@@ -20,32 +20,6 @@ body {
   color: #B2B2B2;
   font-size: 16px;
   margin-bottom: 10px;
-  
-}
-
-.video-item {
-  overflow: hidden;
-  width: 450px;
-  margin-bottom: 10px;
-}
-
-.video-preview {
-  width: 100px;
-  height: 60px;
-  float: left;
-  display: block;
-  margin-right: 20px;
-}
-
-.video-link {
-  font-size: 11px; 
-  display: block;
-  width: 300px;
-  color: #B2B2B2;
-  float: left;
-  word-wrap: break-word;
-  max-height: 54px;
-  overflow: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -77,27 +51,71 @@ button:hover {
 }
 
 .video-item {
+  overflow: hidden;
+  width: 450px;
+  margin-bottom: 10px;
+}
+
+.video-item {
   position: relative;
   z-index: 0;
 }
-.video-item a.proxy,
-.video-item a.proxy > img,
-.video-item a.airplay,
-.video-item a.airplay > img {
+
+.video-item > img.video-preview {
+  width: 100px;
+  height: 60px;
+  float: left;
+  display: block;
+  margin-right: 20px;
+}
+
+.video-item > a.entrypoint {
+  font-size: 11px; 
+  display: block;
+  width: 300px;
+  color: #B2B2B2;
+  float: left;
+  word-wrap: break-word;
+  max-height: 54px;
+  overflow: hidden;
+}
+
+.video-item > a.chromecast,
+.video-item > a.chromecast > img,
+.video-item > a.airplay,
+.video-item > a.airplay > img,
+.video-item > a.proxy,
+.video-item > a.proxy > img,
+.video-item > a.video-link,
+.video-item > a.video-link > img {
   display: block;
   width: 25px;
   height: 25px;
 }
-.video-item a.proxy,
-.video-item a.airplay {
+
+.video-item > a.chromecast,
+.video-item > a.airplay,
+.video-item > a.proxy,
+.video-item > a.video-link {
   position: absolute;
   z-index: 1;
-  top: 0;
   text-decoration: none;
 }
-.video-item a.proxy {
+
+.video-item > a.chromecast,
+.video-item > a.airplay {
+  top: 0;
+}
+.video-item > a.proxy,
+.video-item > a.video-link {
+  bottom: 0;
+}
+
+.video-item > a.chromecast,
+.video-item > a.proxy {
   left: 0;
 }
-.video-item a.airplay {
+.video-item > a.airplay,
+.video-item > a.video-link {
   left: 75px; /* 100 (width of video-preview) - 25 (width of airplay) */
 }
