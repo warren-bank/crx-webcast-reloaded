@@ -29,54 +29,25 @@ select, button {
   <script>
 
 window.onload  = function() {
-  var $select  = document.querySelector('#players')
+  var $select  = document.querySelector('#endpoints')
   var $button  = document.querySelector('button')
   var $counter = document.querySelector('#countdown')
 
-  var players  = {
-    "1-webcast": {
-      subdirectory: "1-webcast",
-      subtitles: false
-    },
-    "2-visualon": {
-      subdirectory: "2-visualon",
-      subtitles: true
-    },
-    "3-theoplayer": {
-      subdirectory: "3-theoplayer",
-      subtitles: true
-    },
-    "4-clappr": {
-      subdirectory: "4-clappr",
-      subtitles: true
-    },
-    "5-clappr-npm": {
-      subdirectory: "5-clappr-npm",
-      subtitles: true
-    },
-    "6-clappr-dev": {
-      subdirectory: "6-clappr-dev",
-      subtitles: true
-    }
-  }
-
-  var time_remains = (1000)*(10)  // 10 seconds
+  var default_endpoint = 'chromecast_sender.html'
+  var cookie_name      = 'webcast_endpoint_key'
+  var time_remains     = (1000)*(10)  // 10 seconds
   var timer
 
-  var redirect_to_player = function() {
+  var redirect_to_endpoint = function() {
     clearTimeout(timer)
 
-    var player_key = $select.options[$select.selectedIndex].value
-    var player     = players[player_key]
+    var endpoint_key = $select.options[$select.selectedIndex].value
     var url
 
-    if (player) {
-      set_cookie_value('player_key', player_key)
+    if (endpoint_key) {
+      set_cookie_value(cookie_name, endpoint_key)
 
-      url = window.location.href.replace(/(\/index\.html)/i, `/${player.subdirectory || player_key}$1`)
-      if (! player.subtitles){
-        url = url.replace(new RegExp('/subtitle/.*$', 'i'), '')
-      }
+      url = window.location.href.replace(/\/index\.html/i, `/${endpoint_key}`)
       window.location = url
     }
   }
@@ -99,31 +70,30 @@ window.onload  = function() {
     document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname.replace('index.html','')};max-age=${60*60*24*365}`
   }
 
-  var change_player_selection = function(player_key) {
-    var default_player_key = '4-clappr'
+  var change_endpoint_selection = function(endpoint_key) {
     var $option
 
     try {
-      if (player_key) {
-        $option = document.querySelector(`select#players option[value="${player_key}"]`)
+      if (endpoint_key) {
+        $option = document.querySelector(`select#endpoints option[value="${endpoint_key}"]`)
       }
     }
     catch(e){}
 
     if (! $option) {
-      $option = document.querySelector(`select#players option[value="${default_player_key}"]`)
+      $option = document.querySelector(`select#endpoints option[value="${default_endpoint}"]`)
     }
 
     $option.setAttribute('selected', 'selected')
   }
 
-  change_player_selection( get_cookie_value('player_key') )
+  change_endpoint_selection( get_cookie_value(cookie_name) )
 
-  $select.onchange = redirect_to_player
+  $select.onchange = redirect_to_endpoint
 
-  $button.onclick = redirect_to_player
+  $button.onclick = redirect_to_endpoint
 
-  timer = setTimeout(redirect_to_player, time_remains)
+  timer = setTimeout(redirect_to_endpoint, time_remains)
 
   setInterval(reduce_counter, 1000) && reduce_counter(true)
 }
@@ -132,21 +102,18 @@ window.onload  = function() {
 </head>
 <body>
   <div>
-    <div>Select an HTML5 Video Player:</div>
+    <div>Redirect to:</div>
     <div>
-      <select id="players">
-        <option value="1-webcast">WebCast</option>
-        <option value="2-visualon">VisualOn</option>
-        <option value="3-theoplayer">THEOplayer</option>
-        <option value="4-clappr">Clappr</option>
-        <option value="5-clappr-npm">Clappr (npm)</option>
-        <option value="6-clappr-dev">Clappr (github)</option>
+      <select id="endpoints">
+        <option value="chromecast_sender.html">Chromecast sender</option>
+        <option value="airplay_sender.html">AirPlay sender</option>
+        <option value="proxy.html">HLS-Proxy configuration</option>
       </select>
-      <button>Load Player</button>
+      <button>Load</button>
     </div>
 
     <hr />
-    <div>The default player will load in <span id="countdown"></span> seconds..</div>
+    <div>The default endpoint will load in <span id="countdown"></span> seconds..</div>
   </div>
 </body>
 </html>

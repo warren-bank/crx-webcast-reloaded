@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>WebCast-Reloaded via HLS-Proxy</title>
+  <title>HLS-Proxy configuration</title>
   <link rel="icon" href="4-clappr/img/favicon.ico" type="image/x-icon" />
   <style>
 
@@ -59,13 +59,17 @@ window.onload  = function() {
 
   var encoded_urls = {
     video: null,
-    subtitle: null
+    subtitle: null,
+    referer: null
+  }
+  var decoded_urls = {
+    video: null
   }
   var get_encoded_video_url = function() {
     var b64, hash_regex_pattern, matches
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+))?$`
+    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+?))?(?:/referer/(${b64}+?))?$`
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     matches = hash_regex_pattern.exec(window.location.hash)
@@ -73,6 +77,9 @@ window.onload  = function() {
         encoded_urls.video = matches[1]
         if (matches.length > 2 && matches[2]) {
             encoded_urls.subtitle = matches[2]
+        }
+        if (matches.length > 3 && matches[3]) {
+            encoded_urls.referer = matches[3]
         }
     }
   }
@@ -108,6 +115,7 @@ window.onload  = function() {
       return false
     }
 
+    decoded_urls.video = payload
     encoded_urls.video = btoa(payload)
     return true
   }
@@ -160,6 +168,36 @@ window.onload  = function() {
 
     persist_form_fields(host, port, tls)
 
+    var get_base64_proxy_server = function() {
+      // determine if video url already points to the same proxy server
+      let video_server = decoded_urls.video.replace(/^https?:\/\/([^\/]+)\/.*$/i, '$1')
+      let proxy_server = `${host}:${port}`
+
+      if (video_server.toLowerCase() === proxy_server.toLowerCase()) {
+        // video stream is already proxied
+
+        let video_tls = (decoded_urls.video.substr(0,5).toLowerCase() === 'https')
+
+        if (tls && video_tls)
+          return encoded_urls.video
+        if (!tls && !video_tls)
+          return encoded_urls.video
+
+        if (tls && !video_tls)
+          return btoa(decoded_urls.video.replace(/^http:/i, 'https:'))
+        if (!tls && video_tls)
+          return btoa(decoded_urls.video.replace(/^https:/i, 'http:'))
+      }
+      else {
+        let base64_payload                = encoded_urls.video
+        let base64_payload_with_extension = base64_payload + '.m3u8'
+        let proxy_server                  = `${ tls ? 'https' : 'http' }://${host}:${port}/${base64_payload_with_extension}`
+        let base64_proxy_server           = btoa(proxy_server)
+
+        return base64_proxy_server
+      }
+    }
+
     var get_proxied_url = function(base_url) {
     /*
       let payload                       = 'https://XXX/video.m3u8'
@@ -170,11 +208,8 @@ window.onload  = function() {
       let webcast                       = 'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html#/watch/' + base64_proxy_server
     */
 
-      let base64_payload                = encoded_urls.video
-      let base64_payload_with_extension = base64_payload + '.m3u8'
-      let proxy_server                  = `${ tls ? 'https' : 'http' }://${host}:${port}/${base64_payload_with_extension}`
-      let base64_proxy_server           = btoa(proxy_server)
-      let webcast                       = `${base_url}#/watch/${base64_proxy_server}${ encoded_urls.subtitle ? `/subtitle/${encoded_urls.subtitle}` : '' }`
+      let base64_proxy_server = get_base64_proxy_server()
+      let webcast             = `${base_url}#/watch/${base64_proxy_server}${ encoded_urls.subtitle ? `/subtitle/${encoded_urls.subtitle}` : '' }${ encoded_urls.referer ? `/referer/${encoded_urls.referer}` : '' }`
 
       return webcast
     }
@@ -191,7 +226,7 @@ window.onload  = function() {
 </head>
 <body>
   <div class="contents">
-    <h3>HLS-Proxy Configuration:</h3>
+    <h3>HLS-Proxy configuration:</h3>
     <div class="left">
       <label for="host">Host:</label>
       <input id="host" type="text" required size="15" placeholder="192.168.0.100" />
