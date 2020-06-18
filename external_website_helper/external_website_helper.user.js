@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.1.0
+// @version      0.2.0
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.surge.sh/*
 // @match        *://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
@@ -21,7 +21,25 @@
 var user_options = {
   "script_enabled":             true,
   "script_injection_delay_ms":  0,
-  "prioritize_cast_over_watch": true
+  "webcast_reloaded_external_website_helper": {
+    "workaround_issue_01": {
+      "script_enabled":             true,
+      "prioritize_cast_over_watch": true
+    },
+    "prepopulate_incognito_forms": {
+      "script_enabled":             true,
+      "airplay_sender": {
+        "host":                     "192.168.0.100",
+        "port":                     "8192",
+        "tls":                      false
+      },
+      "proxy": {
+        "host":                     "192.168.0.100",
+        "port":                     "8080",
+        "tls":                      false
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -191,7 +209,7 @@ var workaround_issue_01 = function(){
       // cast:  YES
       // watch: NO  (not allowed to load insecure content from a secure context)
 
-      if (!window.prioritize_cast_over_watch)
+      if (!window.webcast_reloaded_external_website_helper.workaround_issue_01.prioritize_cast_over_watch)
         redirect(endpoint)
 
       // =============================
@@ -211,7 +229,7 @@ var workaround_issue_01 = function(){
       // watch: YES
 
       if (chrome_major_version >= 72) {
-        if (window.prioritize_cast_over_watch)
+        if (window.webcast_reloaded_external_website_helper.workaround_issue_01.prioritize_cast_over_watch)
           redirect(endpoint)
 
         // =============================
@@ -253,6 +271,96 @@ var workaround_issue_01 = function(){
 
 // ----------------------------------------------------------------------------- </workaround_issue_01>
 
+var prepopulate_incognito_forms = function(){
+
+  // ===========================================================================
+
+  const get_endpoint = () => {
+    const endpoint = {
+      airplay_sender: false,
+      proxy:          false
+    }
+
+    const pathname = window.location.pathname.trim().toLowerCase()
+
+    if (pathname.endsWith('airplay_sender.html'))
+      endpoint.airplay_sender = true
+    else if (pathname.endsWith('proxy.html'))
+      endpoint.proxy = true
+
+    return endpoint
+  }
+
+  // ===========================================================================
+
+  const update_form_field_textbox = (id, val) => {
+    const $field = document.getElementById(id)
+
+    if ($field)
+      $field.value = val
+  }
+
+  const update_form_field_checkbox = (id, val) => {
+    if (!val)
+      return
+
+    const $field = document.getElementById(id)
+
+    if ($field)
+      $field.checked = true
+  }
+
+  const process_airplay_sender = (configs) => {
+    update_form_field_textbox( 'airplay_host', configs.host)
+    update_form_field_textbox( 'airplay_port', configs.port)
+    update_form_field_checkbox('airplay_tls',  configs.tls)
+  }
+
+  const process_proxy = (configs) => {
+    update_form_field_textbox( 'host', configs.host)
+    update_form_field_textbox( 'port', configs.port)
+    update_form_field_checkbox('tls',  configs.tls)
+  }
+
+  // ===========================================================================
+
+  const process_page = () => {
+    const endpoint = get_endpoint()
+
+    if (endpoint.airplay_sender) {
+      process_airplay_sender(window.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.airplay_sender)
+      return
+    }
+
+    if (endpoint.proxy) {
+      process_proxy(window.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.proxy)
+      return
+    }
+  }
+
+  const process_page_in_incognito_window = () => {
+    const fs = window.RequestFileSystem || window.webkitRequestFileSystem
+
+    if (!fs)
+      return
+
+    const callback = (is_incognito) => {
+      if (is_incognito)
+        process_page()
+    }
+
+    fs(window.TEMPORARY,
+      100,
+      callback.bind(undefined, false),
+      callback.bind(undefined, true)
+    )
+  }
+
+  process_page_in_incognito_window()
+}
+
+// ----------------------------------------------------------------------------- </prepopulate_incognito_forms>
+
 var get_hash_code = function(str){
   var hash, i, char
   hash = 0
@@ -283,14 +391,19 @@ var inject_function = function(_function){
 
 var inject_options = function(){
   var _function = `function(){
-    window.prioritize_cast_over_watch = ${user_options['prioritize_cast_over_watch']}
+    window.webcast_reloaded_external_website_helper = ${JSON.stringify(user_options['webcast_reloaded_external_website_helper'])}
   }`
   inject_function(_function)
 }
 
 var bootstrap = function(){
   inject_options()
-  inject_function(workaround_issue_01)
+
+  if (user_options.webcast_reloaded_external_website_helper.workaround_issue_01.script_enabled)
+    inject_function(workaround_issue_01)
+
+  if (user_options.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.script_enabled)
+    inject_function(prepopulate_incognito_forms)
 }
 
 if (user_options['script_enabled']) {
