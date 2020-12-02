@@ -40,6 +40,10 @@ body .contents div:last-child {
   margin-bottom: 0;
 }
 
+body .contents textarea {
+  width: 100%;
+}
+
 body .contents .oneline {
   height: 2em;
   line-height: 2em;
@@ -52,11 +56,11 @@ body .contents .oneline.fullwidth > * {
   width: 100%;
 }
 
-body .contents div.left {
+body .contents .left {
   text-align: left;
 }
 
-body .contents div.right {
+body .contents .right {
   text-align: right;
 }
 
@@ -66,8 +70,12 @@ body .contents div.flex {
   flex-wrap: nowrap;
 }
 body .contents div.flex > div {
-  flex-grow: 1;
+  flex-grow: 0;
   flex-shrink: 0;
+}
+body .contents div.flex > div:first-child {
+  flex-grow: 1;
+  padding: 0 1em;
 }
 
 input, button {
@@ -111,12 +119,17 @@ window.onload  = () => {
   const $video_url               = document.querySelector('input#video_url')
   const $caption_url             = document.querySelector('input#caption_url')
   const $referer_url             = document.querySelector('input#referer_url')
+  const $start_position_hours    = document.querySelector('input#start_position_hours')
+  const $start_position_minutes  = document.querySelector('input#start_position_minutes')
+  const $start_position_seconds  = document.querySelector('input#start_position_seconds')
   const $play                    = document.querySelector('button#play')
   const $queue                   = document.querySelector('button#queue')
   const $pause                   = document.querySelector('button#pause')
   const $resume                  = document.querySelector('button#resume')
   const $captions_on             = document.querySelector('button#captions_on')
   const $captions_off            = document.querySelector('button#captions_off')
+  const $previous                = document.querySelector('button#previous')
+  const $next                    = document.querySelector('button#next')
   const $stop                    = document.querySelector('button#stop')
   const $seek_hours              = document.querySelector('input#seek_hours')
   const $seek_minutes            = document.querySelector('input#seek_minutes')
@@ -138,8 +151,9 @@ window.onload  = () => {
   const $rate                    = document.querySelector('button#rate')
   const $volume_factor           = document.querySelector('input#volume_factor')
   const $volume                  = document.querySelector('button#volume')
-  const $previous                = document.querySelector('button#previous')
-  const $next                    = document.querySelector('button#next')
+  const $toast_message           = document.querySelector('textarea#toast_message')
+  const $show_toast              = document.querySelector('button#show_toast')
+  const $show_player             = document.querySelector('button#show_player')
   const $sample_videos           = document.querySelector('select#sample_videos')
   const $image_file              = document.querySelector('input#image_file')
 
@@ -502,12 +516,18 @@ window.onload  = () => {
     const txt = $caption_url.value
     const ref = $referer_url.value
 
+    const hrs = get_value($start_position_hours,   0)    // const hrs = parseInt($start_position_hours.value,   10) || 0
+    const min = get_value($start_position_minutes, 0)    // const min = parseInt($start_position_minutes.value, 10) || 0
+    const sec = get_value($start_position_seconds, 0)    // const sec = parseInt($start_position_seconds.value, 10) || 0
+
+    const offset = (sec) + (min * 60) + (hrs * 60 * 60)
+
     if (!url) {
       alert('Video URL is required')
       return
     }
 
-    let data = `Content-Location: ${url}\nStart-Position: 0`
+    let data = `Content-Location: ${url}\nStart-Position: ${offset}`
     if (txt) {
       data += `\nCaption-Location: ${txt}`
     }
@@ -620,6 +640,20 @@ window.onload  = () => {
     send_message('/show-captions?toggle=0', null)
   }
 
+  $previous.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    send_message('/previous', null)
+  }
+
+  $next.onclick = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    send_message('/next', null)
+  }
+
   $stop.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
@@ -713,18 +747,29 @@ window.onload  = () => {
     send_message(path, data)
   }
 
-  $previous.onclick = (event) => {
+  $show_toast.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    send_message('/previous', null)
+    const msg = $toast_message.value.trim()
+
+    if (!msg)
+      return
+
+    const path = '/show-toast'
+    const data = msg
+
+    send_message(path, data)
   }
 
-  $next.onclick = (event) => {
+  $show_player.onclick = (event) => {
     event.preventDefault()
     event.stopPropagation()
 
-    send_message('/next', null)
+    const path = '/show-player'
+    const data = null
+
+    send_message(path, data)
   }
 
   $sample_videos.onchange = (event) => {
@@ -735,11 +780,21 @@ window.onload  = () => {
     const url  = item.getAttribute('x-video-url')
     const txt  = item.getAttribute('x-caption-url')
     const ref  = item.getAttribute('x-referer-url')
+    const pos  = item.getAttribute('x-start-position') || '00:00:00'
 
     if (url) {
       $video_url.value   = url
       $caption_url.value = (txt) ? txt : ''
       $referer_url.value = (ref) ? ref : ''
+
+      const pos_chunks = pos.split(':')
+      const hrs = (pos_chunks.length >= 3) ? parseInt(pos_chunks[pos_chunks.length - 3], 10) : 0
+      const min = (pos_chunks.length >= 2) ? parseInt(pos_chunks[pos_chunks.length - 2], 10) : 0
+      const sec = (pos_chunks.length >= 1) ? parseInt(pos_chunks[pos_chunks.length - 1], 10) : 0
+
+      $start_position_hours.value   = (hrs) ? hrs : ''
+      $start_position_minutes.value = (min) ? min : ''
+      $start_position_seconds.value = (sec) ? sec : ''
     }
   }
 
@@ -766,38 +821,88 @@ window.onload  = () => {
   <div class="contents">
     <h3>Network Address of AirPlay Receiver:</h3>
     <div>
-      <div class="left oneline">
-        <label for="airplay_host">Host:</label>
-        <input id="airplay_host" type="text" size="15" placeholder="192.168.0.100" />
-      </div>
-      <div class="left oneline">
-        <label for="airplay_port">Port:</label>
-        <input id="airplay_port" type="number" x-type="range" x-min="1" x-max="999999" x-step="1" size="6" placeholder="8192" />
-      </div>
-      <div class="left oneline">
-        <label for="airplay_tls">HTTPS:</label>
-        <input id="airplay_tls" type="checkbox" />
-      </div>
+      <table align="center">
+        <tr>
+          <td class="oneline right">
+            <label for="airplay_host">Host:</label>
+          </td>
+          <td class="oneline left">
+            <input id="airplay_host" type="text" size="15" placeholder="192.168.0.100" />
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline right">
+            <label for="airplay_port">Port:</label>
+          </td>
+          <td class="oneline left">
+            <input id="airplay_port" type="number" x-type="range" x-min="1" x-max="999999" x-step="1" size="6" placeholder="8192" />
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline right">
+            <label for="airplay_tls">HTTPS:</label>
+          </td>
+          <td class="oneline left">
+            <input id="airplay_tls" type="checkbox" />
+          </td>
+        </tr>
+      </table>
     </div>
     <hr />
     <h3>Network Location of Video Media:</h3>
     <div>
-      <div class="oneline right">
-        <label for="video_url">Video URL:</label>
-        <input id="video_url" type="url" size="100" placeholder="https://example.com/master.m3u8" />
-      </div>
-      <div class="oneline right">
-        <label for="caption_url">Caption URL:</label>
-        <input id="caption_url" type="url" size="100" placeholder="https://example.com/subtitles.srt" />
-      </div>
-      <div class="oneline right">
-        <label for="referer_url">Referer URL:</label>
-        <input id="referer_url" type="url" size="100" placeholder="https://example.com/videos.html" />
-      </div>
-      <div class="oneline">
-        <button id="play">Play</button>
-        <button id="queue">Add to Queue</button>
-      </div>
+      <table align="center">
+        <tr>
+          <td class="oneline right">
+            <label for="video_url">Video URL:</label>
+          </td>
+          <td class="oneline left">
+            <input id="video_url" type="url" size="100" placeholder="https://example.com/master.m3u8" />
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline right">
+            <label for="caption_url">Caption URL:</label>
+          </td>
+          <td class="oneline left">
+            <input id="caption_url" type="url" size="100" placeholder="https://example.com/subtitles.srt" />
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline right">
+            <label for="referer_url">Referer URL:</label>
+          </td>
+          <td class="oneline left">
+            <input id="referer_url" type="url" size="100" placeholder="https://example.com/videos.html" />
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline right">
+            <label>Start Position:</label>
+          </td>
+          <td class="oneline left">
+            <table align="left">
+              <tr>
+                <td class="oneline">
+                  <input id="start_position_hours"   type="number" x-type="range" x-min="0" x-max="24" x-step="1" size="3" placeholder="hour" /> : 
+                </td>
+                <td class="oneline">
+                  <input id="start_position_minutes" type="number" x-type="range" x-min="0" x-max="59" x-step="1" size="3" placeholder="min" /> : 
+                </td>
+                <td class="oneline">
+                  <input id="start_position_seconds" type="number" x-type="range" x-min="0" x-max="59" x-step="1" size="3" placeholder="sec" />
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="oneline" colspan=2>
+            <button id="play">Play</button>
+            <button id="queue">Add to Queue</button>
+          </td>
+        </tr>
+      </table>
     </div>
     <hr />
     <h3>Remote Control of Video Playback:</h3>
@@ -911,39 +1016,58 @@ window.onload  = () => {
       </table>
     </div>
     <hr />
+    <h3>User Interface:</h3>
+    <div class="flex">
+      <div>
+        <textarea id="toast_message" rows="5"></textarea>
+      </div>
+      <div>
+        <div><button id="show_toast">Show Toast</button></div>
+        <div><button id="show_player">Show Player</button></div>
+      </div>
+    </div>
+    <hr />
     <div class="flex">
       <div>
         <h3>Sample Videos:</h3>
         <select id="sample_videos">
           <option value="0">-- video --</option>
-          <option value="1" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8"
-                            x-caption-url="https://github.com/warren-bank/Android-ExoPlayer-AirPlay-Receiver/raw/v02/tests/.captions/counter.workaround-exoplayer-issue-7122.srt"
-                            x-referer-url="https://players.akamai.com/hls/"
-                           >Big Buck Bunny (vid:hls, subs:srt)</option>
-          <option value="2" x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8"
-                            x-caption-url="https://durian.blender.org/wp-content/content/subtitles/sintel_en.srt"
-                            x-referer-url="https://players.akamai.com/hls/"
-                           >Sintel (vid:hls, subs:srt)</option>
-          <option value="3" x-video-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest"
-                            x-caption-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt"
-                            x-referer-url="http://ampdemo.azureedge.net/ams_samplestreams.html"
-                           >Tears Of Steel (vid:dash, subs:vtt)</option>
-          <option value="4" x-video-url="https://html5demos.com/assets/dizzy.mp4"
-                            x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ttml/netflix_ttml_sample.xml#captions.ttml"
-                            x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L598"
-                           >Dizzy (vid:mp4, subs:ttml)</option>
-          <option value="5" x-video-url="https://storage.googleapis.com/exoplayer-test-media-1/gen-3/screens/dash-vod-single-segment/video-avc-baseline-480.mp4"
-                            x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ssa/test-subs-position.ass"
-                            x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L605"
-                           >Sample (vid:mp4, subs:ssa)</option>
-          <option value="6" x-video-url="https://archive.org/download/Mozart_Vesperae_Solennes_de_Confessore/Mozart%20-%20Vesper%C3%A6%20Solennes%20de%20Confessore%20%28Cooke%29.m3u"
-                            x-caption-url=""
-                            x-referer-url="https://archive.org/details/Mozart_Vesperae_Solennes_de_Confessore"
-                           >Audio Playlist (list:m3u, files:mp3) - Mozart - Vesperæ Solennes de Confessore</option>
-          <option value="7" x-video-url="https://archive.org/download/tntvillage_455310/S%26G/Live/1967%20-%20Live%20From%20New%20York%20City%20%40320/"
-                            x-caption-url=""
-                            x-referer-url="https://archive.org/details/tntvillage_455310"
-                           >Audio Playlist (list:html, files:mp3) - Simon &amp; Garfunkel - (1967) Live From New York City</option>
+          <option value="1"
+                  x-video-url="https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8"
+                  x-caption-url="https://github.com/warren-bank/Android-ExoPlayer-AirPlay-Receiver/raw/v02/tests/.captions/counter.workaround-exoplayer-issue-7122.srt"
+                  x-referer-url="https://players.akamai.com/hls/"
+                  x-start-position="00:00:30"
+                 >Big Buck Bunny (vid:hls, subs:srt, pos:30s)</option>
+          <option value="2"
+                  x-video-url="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8"
+                  x-caption-url="https://durian.blender.org/wp-content/content/subtitles/sintel_en.srt"
+                  x-referer-url="https://players.akamai.com/hls/"
+                 >Sintel (vid:hls, subs:srt)</option>
+          <option value="3"
+                  x-video-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TearsOfSteel.ism/manifest"
+                  x-caption-url="http://amssamples.streaming.mediaservices.windows.net/bc57e088-27ec-44e0-ac20-a85ccbcd50da/TOS-en.vtt"
+                  x-referer-url="http://ampdemo.azureedge.net/ams_samplestreams.html"
+                 >Tears Of Steel (vid:dash, subs:vtt)</option>
+          <option value="4"
+                  x-video-url="https://html5demos.com/assets/dizzy.mp4"
+                  x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ttml/netflix_ttml_sample.xml#captions.ttml"
+                  x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L598"
+                 >Dizzy (vid:mp4, subs:ttml)</option>
+          <option value="5"
+                  x-video-url="https://storage.googleapis.com/exoplayer-test-media-1/gen-3/screens/dash-vod-single-segment/video-avc-baseline-480.mp4"
+                  x-caption-url="https://storage.googleapis.com/exoplayer-test-media-1/ssa/test-subs-position.ass"
+                  x-referer-url="https://github.com/google/ExoPlayer/blob/r2.11.3/demos/main/src/main/assets/media.exolist.json#L605"
+                 >Sample (vid:mp4, subs:ssa)</option>
+          <option value="6"
+                  x-video-url="https://archive.org/download/Mozart_Vesperae_Solennes_de_Confessore/Mozart%20-%20Vesper%C3%A6%20Solennes%20de%20Confessore%20%28Cooke%29.m3u"
+                  x-caption-url=""
+                  x-referer-url="https://archive.org/details/Mozart_Vesperae_Solennes_de_Confessore"
+                 >Audio Playlist (list:m3u, files:mp3) - Mozart - Vesperæ Solennes de Confessore</option>
+          <option value="7"
+                  x-video-url="https://archive.org/download/tntvillage_455310/S%26G/Live/1967%20-%20Live%20From%20New%20York%20City%20%40320/"
+                  x-caption-url=""
+                  x-referer-url="https://archive.org/details/tntvillage_455310"
+                 >Audio Playlist (list:html, files:mp3) - Simon &amp; Garfunkel - (1967) Live From New York City</option>
         </select>
       </div>
       <div>
