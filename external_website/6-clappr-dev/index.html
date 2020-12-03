@@ -26,7 +26,15 @@
     <div class="video-player-info">
       <i class="material-icons" id="destroy_videoplayer">highlight_off</i>
       <span class="video-player-info-status"></span>
-      <i class="material-icons" id="toggle_chromecast_connection_state">cast</i>
+      <div class="right">
+        <div id="seek_to">
+          <input type="text" id="seek_to_hh" size="2" placeholder="HH" /> :
+          <input type="text" id="seek_to_mm" size="2" placeholder="MM" /> :
+          <input type="text" id="seek_to_ss" size="4" placeholder="SS" />
+          <button id="seek_to_time">Seek</button>
+        </div>
+        <i class="material-icons" id="toggle_chromecast_connection_state">cast</i>
+      </div>
     </div>
   </div>
 </body>

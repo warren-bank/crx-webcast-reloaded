@@ -23,6 +23,14 @@ body {
   margin-top: 1.5em;
   height: 24px;
 }
+.webcast-video-player .video-player-info * {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 24px;
+}
+.webcast-video-player .video-player-info > .right {
+  float: right;
+}
 
 .webcast-video-player .video-player-info i.material-icons {
   cursor: pointer;
@@ -31,13 +39,7 @@ body {
   margin-right: 0.2em;
 }
 .webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state {
-  display: inline-block;
-  float: right;
-}
-
-.webcast-video-player .video-player-info * {
-  vertical-align: middle;
-  line-height: 24px;
+  margin-left: 1.2em;
 }
 
 .webcast-video-player .video-player-info .video-player-info-status a,
@@ -47,4 +49,13 @@ body {
 }
 .webcast-video-player .video-player-info .video-player-info-status a:hover {
   border-bottom: 1px #333 dotted;
+}
+
+.webcast-video-player .video-player-info #seek_to {
+}
+.webcast-video-player .video-player-info #seek_to input {
+  text-align: center;
+}
+.webcast-video-player .video-player-info #seek_to button#seek_to_time {
+  margin-left: 0.2em;
 }

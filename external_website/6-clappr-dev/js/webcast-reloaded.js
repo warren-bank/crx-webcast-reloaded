@@ -32,6 +32,23 @@ var destroy_videoplayer = function(skip_reload) {
     }
 }
 
+var seek_to_time = function() {
+    if (webcast_video_player) {
+        var hh = parseInt(document.getElementById('seek_to_hh').value, 10)
+        var mm = parseInt(document.getElementById('seek_to_mm').value, 10)
+        var ss = parseInt(document.getElementById('seek_to_ss').value, 10)
+
+        if (isNaN(hh)) hh = 0
+        if (isNaN(mm)) mm = 0
+        if (isNaN(ss)) ss = 0
+
+        var secs = ss + (mm * 60) + (hh * 60 * 60)
+
+        if (secs > 0)
+          webcast_video_player.seek(secs)
+    }
+}
+
 var initialize_videoplayer = function(URL_video, URL_subtitle) {
     if (! URL_video) return
 
@@ -93,6 +110,8 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
     document.querySelector('.webcast-video-player .video-player-info .video-player-info-status').innerHTML = info
 
     document.querySelector('.webcast-video-player .video-player-info i.material-icons#destroy_videoplayer').onclick = destroy_videoplayer
+
+    document.querySelector('.webcast-video-player .video-player-info #seek_to button#seek_to_time').onclick = seek_to_time
 
     document.querySelector('.webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state').onclick = toggle_chromecast_connection_state
 }
