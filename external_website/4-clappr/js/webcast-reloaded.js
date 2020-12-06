@@ -49,6 +49,23 @@ var seek_to_time = function() {
     }
 }
 
+var initialize_subtitles = function() {
+    // unfortunately, the Chromecast plugin still doesn't support subtitles
+
+    var video = document.querySelector('video')
+    if (!video) return
+
+    var textTracks = video.textTracks
+    if (!textTracks || !textTracks.length) return
+
+    for (var i=0; i < textTracks.length; i++) {
+        if (textTracks[i].mode === 'showing') return
+    }
+
+    // turn on the first subtitles text track (which is always "Disabled") to display the "CC" icon/menu in the media-control panel
+    textTracks[0].mode = 'showing'
+}
+
 var initialize_videoplayer = function(URL_video, URL_subtitle) {
     if (! URL_video) return
 
@@ -73,11 +90,15 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
             kind:    'subtitles',
             src:     URL_subtitle
         }],
+        events: {
+            onPlay:  initialize_subtitles
+        },
         poster:      'img/poster.jpg'
     }
 
     if (! URL_subtitle) {
         delete settings.externalTracks
+        delete settings.events
     }
 
     var types = [
