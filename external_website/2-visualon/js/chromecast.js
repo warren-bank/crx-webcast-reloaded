@@ -67,13 +67,13 @@ var destroy_videoplayer = function() {
 var initialize_videoplayer = function(URL_video, URL_subtitle) {
     if (! URL_video) return;
 
-    var info = `now playing: <a href="${URL_video}">video</a>`
+    var info = `Now Playing: <a href="${URL_video}">Video</a>`
 
     Chromecast_stream.links[0].uri = URL_video;
     chromecastUI.onload();
     chromecastUI.open(Chromecast_stream);
     if (URL_subtitle) {
-        info += ` with <a href="${URL_subtitle}">subtitles</a>`
+        info += ` with <a href="${URL_subtitle}">Subtitles</a>`
 
         External_Subtitle_info.uri = URL_subtitle;
         chromecastUI.loadSubtitle(External_Subtitle_info);

@@ -698,6 +698,7 @@ body {
 .player-info a:visited {
   text-decoration: none;
   color: #333;
+  font-weight: bold;
 }
 .player-info a:hover {
   border-bottom: 1px #333 dotted;

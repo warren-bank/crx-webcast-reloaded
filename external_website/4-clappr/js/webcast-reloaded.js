@@ -104,9 +104,9 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
 
     // display direct links to the video stream and subtitle sources
     var info
-    info = `now playing: <a href="${URL_video}">video</a>`
+    info = `Now Playing: <a href="${URL_video}">Video</a>`
     if (URL_subtitle) {
-        info += ` with <a href="${URL_subtitle}">subtitles</a>`
+        info += ` with <a href="${URL_subtitle}">Subtitles</a>`
     }
 
     document.querySelector('.webcast-video-player .video-player-info .video-player-info-status').innerHTML = info
