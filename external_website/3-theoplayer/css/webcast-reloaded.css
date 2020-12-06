@@ -29,9 +29,15 @@ body {
 .webcast-video-player .video-player-info i.material-icons#destroy_videoplayer {
   margin-right: 0.2em;
 }
+.webcast-video-player .video-player-info i.material-icons#destroy_videoplayer:hover {
+  color: #f00;
+}
 .webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state {
   display: inline-block;
   float: right;
+}
+.webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state:hover {
+  color: #666;
 }
 
 .webcast-video-player .video-player-info * {

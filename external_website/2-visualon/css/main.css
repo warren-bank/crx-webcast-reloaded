@@ -713,3 +713,6 @@ body {
   cursor: pointer;
   margin-right: 0.2em;
 }
+.player-info i.material-icons:hover {
+  color: #f00;
+}
