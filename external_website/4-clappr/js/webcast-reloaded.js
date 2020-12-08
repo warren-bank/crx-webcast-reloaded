@@ -72,32 +72,32 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
     var settings = {
         source:      URL_video,
         mimeType:    '',
+        poster:      'img/poster.jpg',
         width:       '100%',
         height:      '100%',
         autoPlay:    false,
         controls:    false,
-    //  crossOrigin: 'anonymous',
         parentId:    '#video-player',
-        plugins: {
-            core:    [ChromecastPlugin, LevelSelector]
-        },
+        plugins:    [ChromecastPlugin, LevelSelector],
         chromecast: {
             appId:   '9DFB77C0'
         },
-        externalTracks: [{
-            lang:    'en-US',
-            label:   'English',
-            kind:    'subtitles',
-            src:     URL_subtitle
-        }],
+        playback: {
+          //crossOrigin: 'anonymous',
+            externalTracks: [{
+                lang:    'en-US',
+                label:   'English',
+                kind:    'subtitles',
+                src:     URL_subtitle
+            }]
+        },
         events: {
             onPlay:  initialize_subtitles
-        },
-        poster:      'img/poster.jpg'
+        }
     }
 
     if (! URL_subtitle) {
-        delete settings.externalTracks
+        delete settings.playback.externalTracks
         delete settings.events
     }
 

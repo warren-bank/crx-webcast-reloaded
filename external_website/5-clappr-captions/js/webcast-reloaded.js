@@ -49,54 +49,35 @@ var seek_to_time = function() {
     }
 }
 
-var initialize_subtitles = function() {
-    // unfortunately, the Chromecast plugin still doesn't support subtitles
-
-    var video = document.querySelector('video')
-    if (!video) return
-
-    var textTracks = video.textTracks
-    if (!textTracks || !textTracks.length) return
-
-    for (var i=0; i < textTracks.length; i++) {
-        if (textTracks[i].mode === 'showing') return
-    }
-
-    // turn on the first subtitles text track (which is always "Disabled") to display the "CC" icon/menu in the media-control panel
-    textTracks[0].mode = 'showing'
-}
-
 var initialize_videoplayer = function(URL_video, URL_subtitle) {
     if (! URL_video) return
 
     var settings = {
         source:      URL_video,
         mimeType:    '',
+        poster:      'img/poster.jpg',
         width:       '100%',
         height:      '100%',
         autoPlay:    false,
         controls:    false,
-    //  crossOrigin: 'anonymous',
         parentId:    '#video-player',
-        plugins:    [ChromecastPlugin, LevelSelector],
+        plugins:    [ChromecastCaptionsPlugin, LevelSelector],
         chromecast: {
             appId:   '9DFB77C0'
         },
-        externalTracks: [{
-            lang:    'en-US',
-            label:   'English',
-            kind:    'subtitles',
-            src:     URL_subtitle
-        }],
-        events: {
-            onPlay:  initialize_subtitles
-        },
-        poster:      'img/poster.jpg'
+        playback: {
+          //crossOrigin: 'anonymous',
+            externalTracks: [{
+                lang:    'en-US',
+                label:   'English',
+                kind:    'subtitles',
+                src:     URL_subtitle
+            }]
+        }
     }
 
     if (! URL_subtitle) {
-        delete settings.externalTracks
-        delete settings.events
+        delete settings.playback.externalTracks
     }
 
     var types = [
