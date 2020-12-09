@@ -11,5 +11,5 @@ https://cdn.jsdelivr.net/npm/clappr-chromecast-plugin@0.1.1/dist/clappr-chromeca
   0.1.1
 
 https://github.com/warren-bank/clappr-chromecast-captions-plugin/releases
-https://cdn.jsdelivr.net/gh/warren-bank/clappr-chromecast-captions-plugin@1.0.0/es5/clappr-chromecast-captions-plugin.min.js
-  1.0.0
+https://cdn.jsdelivr.net/gh/warren-bank/clappr-chromecast-captions-plugin@2.0.0/es5/clappr-chromecast-captions-plugin.min.js
+  2.0.0
