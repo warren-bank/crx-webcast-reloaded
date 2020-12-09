@@ -19,6 +19,11 @@ body {
   height: 405px;
 }
 
+.webcast-video-player #video-player .chromecast-playback .chromecast-playback-background {
+  background-size: cover !important;
+  background-position: center !important;
+}
+
 .webcast-video-player .video-player-info {
   margin-top: 1.5em;
   height: 24px;
