@@ -109,7 +109,7 @@ const process_clear_videos = (event) => {
   event.stopPropagation()
 
   state.bg_window.clear_videos( state.tab_id, true )
-  window.close()
+  close_popup()
 }
 
 const App = ({videos}) => {
@@ -163,8 +163,13 @@ const get_props = () => {
 const draw_list = () => {
   const props = get_props()
 
+  if (props.videos === state.videos)
+    return
+
   if (!props.videos || !props.videos.length)
-    window.close()
+    return close_popup()
+
+  state.videos = props.videos
 
   ReactDOM.render(
     <App {...props} />,
@@ -172,15 +177,26 @@ const draw_list = () => {
   )
 }
 
+const close_popup = () => {
+  if (state.timer)
+    clearInterval(state.timer)
+
+  state.timer     = null
+  state.videos    = null
+  state.bg_window = null
+
+  window.close()
+}
+
 const initialize_popup = async () => {
   try {
     await initialize_state()
 
     draw_list()
-    setInterval(draw_list, 2500)
+    state.timer = setInterval(draw_list, 500)
   }
   catch(e) {
-    window.close()
+    close_popup()
   }
 }
 

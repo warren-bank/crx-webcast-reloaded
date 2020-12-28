@@ -149,7 +149,7 @@
     event.preventDefault();
     event.stopPropagation();
     state.bg_window.clear_videos(state.tab_id, true);
-    window.close();
+    close_popup();
   };
 
   var App = function App(_ref2) {
@@ -225,8 +225,18 @@
 
   var draw_list = function draw_list() {
     var props = get_props();
-    if (!props.videos || !props.videos.length) window.close();
+    if (props.videos === state.videos) return;
+    if (!props.videos || !props.videos.length) return close_popup();
+    state.videos = props.videos;
     ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
+  };
+
+  var close_popup = function close_popup() {
+    if (state.timer) clearInterval(state.timer);
+    state.timer = null;
+    state.videos = null;
+    state.bg_window = null;
+    window.close();
   };
 
   var initialize_popup = function () {
@@ -241,14 +251,14 @@
 
             case 3:
               draw_list();
-              setInterval(draw_list, 2500);
+              state.timer = setInterval(draw_list, 500);
               _context2.next = 10;
               break;
 
             case 7:
               _context2.prev = 7;
               _context2.t0 = _context2["catch"](0);
-              window.close();
+              close_popup();
 
             case 10:
             case "end":
