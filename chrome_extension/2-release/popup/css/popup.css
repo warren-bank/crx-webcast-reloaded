@@ -1,0 +1,143 @@
+::-webkit-scrollbar {
+  height: 12px;
+  width: 12px;
+  background: #fbfbfb;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background: #f5f5f5;
+}
+::-webkit-scrollbar-corner {
+  background: #fbfbfb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  padding: 10px;
+  background-color: #fff;
+  font-family: "Verdana", sans-serif;
+  font-size: 14px;
+  color: #999;
+}
+
+#app > h3 {
+  color: #000;
+  font-size: 1.25em;
+}
+#app > h4 {
+  font-size: 1.10em;
+}
+#app > h3 + h4 {
+  margin-top: 10px
+}
+#app > #links {
+  margin: 10px 0;
+  max-height: 426px; /* multiple of 71 (height of video-item): (71)(6) */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#app > #links > .video-item {
+  display: block;
+  width: 550px;
+  height: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 5px;
+}
+#app > #links > .video-item:last-child {
+  border-bottom: none;
+}
+
+#app > #links > .video-item > .icons-container,
+#app > #links > .video-item > .text-container {
+  display: inline-block;
+  height: 60px;
+  max-height: 60px;
+  vertical-align: top;
+}
+
+#app > #links > .video-item > .icons-container {
+  position: relative;
+  z-index: 0;
+  width: 60px;
+  margin-right: 10px;
+  background-color: #d7ecf5;
+  border: 1px solid #000;
+  border-radius: 14px;
+}
+
+#app > #links > .video-item > .text-container {
+  width: 480px; /* 550 (width of video-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
+}
+#app > #links > .video-item > .text-container > a {
+  color: inherit;
+  text-decoration: none;
+  word-wrap: break-word;
+  font-size: 1em;
+  line-height: 60px;
+}
+#app > #links > .video-item > .text-container > a:hover {
+  color: #000;
+}
+
+#app > #links > .video-item > .icons-container > a.chromecast,
+#app > #links > .video-item > .icons-container > a.chromecast > img,
+#app > #links > .video-item > .icons-container > a.airplay,
+#app > #links > .video-item > .icons-container > a.airplay > img,
+#app > #links > .video-item > .icons-container > a.proxy,
+#app > #links > .video-item > .icons-container > a.proxy > img,
+#app > #links > .video-item > .icons-container > a.video-link,
+#app > #links > .video-item > .icons-container > a.video-link > img {
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+
+#app > #links > .video-item > .icons-container > a.chromecast,
+#app > #links > .video-item > .icons-container > a.airplay,
+#app > #links > .video-item > .icons-container > a.proxy,
+#app > #links > .video-item > .icons-container > a.video-link {
+  position: absolute;
+  z-index: 1;
+  text-decoration: none;
+}
+
+#app > #links > .video-item > .icons-container > a.chromecast,
+#app > #links > .video-item > .icons-container > a.airplay {
+  top: 0;
+}
+#app > #links > .video-item > .icons-container > a.proxy,
+#app > #links > .video-item > .icons-container > a.video-link {
+  bottom: 0;
+}
+
+#app > #links > .video-item > .icons-container > a.chromecast,
+#app > #links > .video-item > .icons-container > a.proxy {
+  left: 0;
+}
+#app > #links > .video-item > .icons-container > a.airplay,
+#app > #links > .video-item > .icons-container > a.video-link {
+  right: 0;
+}
+
+#app > div > button {
+  cursor: pointer;
+  padding: 10px;
+  font-size: 1.25em;
+  background: #eee;
+  color: #000;
+  border: 2px #000 solid;
+  transition: border 0.5s;
+  transition: border-color 0.5s;
+}
+#app > div > button:hover {
+  color: #999;
+  border-color: #999;
+}

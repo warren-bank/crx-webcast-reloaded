@@ -1,0 +1,24 @@
+{
+  "name": "@warren-bank/crx-webcast-reloaded",
+  "private": true,
+  "license": "GPL-2.0",
+  "devDependencies": {
+    "@babel/cli": "*",
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "babel-plugin-iife-wrap": "*"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "iife-wrap"
+    ]
+  },
+  "scripts": {
+    "build": "babel 1-dev/popup/js/popup.js --out-file 2-release/popup/js/popup.js --no-comments --source-maps"
+  }
+}

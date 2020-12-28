@@ -1,0 +1,8 @@
+#external_website_url {
+  width: calc(100% - 6px) !important;
+  margin: 0.5em 0;
+}
+
+#save {
+  margin-top: 0.5em;
+}
