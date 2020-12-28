@@ -18,6 +18,18 @@ const disable_popup = (tab_id) => {
 
 // -----------------------------------------------------------------------------
 
+const user_agent_regex_pattern = /^.*Chrome\/(\d+)\..*$/i
+
+const get_chrome_major_version = () => {
+  const user_agent_string = navigator.userAgent
+
+  return (user_agent_string && user_agent_regex_pattern.test(user_agent_string))
+    ? parseInt( user_agent_string.replace(user_agent_regex_pattern, '$1'), 10)
+    : 0
+}
+
+// -----------------------------------------------------------------------------
+
 const no_video_urls = []
 const tab_videos    = {}  // tab_id => {tab_url, videos: [{video_url, referer_url}]}
 
@@ -126,7 +138,9 @@ chrome.webRequest.onSendHeaders.addListener(
     urls:["<all_urls>"],
     types: ["main_frame", "sub_frame", "object", "xmlhttprequest", "media"]
   },
-  ['requestHeaders', 'extraHeaders']
+  (get_chrome_major_version() >= 72)
+    ? ['requestHeaders', 'extraHeaders']
+    : ['requestHeaders']
 )
 
 const tab_url_regex_pattern = /^(?:https?|file):/i
