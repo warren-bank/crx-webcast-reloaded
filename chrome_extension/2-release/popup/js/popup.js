@@ -43,13 +43,13 @@
 
   var get_options = function get_options() {
     return new Promise(function (resolve, reject) {
-      chrome.storage.sync.get(["external_website_url"], function (items) {
-        var url = items.external_website_url;
-
-        if (url) {
-          state.external_website_url = url;
+      chrome.storage.sync.get(['user_options_json'], function (items) {
+        try {
+          var data = JSON.parse(items.user_options_json);
+          if (!data || !Array.isArray(data.urls) || !data.urls.length || !data.contexts) throw new Error('bad data format');
+          state.user_options = data;
           resolve();
-        } else {
+        } catch (e) {
           reject();
         }
       });
@@ -119,6 +119,33 @@
     return str;
   };
 
+  var is_https = function is_https(url) {
+    return url.substring(0, 6).toLowerCase() === 'https:';
+  };
+
+  var baseurl_suffix_regex_pattern = /\/(index\.html)?$/i;
+
+  var get_contextualized_baseurls = function get_contextualized_baseurls(https) {
+    var urls = {
+      entrypoint: '_text_link',
+      chromecast: '_chromecast',
+      airplay: '_airplay',
+      proxy: '_proxy'
+    };
+
+    for (var key in urls) {
+      var context_key = "http".concat(https ? 's' : '').concat(urls[key]);
+      var url_index = state.user_options.contexts[context_key] - 1;
+      var url = state.user_options.urls[url_index];
+      urls[key] = url;
+    }
+
+    urls.chromecast = urls.chromecast.replace(baseurl_suffix_regex_pattern, '/chromecast_sender.html');
+    urls.airplay = urls.airplay.replace(baseurl_suffix_regex_pattern, '/airplay_sender.html');
+    urls.proxy = urls.proxy.replace(baseurl_suffix_regex_pattern, '/proxy.html');
+    return urls;
+  };
+
   var get_links = function get_links(video) {
     var video_url = video.video_url,
         referer_url = video.referer_url;
@@ -126,13 +153,14 @@
     if (!video_url) return links;
     var base64_video = encode_link(video_url, true);
     var base64_referer = encode_link(referer_url, true);
-    var url = state.external_website_url;
+    var https = is_https(video_url);
+    var urls = get_contextualized_baseurls(https);
     var hash = "#/watch/" + base64_video + (base64_referer ? "/referer/" + base64_referer : "");
     links.video_link = video_url;
-    links.entrypoint = url + hash;
-    links.chromecast = url.replace(/\/(index\.html)?$/, '/chromecast_sender.html') + hash;
-    links.airplay = url.replace(/\/(index\.html)?$/, '/airplay_sender.html') + hash;
-    links.proxy = url.replace(/\/(index\.html)?$/, '/proxy.html') + hash;
+    links.entrypoint = urls.entrypoint + hash;
+    links.chromecast = urls.chromecast + hash;
+    links.airplay = urls.airplay + hash;
+    links.proxy = urls.proxy + hash;
     return links;
   };
 
@@ -171,7 +199,7 @@
         onClick: function onClick(event) {
           return process_click(event, links.chromecast);
         },
-        title: "Chromecast sender"
+        title: "Chromecast Sender"
       }, React.createElement("img", {
         src: "img/chromecast.png"
       })), React.createElement("a", {
@@ -180,7 +208,7 @@
         onClick: function onClick(event) {
           return process_click(event, links.airplay);
         },
-        title: "AirPlay sender"
+        title: "ExoAirPlayer Sender"
       }, React.createElement("img", {
         src: "img/airplay.png"
       })), React.createElement("a", {
@@ -189,7 +217,7 @@
         onClick: function onClick(event) {
           return process_click(event, links.proxy);
         },
-        title: "HLS-Proxy configuration"
+        title: "HLS-Proxy Configuration"
       }, React.createElement("img", {
         src: "img/proxy.png"
       })), React.createElement("a", {

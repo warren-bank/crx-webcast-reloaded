@@ -6,8 +6,42 @@
   <link rel="stylesheet" type="text/css" href="css/options.css" />
 </head>
 <body>
-  URL of external website:<br>
-  <input type="text" id="external_website_url">
+  <div class="row">
+    <button id="add_url">+</button>
+    <h4>URL of External Website(s):</h4>
+  </div>
+  <div id="urls">
+    <ol>
+      <li><input type="text" class="url" /></li>
+    </ol>
+  </div>
+  <div id="contexts">
+    <div class="row">
+      <input type="text" class="context" size="2" id="https_text_link"  value="1" /><label for="https_text_link" >Index of URL for HTTPS text links</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="https_chromecast" value="1" /><label for="https_chromecast">Index of URL for HTTPS icons for Chromecast Sender</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="https_airplay"    value="1" /><label for="https_airplay"   >Index of URL for HTTPS icons for ExoAirPlayer Sender</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="https_proxy"      value="1" /><label for="https_proxy"     >Index of URL for HTTPS icons for HLS-Proxy Configuration</label>
+    </div>
+    <br />
+    <div class="row">
+      <input type="text" class="context" size="2" id="http_text_link"  value="2" /><label for="http_text_link"   >Index of URL for HTTP text links</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="http_chromecast" value="2" /><label for="http_chromecast"  >Index of URL for HTTP icons for Chromecast Sender</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="http_airplay"    value="2" /><label for="http_airplay"     >Index of URL for HTTP icons for ExoAirPlayer Sender</label>
+    </div>
+    <div class="row">
+      <input type="text" class="context" size="2" id="http_proxy"      value="2" /><label for="http_proxy"       >Index of URL for HTTP icons for HLS-Proxy Configuration</label>
+    </div>
+  </div>
 
   <div id="status"></div>
   <button id="save">Save</button>

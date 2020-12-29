@@ -1,8 +1,57 @@
-#external_website_url {
-  width: calc(100% - 6px) !important;
-  margin: 0.5em 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-#save {
+input,
+button {
+  padding: 0.25em;
+}
+
+.row {
+  white-space: nowrap;
+  overflow: hidden;
+}
+.row > * {
+  display: inline-block;
+}
+
+body {
+  padding: 10px;
+  font-family: sans-serif;
+  font-size: 14px;
+  color: #000;
+  background-color: #fff;
+}
+
+button#add_url,
+button#add_url + h4 {
+  font-size: 1.1em;
+  line-height: 1em;
+}
+button#add_url {
+  margin-right: 10px;
+}
+
+#urls,
+#contexts {
+  margin: 0.5em 0;
+}
+button#save {
   margin-top: 0.5em;
+}
+
+#urls ol,
+#urls ol > li {
+  list-style-position: inside;
+}
+#urls ol > li > input.url {
+  width: calc(100% - 3em) !important;
+}
+
+#contexts > .row {
+  margin-bottom: 0.25em;
+}
+#contexts > .row > input.context + label {
+  margin-left: 0.5em;
 }

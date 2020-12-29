@@ -66,9 +66,30 @@ chrome.runtime.onInstalled.addListener(
   function(details){
     if (details.reason === "install"){
       // initialize default option value(s)
-      chrome.storage.sync.set({
-        "external_website_url": "https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html"
-      })
+      const chrome_version = get_chrome_major_version()
+
+      const data = {
+        urls:     [
+          'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html',
+          'http://webcast-reloaded.surge.sh/index.html',
+          'http://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/index.html'
+        ],
+        contexts: {
+          "https_text_link":  1,
+          "https_chromecast": 1,
+          "https_airplay":    2,
+          "https_proxy":      2,
+
+          "http_text_link":   (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
+          "http_chromecast":  (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
+          "http_airplay":     2,
+          "http_proxy":       2
+        }
+      }
+
+      const user_options_json = JSON.stringify(data)
+
+      chrome.storage.sync.set({user_options_json})
     }
   }
 )

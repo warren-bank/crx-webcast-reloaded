@@ -6,15 +6,17 @@ const state = {}
 const get_options = () => {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(
-      ["external_website_url"],
+      ['user_options_json'],
       function(items){
-        const url = items.external_website_url
+        try {
+          const data = JSON.parse(items.user_options_json)
+          if (!data || !Array.isArray(data.urls) || !data.urls.length || !data.contexts)
+            throw new Error('bad data format')
 
-        if (url) {
-          state.external_website_url = url
+          state.user_options = data
           resolve()
         }
-        else {
+        catch(e) {
           reject()
         }
       }
@@ -72,6 +74,33 @@ const encode_link = (str, double_urlencode) => {
   return str
 }
 
+const is_https = (url) => (url.substring(0,6).toLowerCase() === 'https:')
+
+const baseurl_suffix_regex_pattern = /\/(index\.html)?$/i
+
+const get_contextualized_baseurls = (https) => {
+  const urls = {
+    entrypoint: '_text_link',
+    chromecast: '_chromecast',
+    airplay:    '_airplay',
+    proxy:      '_proxy'
+  }
+
+  for (const key in urls) {
+    const context_key = `http${https ? 's' : ''}${urls[key]}`
+    const url_index   = state.user_options.contexts[ context_key ] - 1  // users enter 1-based indices on options page. subtract 1 to shift to 0-based indices for array access.
+    const url         = state.user_options.urls[ url_index ]
+
+    urls[key] = url
+  }
+
+  urls.chromecast = urls.chromecast.replace(baseurl_suffix_regex_pattern, '/chromecast_sender.html')
+  urls.airplay    = urls.airplay.replace(   baseurl_suffix_regex_pattern, '/airplay_sender.html')
+  urls.proxy      = urls.proxy.replace(     baseurl_suffix_regex_pattern, '/proxy.html')
+
+  return urls
+}
+
 const get_links = (video) => {
   const {video_url, referer_url} = video
   const links = {}
@@ -79,17 +108,18 @@ const get_links = (video) => {
   if (!video_url)
     return links
 
-  const base64_video   = encode_link(video_url,   true);
-  const base64_referer = encode_link(referer_url, true);
+  const base64_video   = encode_link(video_url,   true)
+  const base64_referer = encode_link(referer_url, true)
 
-  const url  = state.external_website_url
-  const hash = "#/watch/" + base64_video + (base64_referer ? ("/referer/" + base64_referer) : "")
+  const https = is_https(video_url)
+  const urls  = get_contextualized_baseurls(https)
+  const hash  = "#/watch/" + base64_video + (base64_referer ? ("/referer/" + base64_referer) : "")
 
   links.video_link = video_url
-  links.entrypoint = url + hash
-  links.chromecast = url.replace(/\/(index\.html)?$/, '/chromecast_sender.html') + hash
-  links.airplay    = url.replace(/\/(index\.html)?$/, '/airplay_sender.html')    + hash
-  links.proxy      = url.replace(/\/(index\.html)?$/, '/proxy.html')             + hash
+  links.entrypoint = urls.entrypoint + hash
+  links.chromecast = urls.chromecast + hash
+  links.airplay    = urls.airplay    + hash
+  links.proxy      = urls.proxy      + hash
 
   return links
 }
@@ -124,13 +154,13 @@ const App = ({videos}) => {
           return (
             <div class="video-item" key={index}>
               <div class="icons-container">
-                <a class="chromecast" href={links.chromecast} onClick={(event) => process_click(event, links.chromecast)} title="Chromecast sender">
+                <a class="chromecast" href={links.chromecast} onClick={(event) => process_click(event, links.chromecast)} title="Chromecast Sender">
                   <img src="img/chromecast.png" />
                 </a>
-                <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="AirPlay sender">
+                <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="ExoAirPlayer Sender">
                   <img src="img/airplay.png" />
                 </a>
-                <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy configuration">
+                <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy Configuration">
                   <img src="img/proxy.png" />
                 </a>
                 <a class="video-link" href={links.video_link} onClick={(event) => process_click(event, links.video_link)} title="direct link to video">
