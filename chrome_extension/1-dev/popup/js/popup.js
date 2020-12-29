@@ -142,6 +142,10 @@ const process_clear_videos = (event) => {
   close_popup()
 }
 
+const hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i
+
+const is_hls = (url) => (hls_regex_pattern.test(url))
+
 const App = ({videos}) => {
   return (
     <div id="app">
@@ -160,9 +164,13 @@ const App = ({videos}) => {
                 <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="ExoAirPlayer Sender">
                   <img src="img/airplay.png" />
                 </a>
-                <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy Configuration">
-                  <img src="img/proxy.png" />
-                </a>
+                {
+                  !is_hls(video.video_url) ? null : (
+                    <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy Configuration">
+                      <img src="img/proxy.png" />
+                    </a>
+                  )
+                }
                 <a class="video-link" href={links.video_link} onClick={(event) => process_click(event, links.video_link)} title="direct link to video">
                   <img src="img/video_link.png" />
                 </a>

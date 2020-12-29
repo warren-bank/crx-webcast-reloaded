@@ -126,6 +126,9 @@ body {
 #app > #links > .video-item > .icons-container > a.video-link {
   right: 0;
 }
+#app > #links > .video-item > .icons-container > a.airplay + a.video-link {
+  right: 17px; /* (60 - 25)/2 to center when there is no proxy icon */
+}
 
 #app > div > button {
   cursor: pointer;

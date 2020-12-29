@@ -180,6 +180,12 @@
     close_popup();
   };
 
+  var hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i;
+
+  var is_hls = function is_hls(url) {
+    return hls_regex_pattern.test(url);
+  };
+
   var App = function App(_ref2) {
     var videos = _ref2.videos;
     return React.createElement("div", {
@@ -211,7 +217,7 @@
         title: "ExoAirPlayer Sender"
       }, React.createElement("img", {
         src: "img/airplay.png"
-      })), React.createElement("a", {
+      })), !is_hls(video.video_url) ? null : React.createElement("a", {
         "class": "proxy",
         href: links.proxy,
         onClick: function onClick(event) {
