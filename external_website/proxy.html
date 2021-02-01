@@ -31,6 +31,11 @@ body .contents > div.left {
   text-align: left;
 }
 
+body .contents > div.sep {
+  padding-bottom: 1em;
+  border-bottom: 1px solid #999;
+}
+
 body .contents > div:last-child {
   margin-bottom: 0;
 }
@@ -60,15 +65,17 @@ body .contents > div:last-child {
   <script>
 
 window.onload = function() {
-  var $url         = document.querySelector('.URL-entry-form input#URL_video')
-  var $url_referer = document.querySelector('.URL-entry-form input#URL_referer')
-  var $cfg_button  = document.querySelector('.URL-entry-form button')
+  var $url                = document.querySelector('.URL-entry-form input#URL_video')
+  var $url_referer        = document.querySelector('.URL-entry-form input#URL_referer')
+  var $cfg_button         = document.querySelector('.URL-entry-form button')
 
-  var $host        = document.querySelector('.HLS-Proxy-configs-form input#host')
-  var $port        = document.querySelector('.HLS-Proxy-configs-form input#port')
-  var $tls         = document.querySelector('.HLS-Proxy-configs-form input#tls')
-  var $vod_start   = document.querySelector('.HLS-Proxy-configs-form input#vod_start')
-  var $play_button = document.querySelector('.HLS-Proxy-configs-form button')
+  var $host               = document.querySelector('.HLS-Proxy-configs-form input#host')
+  var $port               = document.querySelector('.HLS-Proxy-configs-form input#port')
+  var $tls                = document.querySelector('.HLS-Proxy-configs-form input#tls')
+  var $target_version     = document.querySelector('.HLS-Proxy-configs-form select#target_version')
+  var $requires_vod_start = document.querySelector('.HLS-Proxy-configs-form #requires_vod_start')
+  var $vod_start          = document.querySelector('.HLS-Proxy-configs-form input#vod_start')
+  var $play_button        = document.querySelector('.HLS-Proxy-configs-form button')
 
   var encoded_urls = {
     video: null,
@@ -78,6 +85,18 @@ window.onload = function() {
   var decoded_urls = {
     video: null,
     referer: null
+  }
+
+  var get_target_version = function() {
+    return parseInt( $target_version.value, 10 )
+  }
+
+  var supports_vod_start = function() {
+    return (get_target_version() >= 2)
+  }
+
+  var supports_referer_url = function() {
+    return (get_target_version() >= 3)
   }
 
   var decode_URL = function(str) {
@@ -145,10 +164,10 @@ window.onload = function() {
 
     var vod_start = $vod_start.value.replace(/[^\d:]/g, '')
 
-    if (vod_start)
+    if (supports_vod_start() && vod_start)
       decoded_video_url += '#vod_start=' + vod_start
 
-    if (decoded_referer_url)
+    if (supports_referer_url() && decoded_referer_url)
       decoded_video_url += '|' + decoded_referer_url
 
     return btoa(decoded_video_url)
@@ -160,7 +179,7 @@ window.onload = function() {
 
     var vod_start = $vod_start.value.replace(/[^\d:]/g, '')
 
-    if (!vod_start)
+    if (!supports_vod_start() || !vod_start)
       return btoa(decoded_proxy_server)
 
     var payload_pattern = /^(.*\/)([^\/]+?)([\._].*)?$/
@@ -269,36 +288,39 @@ window.onload = function() {
     var host = get_cookie_value('hlsd_host')
     var port = get_cookie_value('hlsd_port')
     var tls  = get_cookie_value('hlsd_tls')
+    var ver  = get_cookie_value('hlsd_ver')
 
     if (host) $host.value = host
     if (port) $port.value = port
     if (tls === '1') $tls.checked = true
+    if (ver) {
+      $target_version.value = ver
+      $target_version.onchange()
+    }
   }
 
-  var persist_form_fields = function (host, port, tls) {
+  var persist_form_fields = function (host, port, tls, ver) {
     set_cookie_value('hlsd_host', host)
     set_cookie_value('hlsd_port', port)
     set_cookie_value('hlsd_tls',  (tls ? '1' : '0'))
+    set_cookie_value('hlsd_ver',  ver)
   }
 
   var redirect_to_player = function() {
     var host = $host.value
     var port = $port.value
     var tls  = $tls.checked
+    var ver  = $target_version.value
 
     if (!host || !port) {
       alert('Please enter values for: "host" and "port"')
       return true
     }
 
-    persist_form_fields(host, port, tls)
+    persist_form_fields(host, port, tls, ver)
 
     window.location = get_proxied_url('index.html')
   }
-
-  get_encoded_urls()
-  show_configs()
-  prepopulate_form_fields()
 
   $cfg_button.onclick = function() {
     decoded_urls.video   = $url.value.trim()
@@ -306,7 +328,17 @@ window.onload = function() {
     show_configs()
   }
 
+  $target_version.onchange = function() {
+    $requires_vod_start.style.display = supports_vod_start()
+      ? 'block'
+      : 'none'
+  }
+
   $play_button.onclick = redirect_to_player
+
+  get_encoded_urls()
+  show_configs()
+  prepopulate_form_fields()
 }
 
   </script>
@@ -330,11 +362,19 @@ window.onload = function() {
         <label for="port">Port:</label>
         <input id="port" type="text" required size="6" placeholder="8080" />
       </div>
-      <div>
+      <div class="sep">
         <label for="tls">HTTPS:</label>
         <input id="tls" type="checkbox" />
       </div>
-      <div>
+      <div class="sep">
+        <label for="target_version"><b>Enable features introduced<br />by version:</b></label>
+        <select id="target_version">
+          <option value="1">0.01.0</option>
+          <option value="2">0.17.3</option>
+          <option value="3" selected>0.18.0</option>
+        </select>
+      </div>
+      <div class="sep" id="requires_vod_start">
         <h4>Begin prefetch of vod stream<br />at position (HH:MM:SS):</h4>
         <input id="vod_start" type="text" size="15" placeholder="00:00:00" />
       </div>
