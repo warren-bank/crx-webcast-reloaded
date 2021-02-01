@@ -61,6 +61,7 @@ body .contents > div:last-child {
 
 window.onload = function() {
   var $url         = document.querySelector('.URL-entry-form input#URL_video')
+  var $url_referer = document.querySelector('.URL-entry-form input#URL_referer')
   var $cfg_button  = document.querySelector('.URL-entry-form button')
 
   var $host        = document.querySelector('.HLS-Proxy-configs-form input#host')
@@ -75,7 +76,8 @@ window.onload = function() {
     referer: null
   }
   var decoded_urls = {
-    video: null
+    video: null,
+    referer: null
   }
 
   var decode_URL = function(str) {
@@ -93,22 +95,50 @@ window.onload = function() {
   }
 
   var decode_video_url = function() {
-    var base64_payload = encoded_urls.video
-    var payload        = decode_URL(base64_payload)
+    var base64_payload, payload, pattern
+
+    if (!encoded_urls.video)
+      return false
+
+    base64_payload = encoded_urls.video
+    payload        = decode_URL(base64_payload)
 
     // validate that the decoded video URL contains an .m3u8 file extension
-    var pattern = /\.m3u8(?:[#\?]|$)/i
+    pattern = /\.m3u8(?:[#\?]|$)/i
     if (! pattern.test(payload)) {
       return false
     }
+    else {
+      decoded_urls.video = payload
+    }
 
-    decoded_urls.video = payload
+    if (encoded_urls.referer) {
+      base64_payload = encoded_urls.referer
+      payload        = decode_URL(base64_payload)
+
+      pattern = /^https?:/i
+      if (pattern.test(payload)) {
+        decoded_urls.referer = payload
+      }
+    }
+
     return true
   }
 
-  var get_encoded_video_url = function(decoded_video_url) {
+  var get_encoded_video_url = function(decoded_video_url, decoded_referer_url) {
     if (!decoded_video_url)
       decoded_video_url = decoded_urls.video
+
+    if (!decoded_referer_url)
+      decoded_referer_url = decoded_urls.referer
+
+    var index = decoded_video_url.indexOf('|http')
+    if (index >= 0) {
+      if (!decoded_referer_url)
+        decoded_referer_url = decoded_video_url.substring(index + 1)
+
+      decoded_video_url = decoded_video_url.substring(0, index)
+    }
 
     // clean slate
     decoded_video_url = decoded_video_url.replace(/#vod_start(?:_prefetch_at)?=(?:\d+:)?(?:\d+:)?\d+$/i, '')
@@ -117,6 +147,9 @@ window.onload = function() {
 
     if (vod_start)
       decoded_video_url += '#vod_start=' + vod_start
+
+    if (decoded_referer_url)
+      decoded_video_url += '|' + decoded_referer_url
 
     return btoa(decoded_video_url)
   }
@@ -130,7 +163,7 @@ window.onload = function() {
     if (!vod_start)
       return btoa(decoded_proxy_server)
 
-    var payload_pattern = /^(.*\/)([^\/]+?)(\..*)?$/
+    var payload_pattern = /^(.*\/)([^\/]+?)([\._].*)?$/
     var matches         = payload_pattern.exec(decoded_proxy_server)
 
     if (matches == null)
@@ -196,7 +229,7 @@ window.onload = function() {
   }
 
   var show_configs = function() {
-    if (decoded_urls.video || (encoded_urls.video && decode_video_url())) {
+    if (decoded_urls.video || decode_video_url()) {
       document.querySelector('.URL-entry-form').style.display = 'none'
       document.querySelector('.HLS-Proxy-configs-form').style.display = 'block'
     }
@@ -268,7 +301,8 @@ window.onload = function() {
   prepopulate_form_fields()
 
   $cfg_button.onclick = function() {
-    decoded_urls.video = $url.value.trim()
+    decoded_urls.video   = $url.value.trim()
+    decoded_urls.referer = $url_referer.value.trim()
     show_configs()
   }
 
@@ -281,6 +315,8 @@ window.onload = function() {
   <div class="URL-entry-form">
     <div>URL to video:</div>
     <div><input type="text" id="URL_video" /></div>
+    <div>URL of <i>Referer</i>:</div>
+    <div><input type="text" id="URL_referer" /></div>
     <button>Configure HLS-Proxy Settings</button>
   </div>
   <div class="HLS-Proxy-configs-form" style="display:none">
