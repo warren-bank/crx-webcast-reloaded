@@ -56,6 +56,13 @@ body .contents > div:last-child {
   display: inline-block;
   margin: 0;
 }
+.HLS-Proxy-configs-form button#load_external {
+  display: none;
+}
+.HLS-Proxy-configs-form.webmonkey button#load_external {
+  display: inline-block;
+  margin-left: 1em;
+}
 
 .HLS-Proxy-configs-form input[type="text"] {
   padding: 0 0.5em;
@@ -75,7 +82,8 @@ window.onload = function() {
   var $target_version     = document.querySelector('.HLS-Proxy-configs-form select#target_version')
   var $requires_vod_start = document.querySelector('.HLS-Proxy-configs-form #requires_vod_start')
   var $vod_start          = document.querySelector('.HLS-Proxy-configs-form input#vod_start')
-  var $play_button        = document.querySelector('.HLS-Proxy-configs-form button')
+  var $play_button        = document.querySelector('.HLS-Proxy-configs-form button#load_internal')
+  var $start_app_button   = document.querySelector('.HLS-Proxy-configs-form button#load_external')
 
   var encoded_urls = {
     video: null,
@@ -204,7 +212,7 @@ window.onload = function() {
 
     // determine if video url already points to the same proxy server
     var video_server = decoded_urls.video.replace(/^https?:\/\/([^\/]+)\/.*$/i, '$1')
-    var proxy_server = `${host}:${port}`
+    var proxy_server = host + ':' + port
 
     if (video_server.toLowerCase() === proxy_server.toLowerCase()) {
       // video stream is already proxied
@@ -224,7 +232,7 @@ window.onload = function() {
     else {
       var base64_payload                = get_encoded_video_url()
       var base64_payload_with_extension = base64_payload + '.m3u8'
-      var proxy_server                  = `${ tls ? 'https' : 'http' }://${host}:${port}/${base64_payload_with_extension}`
+      var proxy_server                  = (tls ? 'https' : 'http') + '://' + host + ':' + port + '/' + base64_payload_with_extension
       var base64_proxy_server           = btoa(proxy_server)
 
       return base64_proxy_server
@@ -242,7 +250,7 @@ window.onload = function() {
   */
 
     var base64_proxy_server = get_base64_proxy_server()
-    var webcast             = `${base_url}#/watch/${base64_proxy_server}${ encoded_urls.subtitle ? `/subtitle/${encoded_urls.subtitle}` : '' }${ encoded_urls.referer ? `/referer/${encoded_urls.referer}` : '' }`
+    var webcast             = base_url + '#/watch/' + base64_proxy_server + (encoded_urls.subtitle ? ('/subtitle/' + encoded_urls.subtitle) : '') + (encoded_urls.referer ? ('/referer/' + encoded_urls.referer) : '')
 
     return webcast
   }
@@ -258,7 +266,7 @@ window.onload = function() {
     var b64, hash_regex_pattern, matches
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+?))?(?:/referer/(${b64}+?))?$`
+    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+?))?(?:/referer/(' + b64 + '+?))?$'
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     matches = hash_regex_pattern.exec(window.location.hash)
@@ -281,7 +289,7 @@ window.onload = function() {
   }
 
   var set_cookie_value = function(key, val) {
-    document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname};max-age=${60*60*24*365}`
+    document.cookie = key + '=' + val + ';domain=' + window.location.hostname + ';path=' + window.location.pathname + ';max-age=' + (60*60*24*365)
   }
 
   var prepopulate_form_fields = function() {
@@ -339,6 +347,30 @@ window.onload = function() {
   get_encoded_urls()
   show_configs()
   prepopulate_form_fields()
+
+  // ---------------------------------------------------------------------------
+  // Android-WebMonkey
+
+  window.enable_webmonkey = function(GM_startIntent) {
+    if (typeof GM_startIntent !== 'function') return
+
+    document.querySelector('.HLS-Proxy-configs-form').classList.add('webmonkey')
+
+    var start_android_intent = function() {
+      // running in Android-WebMonkey: open Intent chooser
+
+      var base64_proxy_server = get_base64_proxy_server()
+      var hls_url             = decode_URL(base64_proxy_server)
+      var referer_url         = decoded_urls.referer
+
+      if (referer_url)
+        GM_startIntent(/* action= */ 'android.intent.action.VIEW', /* data= */ hls_url, /* type= */ 'application/x-mpegurl', /* extras: */ 'referUrl', referer_url)
+      else
+        GM_startIntent(/* action= */ 'android.intent.action.VIEW', /* data= */ hls_url, /* type= */ 'application/x-mpegurl')
+    }
+
+    $start_app_button.onclick = start_android_intent
+  }
 }
 
   </script>
@@ -379,7 +411,8 @@ window.onload = function() {
         <input id="vod_start" type="text" size="15" placeholder="00:00:00" />
       </div>
       <div>
-        <button>Load Player</button>
+        <button id="load_internal">Load Player</button>
+        <button id="load_external">Start App</button>
       </div>
     </div>
   </div>
