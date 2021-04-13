@@ -13,7 +13,7 @@ var disconnect_chromecast = function(player) {
 var toggle_chromecast_connection_state = function() {
     // how?
 
-    let button = document.querySelector('.chromecast-button')
+    var button = document.querySelector('.chromecast-button')
     if (button && button.click) button.click()
 }
 
@@ -104,9 +104,9 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
 
     // display direct links to the video stream and subtitle sources
     var info
-    info = `Now Playing: <a href="${URL_video}">Video</a>`
+    info = 'Now Playing: <a href="' + URL_video + '">Video</a>'
     if (URL_subtitle) {
-        info += ` with <a href="${URL_subtitle}">Subtitles</a>`
+        info += ' with <a href="' + URL_subtitle + '">Subtitles</a>'
     }
 
     document.querySelector('.webcast-video-player .video-player-info .video-player-info-status').innerHTML = info
@@ -133,7 +133,7 @@ var parse_location_hash = function() {
     var b64, hash_regex_pattern, URL_video, URL_subtitle
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = `^#/watch/(${b64}+?)(?:/subtitle/(${b64}+))?$`
+    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+))?$'
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     var decode_URL = function(str) {
@@ -157,11 +157,13 @@ var parse_location_hash = function() {
             URL_subtitle = decode_URL( matches[2] )
         }
     }
-    return {URL_video, URL_subtitle}
+    return {URL_video: URL_video, URL_subtitle: URL_subtitle}
 }
 
 var $DOMContentLoaded = function () {
-    var {URL_video, URL_subtitle} = parse_location_hash()
+    var parsed_hash  = parse_location_hash()
+    var URL_video    = parsed_hash.URL_video
+    var URL_subtitle = parsed_hash.URL_subtitle
 
     if (URL_video) {
         show_player()
@@ -181,7 +183,9 @@ var $DOMContentLoaded = function () {
 }
 
 var $hashchange = function () {
-    var {URL_video, URL_subtitle} = parse_location_hash()
+    var parsed_hash  = parse_location_hash()
+    var URL_video    = parsed_hash.URL_video
+    var URL_subtitle = parsed_hash.URL_subtitle
 
     if (URL_video) {
         if (!is_player_showing) show_player()

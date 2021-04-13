@@ -351,8 +351,8 @@ window.onload = function() {
   // ---------------------------------------------------------------------------
   // Android-WebMonkey
 
-  window.enable_webmonkey = function(GM_startIntent) {
-    if (typeof GM_startIntent !== 'function') return
+  window.enable_webmonkey = function(webmonkey_callback) {
+    if (typeof webmonkey_callback !== 'function') return
 
     document.querySelector('.HLS-Proxy-configs-form').classList.add('webmonkey')
 
@@ -363,10 +363,7 @@ window.onload = function() {
       var hls_url             = decode_URL(base64_proxy_server)
       var referer_url         = decoded_urls.referer
 
-      if (referer_url)
-        GM_startIntent(/* action= */ 'android.intent.action.VIEW', /* data= */ hls_url, /* type= */ 'application/x-mpegurl', /* extras: */ 'referUrl', referer_url)
-      else
-        GM_startIntent(/* action= */ 'android.intent.action.VIEW', /* data= */ hls_url, /* type= */ 'application/x-mpegurl')
+      webmonkey_callback(hls_url, referer_url)
     }
 
     $start_app_button.onclick = start_android_intent

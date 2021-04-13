@@ -25,18 +25,25 @@ select, button {
   margin: 1em 0;
 }
 
+body button#load_external {
+  display: none;
+}
+body.webmonkey button#load_external {
+  display: inline-block;
+}
+
   </style>
   <script>
 
 window.onload  = function() {
   var $select  = document.querySelector('#endpoints')
-  var $button  = document.querySelector('button')
+  var $button  = document.querySelector('#load_internal')
   var $counter = document.querySelector('#countdown')
 
   var default_endpoint = 'chromecast_sender.html'
   var cookie_name      = 'webcast_endpoint_key'
   var time_remains     = (1000)*(10)  // 10 seconds
-  var timer
+  var timer, interval
 
   var redirect_to_endpoint = function() {
     clearTimeout(timer)
@@ -47,7 +54,7 @@ window.onload  = function() {
     if (endpoint_key) {
       set_cookie_value(cookie_name, endpoint_key)
 
-      url = window.location.href.replace(/\/index\.html/i, `/${endpoint_key}`)
+      url = window.location.href.replace(/(\/)(?:index\.html)?(#\/watch\/.*|$)/i, ('$1' + endpoint_key + '$2'))
       window.location = url
     }
   }
@@ -56,7 +63,9 @@ window.onload  = function() {
     if (display_only !== true) {
       time_remains -= 1000
     }
-    $counter.innerText = (time_remains / 1000).toString()
+    if ($counter !== null) {
+      $counter.innerText = (time_remains / 1000).toString()
+    }
   }
 
   var get_cookie_value = function(key) {
@@ -67,7 +76,7 @@ window.onload  = function() {
   }
 
   var set_cookie_value = function(key, val) {
-    document.cookie = `${key}=${val};domain=${window.location.hostname};path=${window.location.pathname.replace('index.html','')};max-age=${60*60*24*365}`
+    document.cookie = key + '=' + val + ';domain=' + window.location.hostname + ';path=' + window.location.pathname.replace('index.html','') + ';max-age=' + (60*60*24*365)
   }
 
   var change_endpoint_selection = function(endpoint_key) {
@@ -75,13 +84,13 @@ window.onload  = function() {
 
     try {
       if (endpoint_key) {
-        $option = document.querySelector(`select#endpoints option[value="${endpoint_key}"]`)
+        $option = document.querySelector('select#endpoints option[value="' + endpoint_key + '"]')
       }
     }
     catch(e){}
 
     if (! $option) {
-      $option = document.querySelector(`select#endpoints option[value="${default_endpoint}"]`)
+      $option = document.querySelector('select#endpoints option[value="' + default_endpoint + '"]')
     }
 
     $option.setAttribute('selected', 'selected')
@@ -93,9 +102,35 @@ window.onload  = function() {
 
   $button.onclick = redirect_to_endpoint
 
-  timer = setTimeout(redirect_to_endpoint, time_remains)
+  timer    = setTimeout(redirect_to_endpoint, time_remains)
+  interval = setInterval(reduce_counter, 1000)
 
-  setInterval(reduce_counter, 1000) && reduce_counter(true)
+  reduce_counter(true)
+
+  // ---------------------------------------------------------------------------
+  // Android-WebMonkey
+
+  window.enable_webmonkey = function(webmonkey_callback) {
+    if (typeof webmonkey_callback !== 'function') return
+
+    document.body.classList.add('webmonkey')
+
+    var $start_app_button = document.querySelector('#load_external')
+
+    var start_android_intent = function() {
+      // running in Android-WebMonkey: open Intent chooser
+
+      clearTimeout(timer)
+      clearInterval(interval)
+
+      $counter.parentNode.innerHTML = ''
+      $counter = null
+
+      webmonkey_callback()
+    }
+
+    $start_app_button.onclick = start_android_intent
+  }
 }
 
   </script>
@@ -109,7 +144,8 @@ window.onload  = function() {
         <option value="airplay_sender.html">AirPlay sender</option>
         <option value="proxy.html">HLS-Proxy configuration</option>
       </select>
-      <button>Load</button>
+      <button id="load_internal">Load</button>
+      <button id="load_external">Start App</button>
     </div>
 
     <hr />
