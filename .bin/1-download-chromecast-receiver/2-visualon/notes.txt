@@ -1,16 +1,15 @@
-https://clients3.google.com/cast/chromecast/device/app?a=B5BCD208
+https://clients3.google.com/cast/chromecast/device/app?a=FF4B0BBE
 
 --------------------------------------------------------------------------------
 
 {
     "resolution_height": 0,
     "uses_ipc": true,
-    "display_name": "VisualOn default cast receiver",
-    "app_id": "B5BCD208",
+    "display_name": "VisualOn WebSite Cast Receiver",
+    "app_id": "FF4B0BBE",
     "promo_assets": [{
-        "icon_url": "https://lh3.googleusercontent.com/nxgbUg_V1hyum4r06GSNYV4c0RiGd1udy_GmXQX6wbzeKw1n7x8iuvJi_wIJoHfB0-7rPi2QudDMJFho",
         "description": "This app allows you to broadcast videos are on the web to the Chromecast.",
-        "display_name": "VisualOn default cast receiver"
+        "display_name": "VisualOn WebSite Cast Receiver"
     }],
-    "url": "https://css.visualon.info/files/SampleReceiver/receiver.html"
+    "url": "https://css.visualon.info/Receiver/website-demo/SampleReceiver/receiver.html"
 }

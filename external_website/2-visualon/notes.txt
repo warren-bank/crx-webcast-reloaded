@@ -1,0 +1,204 @@
+--------------------------------------------------------------------------------
+// voplayer from website demo
+//   older version that no-longer works
+//     * client-side JS error
+//     * chromecast receiver (#B5BCD208) license is invalid
+
+const {request}  = require('@warren-bank/node-request')
+
+request('https://github.com/warren-bank/crx-webcast-reloaded/raw/v0.7.4/external_website/2-visualon/js/voplayer.min.js')
+.then(({url, redirects, response}) => {
+  var encoded_js = response
+  var regex = /\\x([0-9a-z]{2})/g
+  return encoded_js.replace(regex, (match, charCode) => String.fromCharCode(parseInt(charCode, 16)))
+})
+.then(decoded_js => {
+  console.log(decoded_js)
+})
+
+---------------------------------------- snippets from decoded JS:
+
+license=_dereq_(291);
+,'291':[function(e,a,n){a['exports']={'info':"(function%20V(e%2Ca)%7Bfor(var%20n%3DdecodeURIComponent(e)%2Cr%3D%22%22%2Co%3D0%2Ct%3D0%3Bo%3Cn.length%3B%2B%2Bo%2C%2B%2Bt)t%3D%3D%3Da.length%26%26(t%3D0)%2Cr%2B%3DString['fromCharCode'](n['charCodeAt'](o)%5Ea['charCodeAt'](t))%3Bvar%20c%3DJSON['parse'](r)%3Breturn%20c.ae%3CDate['now']()%3F(c.enable%3D!1%2Cc.analyticsURL%3D%22%22)%3Ac.enable%3D!0%2Cc%7D)(%22%2526v%2504%2505%251D%255EDy9%250E%2501%252C-p*D%2503R61%2514C%2505FBCGp%25099%251Fe%251AMOT%2508%252F!%253C_O%251E%2502-%2509**%2501b(.z%250B%2506%251A8%2511G7%253Bq%2514rwD%251FB18r.%2523%2524CLDY%2502uSt0DC%2513F%2507A%25111-%2519%2508%255C%25173%257D%253C%257FnO%2509K%2510%2516%255CJr%257B%251E%2500LQR%2501%25064'%2518%2500S%250B%2508%2501%251932%2502N%255E%2502%2515%250D%255C%257F5%2508C%2505US%251CGlaUV%2508P_%2518Cqv%251E%2514O%2514%2509%255D%2504809%2518O%2501%2515%250DJ%2506v%2509%2500L%250CD%2503R0%2524YC%2513F%250B_C%257FxO%2516Z%2506%250B%250D%255C%257F%253B%250A%2506%251DHDG%251C.vAC%255E%250A%2507C%2509)%253D%250E%2512%251D9%251B%22%2C%20%22%5DTma%3Fdf%2Fp%22)"}},{}],
+
+supportedTypes=eval(decodeURIComponent(license.info)).supportedTypes
+
+---------------------------------------- the good parts:
+
+var license = {'info':"(function%20V(e%2Ca)%7Bfor(var%20n%3DdecodeURIComponent(e)%2Cr%3D%22%22%2Co%3D0%2Ct%3D0%3Bo%3Cn.length%3B%2B%2Bo%2C%2B%2Bt)t%3D%3D%3Da.length%26%26(t%3D0)%2Cr%2B%3DString['fromCharCode'](n['charCodeAt'](o)%5Ea['charCodeAt'](t))%3Bvar%20c%3DJSON['parse'](r)%3Breturn%20c.ae%3CDate['now']()%3F(c.enable%3D!1%2Cc.analyticsURL%3D%22%22)%3Ac.enable%3D!0%2Cc%7D)(%22%2526v%2504%2505%251D%255EDy9%250E%2501%252C-p*D%2503R61%2514C%2505FBCGp%25099%251Fe%251AMOT%2508%252F!%253C_O%251E%2502-%2509**%2501b(.z%250B%2506%251A8%2511G7%253Bq%2514rwD%251FB18r.%2523%2524CLDY%2502uSt0DC%2513F%2507A%25111-%2519%2508%255C%25173%257D%253C%257FnO%2509K%2510%2516%255CJr%257B%251E%2500LQR%2501%25064'%2518%2500S%250B%2508%2501%251932%2502N%255E%2502%2515%250D%255C%257F5%2508C%2505US%251CGlaUV%2508P_%2518Cqv%251E%2514O%2514%2509%255D%2504809%2518O%2501%2515%250DJ%2506v%2509%2500L%250CD%2503R0%2524YC%2513F%250B_C%257FxO%2516Z%2506%250B%250D%255C%257F%253B%250A%2506%251DHDG%251C.vAC%255E%250A%2507C%2509)%253D%250E%2512%251D9%251B%22%2C%20%22%5DTma%3Fdf%2Fp%22)"}
+license = eval(decodeURIComponent(license.info))
+console.log(JSON.stringify(license, null, 4))
+
+---------------------------------------- decoded license:
+
+{
+    "id": "VISUALON",
+    "key": "$l7-]T~Z~+`$U{L]`+x-]T~G`]LHU{[NUpxS]^d/#)~}U^]^~p.-{=dZ#)d)",
+    "analyticsURL": "",
+    "ae": 1537158774973,
+    "supportedTypes": [
+        "dash",
+        "mp4",
+        "mp3",
+        "webm",
+        "ogg",
+        "hls",
+        "analytics"
+    ],
+    "enable": false
+}
+
+--------------------------------------------------------------------------------
+// voplayer from website demo
+//   current version
+
+// https://www.visualon.com/index.php/demo/
+// https://www.visualon.com/html5/SamplePlayer/labs/chromecast/
+
+const {request}  = require('@warren-bank/node-request')
+
+request('https://www.visualon.com/html5/SamplePlayer/libs/voplayer.min.js')
+.then(({url, redirects, response}) => {
+  var encoded_js = response
+  var regex = /\\x([0-9a-z]{2})/g
+  return encoded_js.replace(regex, (match, charCode) => String.fromCharCode(parseInt(charCode, 16)))
+})
+.then(decoded_js => {
+  console.log(decoded_js)
+})
+
+---------------------------------------- snippets from decoded JS:
+
+license=_dereq_(299)
+'299':[function(a,e,n){e['exports']={'info':"(function%20V(a%2Ce)%7Bfor(var%20n%3DdecodeURIComponent(a)%2Cl%3D%22%22%2CE%3D0%2Co%3D0%3BE%3Cn.length%3B%2B%2BE%2C%2B%2Bo)o%3D%3D%3De.length%26%26(o%3D0)%2Cl%2B%3DString['fromCharCode'](n['charCodeAt'](E)%5Ee['charCodeAt'](o))%3Bvar%20i%3DJSON['parse'](l)%3Breturn%20i.aeEnable%3D!0%2Ci.aeEnable%7C%7C(i.ae%3CDate['now']()%3F(i.aeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.aeEnable%3D!0)%2Ci.aeeEnable%3D!0%2Ci.aeeEnable%7C%7C(i.aee%3CDate['now']()%3Fi.aeeEnable%3D!1%3Ai.aeeEnable%3D!0)%2Ci.aveEnable%3D!0%2Ci.aveEnable%7C%7C(i.ave%3CDate['now']()%3Fi.aveEnable%3D!1%3Ai.aveEnable%3D!0)%2Ci.aaeEnable%3D!0%2Ci.aaeEnable%7C%7C(i.aae%3CDate['now']()%3Fi.aaeEnable%3D!1%3Ai.aaeEnable%3D!0)%2Ci.lowlatencyExpiration%3CDate['now']()%3Fi.lowlatencyExpired%3D!0%3Ai.lowlatencyExpired%3D!1%2Ci.syncPlaybackExpiration%3CDate['now']()%3Fi.syncPlaybackExpired%3D!0%3Ai.syncPlaybackExpired%3D!1%2Ci.videoEnhancementExpiration%3CDate['now']()%3Fi.videoEnhancementExpired%3D!0%3Ai.videoEnhancementExpired%3D!1%2Ci.awsMediaTailorExpiration%3CDate['now']()%3Fi.awsMediaTailorExpired%3D!0%3Ai.awsMediaTailorExpired%3D!1%2Ci%7D)(%22%2505I%255E%250D%255B%253B%253A%251F%250C*%2512%255E%2509%251Ajy%2508%251B%2511%250F%255B%250FL94%2516KRIG%2508%251Ajy.%2500%250D%251EO%2500w%253E%250C%251D%250B%250D%2502Z%2509%257C56%2517KRIE%2509AraZ%255EW%2508_%251Fa9eOF5%250BGM%257D'2%2511R%250F-w%2505cv%253A%252B%252282%251C%251B%251E9%252CLT*%2502u%255B%257D%2506(%2515QL1%2515%2526%257Fd%251D!L%2540%255CzD%257FrwZ%251E%2516%2502Z%2509T9(%250C%2522%251B%2512%250CV%251AhjK%255D%251B%255DO%255E%255Bfo%251E%250DHR%251D%250E%2500acA%250BO%250F%251D%255E%250BajAZH%2508K%255E%255D5%253F%251E%255DI%250F%2516U%250E5%253EI%255BGZ%251A%255E%255B%2560lAX%251B%250FLT%255Bi%253A%251D%250C%251D%255C%2518%2508%255E4hNZ%251DZ%2519%250D%250Bhb%251D%255CHX%250C%2540%251A15%2519%2505%2507%251FG%250FK%2519%251FZS%255C%253Dg%253Fm%2511%25177'%255CG%250C%250DV17%2501%251D%2517%2508%255D9j%251CyBK%2516%251FZ%251CKjtW%251A%251F%2518%251BX%2516%25262%250B%251C%251F%2507A%2502%251695%251E%2506Q%250AH%251F%251A%257Cy%2519%250C%255CQ%251A%255D%2500ii%2540QKY%251DY%2501fwZ%2508%251B%250E%250CV%250CacA%255BFS%251B%255E%250BebNE%255C%250AX%2509%251AjoIQGY%2516T%250DbhMPHG%250C%250DY5yB%255DOS%2517%255E%2500hnJZKR%2518%2540%251A%253C4%250F%2505%251F%251FK%2502%255B)%251E%2500%2519%2517%2519O%2518Q%253F5ZSJZ%2516U%250AhcM%255BM%255E%2517Z%2514r(%2501%2507%251D%253BB%250DA2%253A%251B%2502%253B%2513%255E%2505J1%252F%2511%2506%2510I%2514%255C%2514r-%2511%250D%251B%2504k%2502P15%251B%250C%2513%250E%2540%2518%257D(%252B%2511%251B%251F%251FG%2503VraLXFR%251CT%2500eiK%255CG%255D%2502Nn%2502%251E%2500%2519%2517%2519O%2518Q%253F5ZSJZ%2516U%250AhcM%255BM%255E%2517Z%2514r%253A%250F%251A3%250EJ%2505Y%2504%253A%2511%2505%2511%2519k%2514H9)%2519%251D%2517%2504%2540N%2502%2560wZ%251A%250B%251B%255E%2503J%2524%253E%251C%252F%251B%250AZ%2519J5(ZS%2525IJ%250DK8yTK%2516%2507%255DN%2514r%252B%250A%2506%2519%2519K%251FK9-%251DKRIO%2502Y%253C%2522%250C%2500%251D%2518%250C%2540%251A%2526%252F%250C%253D%2516%251EC%250EV12%2514KRIO%2508K%25207%2519%2510%251B%2519%250C%2540%251A3%253A%250B%251D%250D%250E%2540%2508%255D%2522yTK%250D%2519Z%253CY%2522(%251D%251B%255CG%250C%251AL%2524%250B%2519%251B%250D%250E%255CN%2514r%252F%250C%2504%2512%253BO%251EK5)ZE%255C%2508O%251CL94%25169%251F%2519%255D%2509JrwZ%250F%251D%2508%257D%2518A%253C%253EZE%255C%2507A%251BT1%252F%251D%2507%251D%2512%250C%2540%251A%25262%251C%250C%2511.%2540%2504Y%253E8%251D%2504%251B%2505ZN%2514r%250D*K%2523%2516%22%2C%20%22~k.l8P%5Bxi%22)"}},{}],
+
+this['gkObj_']=eval(decodeURIComponent(license.info));
+
+---------------------------------------- the good parts:
+
+var license = {'info':"(function%20V(a%2Ce)%7Bfor(var%20n%3DdecodeURIComponent(a)%2Cl%3D%22%22%2CE%3D0%2Co%3D0%3BE%3Cn.length%3B%2B%2BE%2C%2B%2Bo)o%3D%3D%3De.length%26%26(o%3D0)%2Cl%2B%3DString['fromCharCode'](n['charCodeAt'](E)%5Ee['charCodeAt'](o))%3Bvar%20i%3DJSON['parse'](l)%3Breturn%20i.aeEnable%3D!0%2Ci.aeEnable%7C%7C(i.ae%3CDate['now']()%3F(i.aeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.aeEnable%3D!0)%2Ci.aeeEnable%3D!0%2Ci.aeeEnable%7C%7C(i.aee%3CDate['now']()%3Fi.aeeEnable%3D!1%3Ai.aeeEnable%3D!0)%2Ci.aveEnable%3D!0%2Ci.aveEnable%7C%7C(i.ave%3CDate['now']()%3Fi.aveEnable%3D!1%3Ai.aveEnable%3D!0)%2Ci.aaeEnable%3D!0%2Ci.aaeEnable%7C%7C(i.aae%3CDate['now']()%3Fi.aaeEnable%3D!1%3Ai.aaeEnable%3D!0)%2Ci.lowlatencyExpiration%3CDate['now']()%3Fi.lowlatencyExpired%3D!0%3Ai.lowlatencyExpired%3D!1%2Ci.syncPlaybackExpiration%3CDate['now']()%3Fi.syncPlaybackExpired%3D!0%3Ai.syncPlaybackExpired%3D!1%2Ci.videoEnhancementExpiration%3CDate['now']()%3Fi.videoEnhancementExpired%3D!0%3Ai.videoEnhancementExpired%3D!1%2Ci.awsMediaTailorExpiration%3CDate['now']()%3Fi.awsMediaTailorExpired%3D!0%3Ai.awsMediaTailorExpired%3D!1%2Ci%7D)(%22%2505I%255E%250D%255B%253B%253A%251F%250C*%2512%255E%2509%251Ajy%2508%251B%2511%250F%255B%250FL94%2516KRIG%2508%251Ajy.%2500%250D%251EO%2500w%253E%250C%251D%250B%250D%2502Z%2509%257C56%2517KRIE%2509AraZ%255EW%2508_%251Fa9eOF5%250BGM%257D'2%2511R%250F-w%2505cv%253A%252B%252282%251C%251B%251E9%252CLT*%2502u%255B%257D%2506(%2515QL1%2515%2526%257Fd%251D!L%2540%255CzD%257FrwZ%251E%2516%2502Z%2509T9(%250C%2522%251B%2512%250CV%251AhjK%255D%251B%255DO%255E%255Bfo%251E%250DHR%251D%250E%2500acA%250BO%250F%251D%255E%250BajAZH%2508K%255E%255D5%253F%251E%255DI%250F%2516U%250E5%253EI%255BGZ%251A%255E%255B%2560lAX%251B%250FLT%255Bi%253A%251D%250C%251D%255C%2518%2508%255E4hNZ%251DZ%2519%250D%250Bhb%251D%255CHX%250C%2540%251A15%2519%2505%2507%251FG%250FK%2519%251FZS%255C%253Dg%253Fm%2511%25177'%255CG%250C%250DV17%2501%251D%2517%2508%255D9j%251CyBK%2516%251FZ%251CKjtW%251A%251F%2518%251BX%2516%25262%250B%251C%251F%2507A%2502%251695%251E%2506Q%250AH%251F%251A%257Cy%2519%250C%255CQ%251A%255D%2500ii%2540QKY%251DY%2501fwZ%2508%251B%250E%250CV%250CacA%255BFS%251B%255E%250BebNE%255C%250AX%2509%251AjoIQGY%2516T%250DbhMPHG%250C%250DY5yB%255DOS%2517%255E%2500hnJZKR%2518%2540%251A%253C4%250F%2505%251F%251FK%2502%255B)%251E%2500%2519%2517%2519O%2518Q%253F5ZSJZ%2516U%250AhcM%255BM%255E%2517Z%2514r(%2501%2507%251D%253BB%250DA2%253A%251B%2502%253B%2513%255E%2505J1%252F%2511%2506%2510I%2514%255C%2514r-%2511%250D%251B%2504k%2502P15%251B%250C%2513%250E%2540%2518%257D(%252B%2511%251B%251F%251FG%2503VraLXFR%251CT%2500eiK%255CG%255D%2502Nn%2502%251E%2500%2519%2517%2519O%2518Q%253F5ZSJZ%2516U%250AhcM%255BM%255E%2517Z%2514r%253A%250F%251A3%250EJ%2505Y%2504%253A%2511%2505%2511%2519k%2514H9)%2519%251D%2517%2504%2540N%2502%2560wZ%251A%250B%251B%255E%2503J%2524%253E%251C%252F%251B%250AZ%2519J5(ZS%2525IJ%250DK8yTK%2516%2507%255DN%2514r%252B%250A%2506%2519%2519K%251FK9-%251DKRIO%2502Y%253C%2522%250C%2500%251D%2518%250C%2540%251A%2526%252F%250C%253D%2516%251EC%250EV12%2514KRIO%2508K%25207%2519%2510%251B%2519%250C%2540%251A3%253A%250B%251D%250D%250E%2540%2508%255D%2522yTK%250D%2519Z%253CY%2522(%251D%251B%255CG%250C%251AL%2524%250B%2519%251B%250D%250E%255CN%2514r%252F%250C%2504%2512%253BO%251EK5)ZE%255C%2508O%251CL94%25169%251F%2519%255D%2509JrwZ%250F%251D%2508%257D%2518A%253C%253EZE%255C%2507A%251BT1%252F%251D%2507%251D%2512%250C%2540%251A%25262%251C%250C%2511.%2540%2504Y%253E8%251D%2504%251B%2505ZN%2514r%250D*K%2523%2516%22%2C%20%22~k.l8P%5Bxi%22)"}
+license = eval(decodeURIComponent(license.info))
+console.log(JSON.stringify(license, null, 4))
+
+---------------------------------------- decoded license:
+
+{
+    "packageType": "production",
+    "id": "VisualOnWebsiteDemo",
+    "key": "7)cqsYi>7/K`i!Ewii;qFYi[&aSKFY2w&iw4=Ti[7EVsm82Z;JG4FY%>7T(G",
+    "whitelistKey": "8134e6a2c64fd693b8189b1d32311936ce2eedf47d896ee129142c0791edb8c9aeec76dfd363c17a389e563",
+    "analyticsID": "VISUALON",
+    "analyticsURL": "https://sas54.visualon.info/afs",
+    "ae": 4189288523596,
+    "aee": 4189288523596,
+    "ave": 4189288523596,
+    "aae": 4189288523596,
+    "lowlatencyExpiration": 4189288523596,
+    "syncPlaybackExpiration": 0,
+    "videoEnhancementExpiration": 4189288523596,
+    "VRExpiration": 4189288523596,
+    "awsMediaTailorExpiration": 0,
+    "supportedFeatures": [
+        "dash",
+        "hls",
+        "progressive",
+        "analytics",
+        "vttThumbnail",
+        "adsplayer",
+        "castsender",
+        "srtParser",
+        "vttParser",
+        "ttmlParser",
+        "captionParser",
+        "fccStyle",
+        "lowlatency",
+        "videoEnhancement",
+        "VR"
+    ],
+    "aeEnable": true,
+    "aeeEnable": true,
+    "aveEnable": true,
+    "aaeEnable": true,
+    "lowlatencyExpired": false,
+    "syncPlaybackExpired": true,
+    "videoEnhancementExpired": false,
+    "awsMediaTailorExpired": true
+}
+
+--------------------------------------------------------------------------------
+// voplayer from chromecast receiver (#FF4B0BBE)
+//   current version
+
+const {request}  = require('@warren-bank/node-request')
+
+request('https://css.visualon.info/Receiver/website-demo/SampleReceiver/libs/voreceiver.min.js')
+.then(({url, redirects, response}) => {
+  var encoded_js = response
+  var regex = /\\x([0-9a-z]{2})/g
+  return encoded_js.replace(regex, (match, charCode) => String.fromCharCode(parseInt(charCode, 16)))
+})
+.then(decoded_js => {
+  console.log(decoded_js)
+})
+
+---------------------------------------- snippets from decoded JS:
+
+license=_dereq_(302)
+licenseServerUrl="https://counter.visualon.info"
+
+'302':[function(a,e,n){e['exports']={'info':"(function%20V(a%2Ce)%7Bfor(var%20n%3DdecodeURIComponent(a)%2Cl%3D%22%22%2CE%3D0%2Co%3D0%3BE%3Cn.length%3B%2B%2BE%2C%2B%2Bo)o%3D%3D%3De.length%26%26(o%3D0)%2Cl%2B%3DString['fromCharCode'](n['charCodeAt'](E)%5Ee['charCodeAt'](o))%3Bvar%20i%3DJSON['parse'](l)%3Breturn%20i.aeEnable%3D!0%2Ci.aeEnable%7C%7C(i.ae%3CDate['now']()%3F(i.aeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.aeEnable%3D!0)%2Ci.saeEnable%7C%7C(i.sae%3CDate['now']()%3F(i.saeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.saeEnable%3D!0)%2Ci.aeeEnable%3D!0%2Ci.aeeEnable%7C%7C(i.aee%3CDate['now']()%3Fi.aeeEnable%3D!1%3Ai.aeeEnable%3D!0)%2Ci.aveEnable%3D!0%2Ci.aveEnable%7C%7C(i.ave%3CDate['now']()%3Fi.aveEnable%3D!1%3Ai.aveEnable%3D!0)%2Ci.aaeEnable%3D!0%2Ci.aaeEnable%7C%7C(i.aae%3CDate['now']()%3Fi.aaeEnable%3D!1%3Ai.aaeEnable%3D!0)%2Ci.lowlatencyExpiration%3CDate['now']()%3Fi.lowlatencyExpired%3D!0%3Ai.lowlatencyExpired%3D!1%2Ci.syncPlaybackExpiration%3CDate['now']()%3Fi.syncPlaybackExpired%3D!0%3Ai.syncPlaybackExpired%3D!1%2Ci.videoEnhancementExpiration%3CDate['now']()%3Fi.videoEnhancementExpired%3D!0%3Ai.videoEnhancementExpired%3D!1%2Ci.awsMediaTailorExpiration%3CDate['now']()%3Fi.awsMediaTailorExpired%3D!0%3Ai.awsMediaTailorExpired%3D!1%2Ci%7D)(%22%250E%250A%2505MN%2511%255C%250E!!Q%2505I%250F%2540%251F%25196%251AL%2500OY%2513R%2507fY%250A%251CH%250F%2540%251F%253F-%2506%255D%2514%2540b%2514j%250C%2526%2506A%2501Ii%251FP%2506fY%250A%251EITX%2507Kv%2514%2502Lu%2501%2504%250A%250C9_X%252CuZ%2503%2510A%2517L%25125cE%255C%2540%2500%2510%252C%2504%2502UMV%2515P%25060m%251D%250A%255C)M%253E%2501B%251F%250B%2500%2504%255B%2507)aB%250E%2526%255BwX%2511K3%251DA%2501IA%2513N%251D%250F%2510QW%2516%250FB%250CZp%2510%251E%2514%251ENL%2509%250F%2520C%2511FN%2515K%2505P%2526DLF%251E%251EK%250CPwCK%2510%251EH%251FY%250FpBLM%2515%251B%251FXXvL%2519A%251ENJ%250APu%2510L%2517%2514NC%255C%250C!%2516%251FCHK%251E%250E_w%2516%2519BM%251EB%2504%250CqC%251BW%2500%250F%251BS%2508(%250C%255C%251CO%255E3yK~W~%253C%257Fx%253Bq%2526%250AW%2504WMC%251BQ%25100%251CK%2506y%257F6%251FSf%251D%255C%2501%255C%255E%2540%2512F7%2514%255B%2540%2518%2503%250CT%251A1%2514D%251AB%2503%2513S%250F%252BZI%2513_%250FV%251F%2508!W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K7%2514MW%2516%251CL%250CXsD%251EA%251C%251DK%2508PhWI%2510I%250F%2540%2509X%257DM%251DF%251E%2519J%250DXqL%2504WM%255B%251F%251FSpD%2511M%2519%251EH%2509YtD%251DL%2500%250F%251B%255C%250CfO%251CD%2515%2515O%250E%255BpE%2518D%2519%2514V%251F%2505%252B%2502D%2514XH%2514%255E%2510%2501%250DX%251C%255EL%250ET%2506*W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K7%250CF%2516%257CA%251BD%250B%2525%2516C0T%255D%2513O%25080%251CG%251B%250E%2517J%2511K2%251CL%2510Ch%2514U%2508*%2516M%2518IC%250Ex%25114%251CZ%2514XD%2515SK~A%2519L%2514%2518I%250F%255DtE%2519%2540%2515%2501Xk%253B%2501%250DX%251C%255EL%250ET%2506*W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K%2525%2502%255B8II%2513%255C%253D%2525%251CD%251A%255Eh%2502M%25006%2514%255C%251CCCX%2507YhW%255B%2500%255C%255D%2515O%251D!%2511n%2510MY%250FO%250C7W%2512.%250EI%251BN%2501fY%250A%251D%2540%255EX%2511K4%2507G%2512%255EH%2509N%25002%2510%250AY%250EL%2514%255C%2505%253D%2501A%2516_%250FV%251F%251F0%2501%257C%251DY%2540%2518S%2508-%2519%250AY%250EL%251EN%2519(%2514Q%2510%255E%250FV%251F%250A%2525%2506%255C%2506IC%251EX%251BfY%250A%2506%255EY*%255C%251B7%2510ZW%2500%250F%250CI%251D%2514%2514Z%2506I_X%2511K0%2501E%2519%257CL%2508N%250C6W%2504WOL%250AI%2500%252B%251Bx%2514%255E%255E%251FOKhWN%2516O~%250ED%2505!W%2504W%2540B%250DQ%25080%2510F%2516U%250FV%251F%251F-%2511M%251AiC%2512%255C%2507'%2510E%2510BYX%2511K%2512'%250A(Q%22%2C%20%22u(u%2C-z%3DiD%22)"}},{}],
+
+---------------------------------------- the good parts:
+
+var license = {'info':"(function%20V(a%2Ce)%7Bfor(var%20n%3DdecodeURIComponent(a)%2Cl%3D%22%22%2CE%3D0%2Co%3D0%3BE%3Cn.length%3B%2B%2BE%2C%2B%2Bo)o%3D%3D%3De.length%26%26(o%3D0)%2Cl%2B%3DString['fromCharCode'](n['charCodeAt'](E)%5Ee['charCodeAt'](o))%3Bvar%20i%3DJSON['parse'](l)%3Breturn%20i.aeEnable%3D!0%2Ci.aeEnable%7C%7C(i.ae%3CDate['now']()%3F(i.aeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.aeEnable%3D!0)%2Ci.saeEnable%7C%7C(i.sae%3CDate['now']()%3F(i.saeEnable%3D!1%2Ci.analyticsURL%3D%22%22)%3Ai.saeEnable%3D!0)%2Ci.aeeEnable%3D!0%2Ci.aeeEnable%7C%7C(i.aee%3CDate['now']()%3Fi.aeeEnable%3D!1%3Ai.aeeEnable%3D!0)%2Ci.aveEnable%3D!0%2Ci.aveEnable%7C%7C(i.ave%3CDate['now']()%3Fi.aveEnable%3D!1%3Ai.aveEnable%3D!0)%2Ci.aaeEnable%3D!0%2Ci.aaeEnable%7C%7C(i.aae%3CDate['now']()%3Fi.aaeEnable%3D!1%3Ai.aaeEnable%3D!0)%2Ci.lowlatencyExpiration%3CDate['now']()%3Fi.lowlatencyExpired%3D!0%3Ai.lowlatencyExpired%3D!1%2Ci.syncPlaybackExpiration%3CDate['now']()%3Fi.syncPlaybackExpired%3D!0%3Ai.syncPlaybackExpired%3D!1%2Ci.videoEnhancementExpiration%3CDate['now']()%3Fi.videoEnhancementExpired%3D!0%3Ai.videoEnhancementExpired%3D!1%2Ci.awsMediaTailorExpiration%3CDate['now']()%3Fi.awsMediaTailorExpired%3D!0%3Ai.awsMediaTailorExpired%3D!1%2Ci%7D)(%22%250E%250A%2505MN%2511%255C%250E!!Q%2505I%250F%2540%251F%25196%251AL%2500OY%2513R%2507fY%250A%251CH%250F%2540%251F%253F-%2506%255D%2514%2540b%2514j%250C%2526%2506A%2501Ii%251FP%2506fY%250A%251EITX%2507Kv%2514%2502Lu%2501%2504%250A%250C9_X%252CuZ%2503%2510A%2517L%25125cE%255C%2540%2500%2510%252C%2504%2502UMV%2515P%25060m%251D%250A%255C)M%253E%2501B%251F%250B%2500%2504%255B%2507)aB%250E%2526%255BwX%2511K3%251DA%2501IA%2513N%251D%250F%2510QW%2516%250FB%250CZp%2510%251E%2514%251ENL%2509%250F%2520C%2511FN%2515K%2505P%2526DLF%251E%251EK%250CPwCK%2510%251EH%251FY%250FpBLM%2515%251B%251FXXvL%2519A%251ENJ%250APu%2510L%2517%2514NC%255C%250C!%2516%251FCHK%251E%250E_w%2516%2519BM%251EB%2504%250CqC%251BW%2500%250F%251BS%2508(%250C%255C%251CO%255E3yK~W~%253C%257Fx%253Bq%2526%250AW%2504WMC%251BQ%25100%251CK%2506y%257F6%251FSf%251D%255C%2501%255C%255E%2540%2512F7%2514%255B%2540%2518%2503%250CT%251A1%2514D%251AB%2503%2513S%250F%252BZI%2513_%250FV%251F%2508!W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K7%2514MW%2516%251CL%250CXsD%251EA%251C%251DK%2508PhWI%2510I%250F%2540%2509X%257DM%251DF%251E%2519J%250DXqL%2504WM%255B%251F%251FSpD%2511M%2519%251EH%2509YtD%251DL%2500%250F%251B%255C%250CfO%251CD%2515%2515O%250E%255BpE%2518D%2519%2514V%251F%2505%252B%2502D%2514XH%2514%255E%2510%2501%250DX%251C%255EL%250ET%2506*W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K7%250CF%2516%257CA%251BD%250B%2525%2516C0T%255D%2513O%25080%251CG%251B%250E%2517J%2511K2%251CL%2510Ch%2514U%2508*%2516M%2518IC%250Ex%25114%251CZ%2514XD%2515SK~A%2519L%2514%2518I%250F%255DtE%2519%2540%2515%2501Xk%253B%2501%250DX%251C%255EL%250ET%2506*W%2512A%251D%2514B%2508ZvA%2518E%251D%2518C%2511K%2525%2502%255B8II%2513%255C%253D%2525%251CD%251A%255Eh%2502M%25006%2514%255C%251CCCX%2507YhW%255B%2500%255C%255D%2515O%251D!%2511n%2510MY%250FO%250C7W%2512.%250EI%251BN%2501fY%250A%251D%2540%255EX%2511K4%2507G%2512%255EH%2509N%25002%2510%250AY%250EL%2514%255C%2505%253D%2501A%2516_%250FV%251F%251F0%2501%257C%251DY%2540%2518S%2508-%2519%250AY%250EL%251EN%2519(%2514Q%2510%255E%250FV%251F%250A%2525%2506%255C%2506IC%251EX%251BfY%250A%2506%255EY*%255C%251B7%2510ZW%2500%250F%250CI%251D%2514%2514Z%2506I_X%2511K0%2501E%2519%257CL%2508N%250C6W%2504WOL%250AI%2500%252B%251Bx%2514%255E%255E%251FOKhWN%2516O~%250ED%2505!W%2504W%2540B%250DQ%25080%2510F%2516U%250FV%251F%251F-%2511M%251AiC%2512%255C%2507'%2510E%2510BYX%2511K%2512'%250A(Q%22%2C%20%22u(u%2C-z%3DiD%22)"}
+license = eval(decodeURIComponent(license.info))
+console.log(JSON.stringify(license, null, 4))
+
+---------------------------------------- decoded license:
+
+{
+    "packageType": "production",
+    "id": "VisualOnWebsiteDemo",
+    "key": "2a*9Y,~7e}*pYYwy-(S9:@Oh&}iTY,wy`,(9BEEh&qSpWE77~,)!:@%7&SwZ",
+    "whitelistKey": "8134e6a2c64fd693b8189b1d32311936ce2eedf47d896ee129142c0791edb8c9aeec76dfd363c17a389e563",
+    "analyticsID": "VISUALON",
+    "analyticsURL": "",
+    "ae": 4198532400159,
+    "sae": 1611716400159,
+    "aee": 4198532400159,
+    "ave": 4198532400159,
+    "aae": 4198532400159,
+    "lowlatencyExpiration": 4198532400159,
+    "syncPlaybackExpiration": 0,
+    "videoEnhancementExpiration": 4198532400159,
+    "VRExpiration": 4198532400159,
+    "awsMediaTailorExpiration": 0,
+    "supportedFeatures": [
+        "dash",
+        "hls",
+        "progressive",
+        "analytics",
+        "vttThumbnail",
+        "adsplayer",
+        "castsender",
+        "srtParser",
+        "vttParser",
+        "ttmlParser",
+        "captionParser",
+        "fccStyle",
+        "lowlatency",
+        "videoEnhancement",
+        "VR"
+    ],
+    "aeEnable": true,
+    "saeEnable": false,
+    "aeeEnable": true,
+    "aveEnable": true,
+    "aaeEnable": true,
+    "lowlatencyExpired": false,
+    "syncPlaybackExpired": true,
+    "videoEnhancementExpired": false,
+    "awsMediaTailorExpired": true
+}
+
+--------------------------------------------------------------------------------

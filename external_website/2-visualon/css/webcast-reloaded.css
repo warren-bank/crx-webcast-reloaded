@@ -1,0 +1,73 @@
+body {
+  margin: 0;
+  padding: 15px;
+}
+
+.URL-entry-form {
+}
+
+.URL-entry-form input[type] {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.webcast-video-player,
+.webcast-video-player #video-player {
+  width: 720px;
+}
+.webcast-video-player #video-player {
+  height: 405px;
+}
+
+.webcast-video-player #video-player .chromecast-playback .chromecast-playback-background {
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.webcast-video-player .video-player-info {
+  margin-top: 1.5em;
+  height: 24px;
+}
+.webcast-video-player .video-player-info * {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 24px;
+}
+.webcast-video-player .video-player-info > .right {
+  float: right;
+}
+
+.webcast-video-player .video-player-info i.material-icons {
+  cursor: pointer;
+}
+.webcast-video-player .video-player-info i.material-icons#destroy_videoplayer {
+  margin-right: 0.2em;
+}
+.webcast-video-player .video-player-info i.material-icons#destroy_videoplayer:hover {
+  color: #f00;
+}
+.webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state {
+  margin-left: 1.2em;
+}
+.webcast-video-player .video-player-info i.material-icons#toggle_chromecast_connection_state:hover {
+  color: #666;
+}
+
+.webcast-video-player .video-player-info .video-player-info-status a,
+.webcast-video-player .video-player-info .video-player-info-status a:visited {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+.webcast-video-player .video-player-info .video-player-info-status a:hover {
+  border-bottom: 1px #333 dotted;
+}
+
+.webcast-video-player .video-player-info #seek_to {
+}
+.webcast-video-player .video-player-info #seek_to input {
+  text-align: center;
+}
+.webcast-video-player .video-player-info #seek_to button#seek_to_time {
+  margin-left: 0.2em;
+}

@@ -5,20 +5,29 @@
   <title>WebCast-Reloaded</title>
   <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
 
-  <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/material-icons.css" />
-  <link rel="stylesheet" href="css/chromecast.css" />
+  <link rel="stylesheet" href="css/webcast-reloaded.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/voplayer-ui.min.css" />
 
   <!-- google chromecast lib -->
-  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
+  <!--
+  <script src="js/plugins/voplayer-analytics.min.js"></script>
+  -->
+  <script src="js/plugins/voplayer-castsender.min.js"></script>
+  <script src="js/plugins/voplayer-captionParser.min.js"></script>
+  <script src="js/plugins/voplayer-srtParser.min.js"></script>
+  <script src="js/plugins/voplayer-vttParser.min.js"></script>
+  <script src="js/plugins/voplayer-ttmlParser.min.js"></script>
+  <script src="js/plugins/voplayer-fccStyle.min.js"></script>
+  <script src="js/plugins/voplayer-subtitles.min.js"></script>
 
   <script src="js/voplayer.min.js"></script>
-  <script src="js/assets.js"></script>
+  <script src="js/voplayer-ui.min.js"></script>
   <script src="js/tool.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/chromecast.js"></script>
-  <script src="js/init.js"></script>
+  <script src="js/webcast-reloaded.js"></script>
 </head>
 <body>
   <div class="URL-entry-form">
@@ -28,74 +37,22 @@
     <div><input type="text" id="URL_subtitle" /></div>
     <button>Load Player</button>
   </div>
-  <div class="player" style="display:none">
-    <div id="player-container" class="html5-video-player">
-      <div class="vop-remote-display-container">
-        <div class="vop-remote-display-status">
-          <div class="vop-remote-display-status-icon material-icons">cast</div>
-          <div class="vop-remote-display-status-text"></div>
+  <div class="webcast-video-player" style="display:none">
+    <div id="video-player">
+      <div id="video-player-container"></div>
+    </div>
+    <div class="video-player-info">
+      <i class="material-icons" id="destroy_videoplayer">highlight_off</i>
+      <span class="video-player-info-status"></span>
+      <div class="right">
+        <div id="seek_to">
+          <input type="text" id="seek_to_hh" size="2" placeholder="HH" /> :
+          <input type="text" id="seek_to_mm" size="2" placeholder="MM" /> :
+          <input type="text" id="seek_to_ss" size="4" placeholder="SS" />
+          <button id="seek_to_time">Seek</button>
         </div>
-      </div>
-      <div class="vop-tooltip">
-          <div class="vop-tooltip-bg"></div>
-          <div class="vop-tooltip-text-wrapper">
-            <span class="vop-tooltip-text">00:00</span>
-          </div>
-      </div>
-      <div class="vop-popup vop-settings-menu">
-        <div class="vop-panel">
-          <div class="vop-panel-menu"></div>
-        </div>
-      </div>
-      <div class="vop-gradient-bottom"></div>
-      <div class="vop-control-bar">
-        <div class="vop-progress-bar">
-          <div class="vop-progress-list">
-              <div class="vop-load-progress"></div>
-              <div class="vop-play-progress"></div>
-              <div class="vop-hover-progress"></div>
-            </div>
-          <div class="vop-scrubber-container"></div>
-        </div>
-        <div class="vop-controls">
-            <div class="vop-left-controls">
-              <button class="vop-button material-icons vop-play-button"></button>
-              <button class="vop-button material-icons vop-mute-button" title="mute"></button>
-              <div class="vop-volume-panel">
-                <div class="vop-volume-slider">
-                  <div class="vop-volume-slider-handle">
-                  </div>
-                </div>
-              </div>
-              <div class="vop-time-display"><span class="vop-time-text">00:00/00:00</span></div>
-            </div>
-            <div class="vop-right-controls">
-              <button is="google-cast-button" id="castbutton" title="Chromecast"></button>
-              <div class="vop-button material-icons vop-subtitles-button" title="subtitles">subtitles</div>
-              <div class="vop-button material-icons vop-settings-button" title="settings">settings</div>
-              <button class="vop-button material-icons vop-fullscreen-button">fullscreen</button>
-          </div>
-        </div>
-      </div>
-      <div class="vop-spinner">
-        <div class="vop-spinner-container">
-          <div class="vop-spinner-rotator">
-            <div class="vop-spinner-left">
-              <div class="vop-spinner-circle">
-              </div>
-            </div>
-            <div class="vop-spinner-right">
-              <div class="vop-spinner-circle">
-              </div>
-            </div>
-          </div>
-        </div>
+        <i class="material-icons" id="toggle_chromecast_connection_state">cast</i>
       </div>
     </div>
-    <div class="player-info">
-      <i class="material-icons">highlight_off</i>
-      <span class="player-info-status"></span>
-    </div>
-  </div>
 </body>
 </html>

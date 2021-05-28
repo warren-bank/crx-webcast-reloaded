@@ -23,50 +23,42 @@ The overlay layer holds:
   <!-- Change the title tag to your app's name to display as the details text on the Cast device picker -->
   <title>Casting app name</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="receiver.css" />
-  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-<script type="text/javascript" src="libs/voreceiver.min.js"></script>
-  <script type="text/javascript" src="main.js"></script>
+  <link rel="stylesheet" href="css/receiver.css" />
+  <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
+  <script type="text/javascript" src="libs/voMediaTailor.min.js" x-src="https://d2oqx05f1pe3rg.cloudfront.net/latest/libs/voMediaTailor.min.js"></script>
+  <script type="text/javascript" src="libs/voreceiver.min.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body style="margin: 0">
-  <div id="player" class="player">
-    <div class="media">
-      <video></video>
-      <div class="spinner_large"></div>
+  <div class="receiver-video-player">
+    <div id="player-container">
     </div>
-    <div class="logo"></div>
-    <div class="spinner"></div>
-    <div class="watermark"></div>
-    <div class="gradient"></div>
-    <div class="overlay">
-      <div class="media-info">
-        <div class="media-artwork"></div>
-        <div class="media-text">
-          <div class="media-title"></div>
-          <div class="media-subtitle"></div>
-        </div>
-      </div>
-      <div class="preview-mode-info">
-        <div class="preview-mode-artwork"></div>
-        <div class="preview-mode-text">
-          <div class="preview-mode-timer">
-            <div class="preview-mode-timer-starts">Up next in&nbsp;</div>
-            <div class="preview-mode-timer-countdown"></div>
-            <div class="preview-mode-timer-sec">&nbsp;secs...</div>
+    <div class="vop-spinner">
+      <div class="vop-spinner-container">
+        <div class="vop-spinner-rotator">
+          <div class="vop-spinner-left">
+            <div class="vop-spinner-circle">
+            </div>
           </div>
-          <div class="preview-mode-title"></div>
-          <div class="preview-mode-subtitle"></div>
+          <div class="vop-spinner-right">
+            <div class="vop-spinner-circle">
+            </div>
+          </div>
         </div>
       </div>
-      <div class="controls">
-        <span class="controls-play-pause"></span>
-        <span class="controls-cur-time"></span>
-        <span class="controls-total-time"></span>
-        <div class="controls-progress">
-          <div class="controls-progress-inner progressBar"></div>
-          <div class="controls-progress-thumb"></div>
+    </div>
+    <div class="vop-timeline-bar">
+      <span class="vop-position">00:00</span>
+      <div class='vop-progress-bar'>
+        <div class='vop-progress-list'>
+          <div class='vop-load-progress'></div>
+          <div class='vop-play-progress'></div>
         </div>
       </div>
+      <span class="vop-duration">00:00</span>
+    </div>
+    <div class="vop-huge-button-container">
+      <div class="vop-huge-button"></div>
     </div>
   </div>
 </body>
