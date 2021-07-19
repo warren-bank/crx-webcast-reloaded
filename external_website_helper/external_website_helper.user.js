@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.3.0
+// @version      0.3.1
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.surge.sh/*
 // @match        *://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
@@ -403,22 +403,50 @@ var prepopulate_incognito_forms = function(){
     }
   }
 
-  var process_page_in_incognito_window = function(){
-    var fs = window.RequestFileSystem || window.webkitRequestFileSystem
+  var get_chrome_major_version = function(){
+    var useragent = navigator.userAgent
+    var regex     = /^.*\bChrome\/(\d+)\..*$/
+    var version
 
-    if (!fs)
-      return
+    version = useragent.replace(regex, '$1')
+    version = Number(version)
+
+    return isNaN(version) ? 0 : version
+  }
+
+  var process_page_in_incognito_window = function(){
+    // updated detection strategy, based on:
+    //   https://mishravikas.com/articles/2019-07/bypassing-anti-incognito-detection-google-chrome.html
+
+    var chrome_major_version = get_chrome_major_version()
 
     var callback = function(is_incognito){
       if (is_incognito)
         process_page()
     }
 
-    fs(window.TEMPORARY,
-      100,
-      callback.bind(undefined, false),
-      callback.bind(undefined, true)
-    )
+    if (chrome_major_version <= 73) {
+      var fs = window.RequestFileSystem || window.webkitRequestFileSystem
+
+      if (!fs)
+        return
+
+      fs(window.TEMPORARY,
+        100,
+        callback.bind(undefined, false),
+        callback.bind(undefined, true)
+      )
+    }
+    else { // Chrome 74+
+      if (!navigator.webkitTemporaryStorage || !navigator.webkitTemporaryStorage.queryUsageAndQuota)
+        return
+
+      navigator.webkitTemporaryStorage.queryUsageAndQuota(function(usage, quota){
+        var is_incognito = ((typeof quota === "number") && (quota > 0) && (quota < 175000000))
+
+        callback(is_incognito)
+      })
+    }
   }
 
   process_page_in_incognito_window()
