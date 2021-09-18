@@ -86,13 +86,16 @@ window.onload = function() {
   var $start_app_button   = document.querySelector('.HLS-Proxy-configs-form button#load_external')
 
   var encoded_urls = {
-    video: null,
-    subtitle: null,
-    referer: null
+    video:      null,
+    caption:    null,
+    referer:    null,
+    drm:        null
   }
   var decoded_urls = {
-    video: null,
-    referer: null
+    video:      null,
+    referer:    null,
+    drm_scheme: null,
+    drm_server: null
   }
 
   var get_target_version = function() {
@@ -122,7 +125,7 @@ window.onload = function() {
   }
 
   var decode_video_url = function() {
-    var base64_payload, payload, pattern
+    var base64_payload, payload, pattern, matches
 
     if (!encoded_urls.video)
       return false
@@ -146,6 +149,18 @@ window.onload = function() {
       pattern = /^https?:/i
       if (pattern.test(payload)) {
         decoded_urls.referer = payload
+      }
+    }
+
+    if (encoded_urls.drm) {
+      base64_payload = encoded_urls.drm
+      payload        = decode_URL(base64_payload)
+
+      pattern = /^(widevine|clearkey|playready|fairplay)\|(https?:.*)$/i
+      matches = pattern.exec(payload)
+      if (matches) {
+        decoded_urls.drm_scheme = matches[1]
+        decoded_urls.drm_server = matches[2]
       }
     }
 
@@ -250,7 +265,10 @@ window.onload = function() {
   */
 
     var base64_proxy_server = get_base64_proxy_server()
-    var webcast             = base_url + '#/watch/' + base64_proxy_server + (encoded_urls.subtitle ? ('/subtitle/' + encoded_urls.subtitle) : '') + (encoded_urls.referer ? ('/referer/' + encoded_urls.referer) : '')
+    var webcast             = base_url + '#/watch/' + base64_proxy_server 
+                                + (encoded_urls.caption ? ('/subtitle/' + encoded_urls.caption) : '')
+                                + (encoded_urls.referer ? ('/referer/'  + encoded_urls.referer) : '')
+                                + (encoded_urls.drm     ? ('/drm/'      + encoded_urls.drm)     : '')
 
     return webcast
   }
@@ -266,18 +284,21 @@ window.onload = function() {
     var b64, hash_regex_pattern, matches
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+?))?(?:/referer/(' + b64 + '+?))?$'
+    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+?))?(?:/referer/(' + b64 + '+?))?(?:/drm/(' + b64 + '+?))?$'
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     matches = hash_regex_pattern.exec(window.location.hash)
     if (matches && matches.length && matches[1]) {
         encoded_urls.video = matches[1]
-        if (matches.length > 2 && matches[2]) {
-            encoded_urls.subtitle = matches[2]
-        }
-        if (matches.length > 3 && matches[3]) {
-            encoded_urls.referer = matches[3]
-        }
+
+        if ((matches.length > 2) && matches[2])
+          encoded_urls.caption = matches[2]
+
+        if ((matches.length > 3) && matches[3])
+          encoded_urls.referer = matches[3]
+
+        if ((matches.length > 4) && matches[4])
+          encoded_urls.drm = matches[4]
     }
   }
 
@@ -362,8 +383,10 @@ window.onload = function() {
       var base64_proxy_server = get_base64_proxy_server()
       var hls_url             = decode_URL(base64_proxy_server)
       var referer_url         = decoded_urls.referer
+      var drm_scheme          = decoded_urls.drm_scheme
+      var drm_server          = decoded_urls.drm_server
 
-      webmonkey_callback(hls_url, referer_url)
+      webmonkey_callback(hls_url, referer_url, drm_scheme, drm_server)
     }
 
     $start_app_button.onclick = start_android_intent

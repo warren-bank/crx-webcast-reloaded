@@ -43,33 +43,39 @@ window.onload  = function() {
   var players  = {
     "1-webcast": {
       subdirectory: "1-webcast",
-      subtitles: false,
-      referer: false
+      subtitles:    false,
+      referer:      false,
+      drm:          false
     },
     "2-visualon": {
       subdirectory: "2-visualon",
-      subtitles: true,
-      referer: false
+      subtitles:    true,
+      referer:      false,
+      drm:          false
     },
     "3-theoplayer": {
       subdirectory: "3-theoplayer",
-      subtitles: true,
-      referer: false
+      subtitles:    true,
+      referer:      false,
+      drm:          false
     },
     "4-clappr": {
       subdirectory: "4-clappr",
-      subtitles: true,
-      referer: false
+      subtitles:    true,
+      referer:      false,
+      drm:          false
     },
     "5-clappr-captions": {
       subdirectory: "5-clappr-captions",
-      subtitles: true,
-      referer: false
+      subtitles:    true,
+      referer:      false,
+      drm:          false
     },
     "6-clappr-latest": {
       subdirectory: "6-clappr-latest",
-      subtitles: true,
-      referer: false
+      subtitles:    true,
+      referer:      false,
+      drm:          false
     }
   }
 
@@ -90,10 +96,13 @@ window.onload  = function() {
 
       url = window.location.href.replace(/\/chromecast_sender\.html/i, ('/' + (player.subdirectory || player_key) + '/index.html'))
       if (! player.subtitles){
-        url = url.replace(new RegExp('/subtitle/.*$', 'i'), '')
+        url = url.replace(new RegExp('/subtitle/[^/]*', 'i'), '')
       }
       if (! player.referer){
-        url = url.replace(new RegExp('/referer/.*$', 'i'), '')
+        url = url.replace(new RegExp('/referer/[^/]*', 'i'), '')
+      }
+      if (! player.drm){
+        url = url.replace(new RegExp('/drm/[^/]*', 'i'), '')
       }
       window.location = url
     }
