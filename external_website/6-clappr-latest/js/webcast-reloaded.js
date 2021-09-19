@@ -121,8 +121,11 @@ var initialize_videoplayer = function(URL_video, URL_subtitle, DRM_scheme, DRM_s
                 break
         }
 
-        if (settings.shakaConfiguration)
+        if (settings.shakaConfiguration) {
             settings.plugins.push(DashShakaPlayback)
+
+            settings.chromecast.customData = {protectionSystem: DRM_scheme, licenseURL: DRM_server}
+        }
     }
 
     var types = [
