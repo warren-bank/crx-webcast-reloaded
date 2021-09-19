@@ -9,3 +9,7 @@ https://cdn.jsdelivr.net/npm/level-selector@0.2.0/dist/level-selector.min.js
 https://www.jsdelivr.com/package/npm/clappr-chromecast-plugin
 https://cdn.jsdelivr.net/npm/clappr-chromecast-plugin@0.1.1/dist/clappr-chromecast-plugin.min.js
   0.1.1
+
+https://www.jsdelivr.com/package/npm/dash-shaka-playback
+https://cdn.jsdelivr.net/npm/dash-shaka-playback@3.0.3/dist/dash-shaka-playback.min.js
+  3.0.3

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebCast-Reloaded
 // @description  Userscript for Android-WebMonkey to enable the ability to open an Intent chooser to transfer video streams to another app (ex: Android-WebCast).
-// @version      1.0.1
+// @version      1.0.2
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.surge.sh/*
 // @match        *://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
@@ -95,7 +95,7 @@ var get_decoded_urls = function() {
     pattern = /^(widevine|clearkey|playready|fairplay)\|(https?:.*)$/i
     matches = pattern.exec(payload)
     if (matches) {
-      decoded_urls.drm_scheme = matches[1]
+      decoded_urls.drm_scheme = matches[1].toLowerCase()
       decoded_urls.drm_server = matches[2]
     }
   }

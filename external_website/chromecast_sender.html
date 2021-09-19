@@ -57,29 +57,29 @@ window.onload  = function() {
       subdirectory: "3-theoplayer",
       subtitles:    true,
       referer:      false,
-      drm:          false
+      drm:          true
     },
     "4-clappr": {
       subdirectory: "4-clappr",
       subtitles:    true,
       referer:      false,
-      drm:          false
+      drm:          true
     },
     "5-clappr-captions": {
       subdirectory: "5-clappr-captions",
       subtitles:    true,
       referer:      false,
-      drm:          false
+      drm:          true
     },
     "6-clappr-latest": {
       subdirectory: "6-clappr-latest",
       subtitles:    true,
       referer:      false,
-      drm:          false
+      drm:          true
     }
   }
 
-  var default_player_key = '5-clappr-captions'
+  var default_player_key = '4-clappr'
   var cookie_name        = 'chromecast_player_key'
   var time_remains       = (1000)*(10)  // 10 seconds
   var timer, interval

@@ -266,7 +266,7 @@ window.onload  = function() {
       pattern = /^(widevine|clearkey|playready)\|(https?:.*)$/i
       matches = pattern.exec(payload)
       if (matches) {
-        $drm_license_scheme.value = matches[1]
+        $drm_license_scheme.value = matches[1].toLowerCase()
         $drm_license_server.value = matches[2]
       }
     }

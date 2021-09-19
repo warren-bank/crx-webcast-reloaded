@@ -37,7 +37,7 @@ var destroy_videoplayer = function(skip_reload) {
     }
 }
 
-var initialize_videoplayer = function(URL_video, URL_subtitle) {
+var initialize_videoplayer = function(URL_video, URL_subtitle, DRM_scheme, DRM_server) {
     if (! URL_video) return
 
     var settings = { 
@@ -56,6 +56,16 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
 
     if (! URL_subtitle) {
         delete settings.textTracks
+    }
+
+    // https://www.theoplayer.com/demo-zone
+    // https://demo.theoplayer.com/drm-aes-protection-128-encryption
+
+    if (DRM_scheme && DRM_server) {
+        settings.sources[0].drm = {}
+        settings.sources[0].drm[DRM_scheme] = {
+            licenseAcquisitionURL: DRM_server
+        }
     }
 
     var types = [
@@ -94,9 +104,9 @@ var initialize_videoplayer = function(URL_video, URL_subtitle) {
 
     // display direct links to the video stream and subtitle sources
     var info
-    info = `Now Playing: <a href="${URL_video}">Video</a>`
+    info = 'Now Playing: <a href="' + URL_video + '">Video</a>'
     if (URL_subtitle) {
-        info += ` with <a href="${URL_subtitle}">Subtitles</a>`
+        info += ' with <a href="' + URL_subtitle + '">Subtitles</a>'
     }
 
     document.querySelector('.webcast-video-player .video-player-info .video-player-info-status').innerHTML = info
@@ -118,10 +128,10 @@ var show_player = function() {
 }
 
 var parse_location_hash = function() {
-    var b64, hash_regex_pattern, URL_video, URL_subtitle
+    var b64, hash_regex_pattern, URL_video, URL_subtitle, DRM_data, DRM_scheme, DRM_server
 
     b64 = '[A-Za-z0-9+/=%]'
-    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+?))?(?:/referer/(' + b64 + '+?))?(?:/drm/(' + b64 + '+?))?$'
+    hash_regex_pattern = '^#/watch/(' + b64 + '+?)(?:/subtitle/(' + b64 + '+?))?(?:/referer/(?:' + b64 + '+?))?(?:/drm/(' + b64 + '+?))?$'
     hash_regex_pattern = new RegExp(hash_regex_pattern)
 
     var decode_URL = function(str) {
@@ -138,42 +148,78 @@ var parse_location_hash = function() {
       return str
     }
 
+    var decode_DRM_data = function(str) {
+        var DRM_data, pattern, matches
+
+        if (str) {
+            pattern = /^(widevine|clearkey|playready|fairplay)\|(https?:.*)$/i
+            matches = pattern.exec(str)
+            if (matches) {
+                DRM_data = {
+                    DRM_scheme: matches[1].toLowerCase(),
+                    DRM_server: matches[2]
+                }
+            }
+        }
+        return DRM_data
+    }
+
     var matches = hash_regex_pattern.exec(window.location.hash)
     if (matches && matches.length && matches[1]) {
         URL_video = decode_URL( matches[1] )
-        if (matches.length > 2 && matches[2]) {
+
+        if (matches.length > 2 && matches[2])
             URL_subtitle = decode_URL( matches[2] )
+
+        if (matches.length > 3 && matches[3]) {
+            DRM_data = decode_DRM_data( decode_URL( matches[3] ) )
+
+            if (DRM_data) {
+                DRM_scheme = DRM_data.DRM_scheme
+                DRM_server = DRM_data.DRM_server
+            }
         }
     }
-    return {URL_video, URL_subtitle}
+
+    return {URL_video: URL_video, URL_subtitle: URL_subtitle, DRM_scheme: DRM_scheme, DRM_server: DRM_server}
 }
 
 var $DOMContentLoaded = function () {
-    var {URL_video, URL_subtitle} = parse_location_hash()
+    var parsed_hash  = parse_location_hash()
+    var URL_video    = parsed_hash.URL_video
+    var URL_subtitle = parsed_hash.URL_subtitle
+    var DRM_scheme   = parsed_hash.DRM_scheme
+    var DRM_server   = parsed_hash.DRM_server
 
     if (URL_video) {
         show_player()
-        initialize_videoplayer(URL_video, URL_subtitle)
+        initialize_videoplayer(URL_video, URL_subtitle, DRM_scheme, DRM_server)
     }
     else {
         document.querySelector('.URL-entry-form button').onclick = function() {
             URL_video    = document.querySelector('.URL-entry-form input#URL_video').value
             URL_subtitle = document.querySelector('.URL-entry-form input#URL_subtitle').value
+            DRM_scheme   = null
+            DRM_server   = null
 
             if (URL_video) {
                 show_player()
-                initialize_videoplayer(URL_video, URL_subtitle)
+                initialize_videoplayer(URL_video, URL_subtitle, DRM_scheme, DRM_server)
             }
         }
     }
 }
 
 var $hashchange = function () {
-    var {URL_video, URL_subtitle} = parse_location_hash()
+    var parsed_hash  = parse_location_hash()
+    var URL_video    = parsed_hash.URL_video
+    var URL_subtitle = parsed_hash.URL_subtitle
+    var DRM_scheme   = parsed_hash.DRM_scheme
+    var DRM_server   = parsed_hash.DRM_server
 
     if (URL_video) {
         if (!is_player_showing) show_player()
-        initialize_videoplayer(URL_video, URL_subtitle)
+        initialize_videoplayer(URL_video, URL_subtitle, DRM_scheme, DRM_server)
     }
     else {
         destroy_videoplayer()

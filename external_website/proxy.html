@@ -159,7 +159,7 @@ window.onload = function() {
       pattern = /^(widevine|clearkey|playready|fairplay)\|(https?:.*)$/i
       matches = pattern.exec(payload)
       if (matches) {
-        decoded_urls.drm_scheme = matches[1]
+        decoded_urls.drm_scheme = matches[1].toLowerCase()
         decoded_urls.drm_server = matches[2]
       }
     }
