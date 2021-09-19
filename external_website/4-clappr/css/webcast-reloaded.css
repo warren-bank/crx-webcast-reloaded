@@ -4,10 +4,20 @@ body {
 }
 
 .URL-entry-form {
+  white-space: nowrap;
 }
-
+.URL-entry-form  > table,
+.URL-entry-form  > table td:last-child,
 .URL-entry-form input[type] {
   width: 100%;
+}
+.URL-entry-form  > table td {
+  vertical-align: top;
+}
+.URL-entry-form  > table td + td {
+  padding-left: 1em;
+}
+.URL-entry-form input[type] {
   margin-bottom: 1em;
 }
 

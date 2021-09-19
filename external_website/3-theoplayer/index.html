@@ -22,6 +22,23 @@
     <div><input type="text" id="URL_video" /></div>
     <div>URL to external subtitles:</div>
     <div><input type="text" id="URL_subtitle" /></div>
+    <table>
+      <tr>
+        <td>
+          <div>DRM scheme:</div>
+          <select id="DRM_scheme">
+            <option value="">Scheme:</option>
+            <option value="widevine">Widevine</option>
+            <option value="clearkey">ClearKey</option>
+            <option value="playready">PlayReady</option>
+          </select>
+        </td>
+        <td>
+          <div>DRM license server:</div>
+          <div><input type="text" id="DRM_server" /></div>
+        </td>
+      </tr>
+    </table>
     <button>Load Player</button>
   </div>
   <div class="webcast-video-player" style="display:none">

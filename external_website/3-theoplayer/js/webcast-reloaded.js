@@ -199,8 +199,8 @@ var $DOMContentLoaded = function () {
         document.querySelector('.URL-entry-form button').onclick = function() {
             URL_video    = document.querySelector('.URL-entry-form input#URL_video').value
             URL_subtitle = document.querySelector('.URL-entry-form input#URL_subtitle').value
-            DRM_scheme   = null
-            DRM_server   = null
+            DRM_scheme   = document.querySelector('.URL-entry-form select#DRM_scheme').value
+            DRM_server   = document.querySelector('.URL-entry-form input#DRM_server').value
 
             if (URL_video) {
                 show_player()
