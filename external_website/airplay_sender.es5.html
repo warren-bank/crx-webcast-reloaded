@@ -904,6 +904,12 @@ window.onload  = function() {
       var intent_data = null
 
       switch(key) {
+        case 'android-settings-app-info-exoairplayer':
+          intent_data = [
+            'action: android.settings.APPLICATION_DETAILS_SETTINGS',
+            'data:   package:com.github.warren_bank.exoplayer_airplay_receiver'
+          ]
+          break
         case 'android-recents-screen-api-16':
           intent_data = [
             'package: com.android.systemui',
@@ -1498,6 +1504,7 @@ window.onload  = function() {
           <div>
             <select id="predefined_intent_data">
               <option value="">Load:</option>
+              <option value="android-settings-app-info-exoairplayer">Android Settings &gt; App Info &gt; ExoAirPlayer</option>
               <option value="android-recents-screen-api-16">Android Recents screen [Android 4.1]</option>
               <option value="android-recents-screen-api-17-19">Android Recents screen [Android 4.2 - 4.4]</option>
               <option value="android-recents-screen-api-21-25">Android Recents screen [Android 5.0 - 7.1]</option>
