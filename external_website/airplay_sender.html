@@ -1147,12 +1147,99 @@ window.onload  = () => {
       let intent_data = null
 
       switch(key) {
-        case 'android-settings-app-info-exoairplayer':
+        case 'share-text-content':
           intent_data = [
-            'action: android.settings.APPLICATION_DETAILS_SETTINGS',
-            'data:   package:com.github.warren_bank.exoplayer_airplay_receiver'
+            'action:   android.intent.action.SEND',
+            'type:     text/plain',
+            'category: android.intent.category.DEFAULT',
+            '',
+            '# String extras..',
+            'extra-android.intent.extra.TEXT:      Lorem Ipsum',
+            'extra-android.intent.extra.HTML_TEXT: ',
+            'extra-android.intent.extra.SUBJECT:   ',
+            '',
+            '# String[] extras..',
+            'extra-android.intent.extra.EMAIL:     ',
+            'extra-android.intent.extra.CC:        ',
+            'extra-android.intent.extra.BCC:       '
           ]
           break
+        case 'assistant':
+          intent_data = [
+            'action:   android.intent.action.ASSIST',
+            'category: android.intent.category.DEFAULT',
+            '',
+            '# String extras..',
+            'extra-android.intent.extra.ASSIST_PACKAGE: '
+          ]
+          break
+        case 'web-page':
+          intent_data = [
+            'package:  ',
+            'action:   android.intent.action.VIEW',
+            'data:     https://github.com/warren-bank/Android-ExoPlayer-AirPlay-Receiver/releases',
+            'type:     text/html',
+            'category: android.intent.category.DEFAULT',
+            'category: android.intent.category.BROWSABLE'
+          ]
+          break
+        case 'web-search':
+          intent_data = [
+            'action:   android.intent.action.WEB_SEARCH',
+            'category: android.intent.category.DEFAULT',
+            '',
+            '# String extras..',
+            'extra-query: ExoAirPlayer'
+          ]
+          break
+        case 'map-search':
+          intent_data = [
+            'action: android.intent.action.VIEW',
+            '',
+            '# format..',
+            '# "geo:0,0?q=" + encodeURIComponent(`${address_query}(${optional_label})`)',
+            '',
+            'data: geo:0,0?q=1600+Pennsylvania+Ave(White+House)'
+          ]
+          break
+        case 'map-location':
+          intent_data = [
+            'action: android.intent.action.VIEW',
+            '',
+            '# format..',
+            '# "geo:" + `${latitude},${longitude}`',
+            '',
+            'data: geo:38.897957,-77.036560'
+          ]
+          break
+        case 'phone-dialer':
+          intent_data = [
+            'action: android.intent.action.DIAL',
+            'data:   tel:8675309'
+          ]
+          break
+        case 'sms-messenger':
+          intent_data = [
+            'action: android.intent.action.VIEW',
+            'data:   sms:8675309',
+            '',
+            '# String extras..',
+            'extra-sms_body: Jenny Jenny, you\'re the girl for me..'
+          ]
+          break
+        case 'contacts':
+          intent_data = [
+            'action: android.intent.action.VIEW',
+            'type:   vnd.android.cursor.dir/contact'
+          ]
+          break
+        case 'call-logs':
+          intent_data = [
+            'action: android.intent.action.VIEW',
+            'type:   vnd.android.cursor.dir/calls'
+          ]
+          break
+
         case 'android-recents-screen-api-16':
           intent_data = [
             'package: com.android.systemui',
@@ -1172,6 +1259,12 @@ window.onload  = () => {
             'package: com.android.systemui',
             'class:   com.android.systemui.recents.RecentsActivity',
             'action:  com.android.systemui.recent.action.TOGGLE_RECENTS'
+          ]
+          break
+        case 'android-settings-app-info-exoairplayer':
+          intent_data = [
+            'action: android.settings.APPLICATION_DETAILS_SETTINGS',
+            'data:   package:com.github.warren_bank.exoplayer_airplay_receiver'
           ]
           break
       }
@@ -1213,6 +1306,7 @@ window.onload  = () => {
       'category: android.intent.category.BROWSABLE',
       'flag: 0x10000000',
       'flag: 0x00008000',
+      'chooser-title:   Open video in:',
       `extra-referUrl:  ${$referer_url.value.trim()}`,
       `extra-textUrl:   ${$caption_url.value.trim()}`,
       `extra-useCache:  ${$use_cache.checked ? 'true' : 'false'}`,
@@ -1744,10 +1838,20 @@ window.onload  = () => {
           <div>
             <select id="predefined_intent_data">
               <option value="">Load:</option>
-              <option value="android-settings-app-info-exoairplayer">Android Settings &gt; App Info &gt; ExoAirPlayer</option>
+              <option value="share-text-content">Share Text Content</option>
+              <option value="assistant">Assistant</option>
+              <option value="web-page">Web Page</option>
+              <option value="web-search">Web Search</option>
+              <option value="map-search">Map Search</option>
+              <option value="map-location">Map GPS Coordinates</option>
+              <option value="phone-dialer">Phone Dialer</option>
+              <option value="sms-messenger">SMS Messenger</option>
+              <option value="contacts">Contacts</option>
+              <option value="call-logs">Call Logs</option>
               <option value="android-recents-screen-api-16">Android Recents screen [Android 4.1]</option>
               <option value="android-recents-screen-api-17-19">Android Recents screen [Android 4.2 - 4.4]</option>
               <option value="android-recents-screen-api-21-25">Android Recents screen [Android 5.0 - 7.1]</option>
+              <option value="android-settings-app-info-exoairplayer">Android Settings &gt; App Info &gt; ExoAirPlayer</option>
             </select>
           </div>
           <div><button id="load_video">Load Video</button></div>
