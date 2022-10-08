@@ -101,27 +101,35 @@ const get_contextualized_baseurls = (https) => {
   return urls
 }
 
-const get_links = (video) => {
-  const {video_url, referer_url} = video
+const get_links = (media_item) => {
+  const {media_url, referer_url} = media_item
   const links = {}
 
-  if (!video_url)
+  if (!media_url)
     return links
 
-  const base64_video   = encode_link(video_url,   true)
+  const base64_video   = encode_link(media_url,   true)
   const base64_referer = encode_link(referer_url, true)
 
-  const https = is_https(video_url)
+  const https = is_https(media_url)
   const urls  = get_contextualized_baseurls(https)
   const hash  = "#/watch/" + base64_video + (base64_referer ? ("/referer/" + base64_referer) : "")
 
-  links.video_link = video_url
+  links.media_link = media_url
   links.entrypoint = urls.entrypoint + hash
   links.chromecast = urls.chromecast + hash
   links.airplay    = urls.airplay    + hash
   links.proxy      = urls.proxy      + hash
 
   return links
+}
+
+const process_set_media_type = (event, media_type) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  state.bg_window.set_media_type( state.tab_id, media_type )
+  draw_list()
 }
 
 const process_click = (event, url) => {
@@ -134,58 +142,78 @@ const process_click = (event, url) => {
   })
 }
 
-const process_clear_videos = (event) => {
+const process_clear_media = (event) => {
   event.preventDefault()
   event.stopPropagation()
 
-  state.bg_window.clear_videos( state.tab_id, true )
-  close_popup()
+  state.bg_window.clear_media( state.tab_id, true )
 }
+
+const all_media_types = ["videos", "audios", "captions"]
+
+const is_audio_video = (media_type) => ((["videos", "audios"]).indexOf(media_type) >= 0)
 
 const hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i
 
 const is_hls = (url) => (hls_regex_pattern.test(url))
 
-const App = ({videos}) => {
+const App = ({media_type, media}) => {
+  const av_media_type = is_audio_video(media_type)
+
   return (
     <div id="app">
-      <h3>{videos.length} videos detected on page.</h3>
-      <h4>Click link to transfer video to external website in a new tab.</h4>
+      <div id="media-type-options">
+        {all_media_types.map((media_type_option, index) => {
+          return (
+            <button disabled={(media_type_option === media_type)} onClick={(event) => process_set_media_type(event, media_type_option)}>{media_type_option}</button>
+          )
+        })}
+      </div>
+      <h3>{media.length} {media_type} detected on page.</h3>
+      <h4>Click link to transfer the media item to external website in a new tab.</h4>
       <div id="links">
-        {videos.map((video, index) => {
-          const links = get_links(video)
+        {media.map((media_item, index) => {
+          const links = get_links(media_item)
 
           return (
-            <div class="video-item" key={index}>
+            <div class={av_media_type ? "media-item" : "non-av media-item"} key={index}>
               <div class="icons-container">
-                <a class="chromecast" href={links.chromecast} onClick={(event) => process_click(event, links.chromecast)} title="Chromecast Sender">
-                  <img src="img/chromecast.png" />
-                </a>
-                <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="ExoAirPlayer Sender">
-                  <img src="img/airplay.png" />
-                </a>
                 {
-                  !is_hls(video.video_url) ? null : (
+                  (!av_media_type) ? null : (
+                    <a class="chromecast" href={links.chromecast} onClick={(event) => process_click(event, links.chromecast)} title="Chromecast Sender">
+                      <img src="img/chromecast.png" />
+                    </a>
+                  )
+                }
+                {
+                  (!av_media_type) ? null : (
+                    <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="ExoAirPlayer Sender">
+                      <img src="img/airplay.png" />
+                    </a>
+                  )
+                }
+                {
+                  (!av_media_type || !is_hls(media_item.media_url)) ? null : (
                     <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy Configuration">
                       <img src="img/proxy.png" />
                     </a>
                   )
                 }
-                <a class="video-link" href={links.video_link} onClick={(event) => process_click(event, links.video_link)} title="direct link to video">
-                  <img src="img/video_link.png" />
+                <a class="media-link" href={links.media_link} onClick={(event) => process_click(event, links.media_link)} title="direct link to media item">
+                  <img src="img/media_link.png" />
                 </a>
               </div>
               <div class="text-container">
-                <a class="entrypoint" href={links.entrypoint} onClick={(event) => process_click(event, links.entrypoint)} title={links.video_link}>
-                  {links.video_link}
+                <a class="entrypoint" href={links.entrypoint} onClick={(event) => process_click(event, (av_media_type ? links.entrypoint : links.media_link))} title={links.media_link}>
+                  {links.media_link}
                 </a>
               </div>
             </div>
           )
         })}
       </div>
-      <div>
-        <button onClick={process_clear_videos}>Clear videos list</button>
+      <div id="actions">
+        <button onClick={process_clear_media}>Clear {media_type} list</button>
       </div>
     </div>
   )
@@ -194,20 +222,20 @@ const App = ({videos}) => {
 // -----------------------------------------------------------------------------
 
 const get_props = () => {
-  const videos = state.bg_window.get_videos( state.tab_id )
-  return {videos}
+  return state.bg_window.get_media( state.tab_id )
 }
 
 const draw_list = () => {
   const props = get_props()
 
-  if (props.videos === state.videos)
+  if (
+    (props.media_type === state.media_type) &&
+    (props.media === state.media)
+  )
     return
 
-  if (!props.videos || !props.videos.length)
-    return close_popup()
-
-  state.videos = props.videos
+  state.media_type = props.media_type
+  state.media      = props.media
 
   ReactDOM.render(
     <App {...props} />,
@@ -219,9 +247,10 @@ const close_popup = () => {
   if (state.timer)
     clearInterval(state.timer)
 
-  state.timer     = null
-  state.videos    = null
-  state.bg_window = null
+  state.timer      = null
+  state.media_type = null
+  state.media      = null
+  state.bg_window  = null
 
   window.close()
 }

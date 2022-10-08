@@ -146,22 +146,29 @@
     return urls;
   };
 
-  var get_links = function get_links(video) {
-    var video_url = video.video_url,
-        referer_url = video.referer_url;
+  var get_links = function get_links(media_item) {
+    var media_url = media_item.media_url,
+        referer_url = media_item.referer_url;
     var links = {};
-    if (!video_url) return links;
-    var base64_video = encode_link(video_url, true);
+    if (!media_url) return links;
+    var base64_video = encode_link(media_url, true);
     var base64_referer = encode_link(referer_url, true);
-    var https = is_https(video_url);
+    var https = is_https(media_url);
     var urls = get_contextualized_baseurls(https);
     var hash = "#/watch/" + base64_video + (base64_referer ? "/referer/" + base64_referer : "");
-    links.video_link = video_url;
+    links.media_link = media_url;
     links.entrypoint = urls.entrypoint + hash;
     links.chromecast = urls.chromecast + hash;
     links.airplay = urls.airplay + hash;
     links.proxy = urls.proxy + hash;
     return links;
+  };
+
+  var process_set_media_type = function process_set_media_type(event, media_type) {
+    event.preventDefault();
+    event.stopPropagation();
+    state.bg_window.set_media_type(state.tab_id, media_type);
+    draw_list();
   };
 
   var process_click = function process_click(event, url) {
@@ -173,11 +180,17 @@
     });
   };
 
-  var process_clear_videos = function process_clear_videos(event) {
+  var process_clear_media = function process_clear_media(event) {
     event.preventDefault();
     event.stopPropagation();
-    state.bg_window.clear_videos(state.tab_id, true);
+    state.bg_window.clear_media(state.tab_id, true);
     close_popup();
+  };
+
+  var all_media_types = ["videos", "audios", "captions"];
+
+  var is_audio_video = function is_audio_video(media_type) {
+    return ["videos", "audios"].indexOf(media_type) >= 0;
   };
 
   var hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i;
@@ -187,19 +200,29 @@
   };
 
   var App = function App(_ref2) {
-    var videos = _ref2.videos;
+    var media_type = _ref2.media_type,
+        media = _ref2.media;
     return React.createElement("div", {
       id: "app"
-    }, React.createElement("h3", null, videos.length, " videos detected on page."), React.createElement("h4", null, "Click link to transfer video to external website in a new tab."), React.createElement("div", {
+    }, React.createElement("div", {
+      id: "media-type-options"
+    }, all_media_types.map(function (media_type_option, index) {
+      return React.createElement("button", {
+        disabled: media_type_option === media_type,
+        onClick: function onClick(event) {
+          return process_set_media_type(event, media_type_option);
+        }
+      }, media_type_option);
+    })), React.createElement("h3", null, media.length, " ", media_type, " detected on page."), React.createElement("h4", null, "Click link to transfer the media item to external website in a new tab."), React.createElement("div", {
       id: "links"
-    }, videos.map(function (video, index) {
-      var links = get_links(video);
+    }, media.map(function (media_item, index) {
+      var links = get_links(media_item);
       return React.createElement("div", {
-        "class": "video-item",
+        "class": "media-item",
         key: index
       }, React.createElement("div", {
         "class": "icons-container"
-      }, React.createElement("a", {
+      }, !is_audio_video(media_item.media_type) ? null : React.createElement("a", {
         "class": "chromecast",
         href: links.chromecast,
         onClick: function onClick(event) {
@@ -208,7 +231,7 @@
         title: "Chromecast Sender"
       }, React.createElement("img", {
         src: "img/chromecast.png"
-      })), React.createElement("a", {
+      })), !is_audio_video(media_item.media_type) ? null : React.createElement("a", {
         "class": "airplay",
         href: links.airplay,
         onClick: function onClick(event) {
@@ -217,7 +240,7 @@
         title: "ExoAirPlayer Sender"
       }, React.createElement("img", {
         src: "img/airplay.png"
-      })), !is_hls(video.video_url) ? null : React.createElement("a", {
+      })), !is_audio_video(media_item.media_type) || !is_hls(media_item.media_url) ? null : React.createElement("a", {
         "class": "proxy",
         href: links.proxy,
         onClick: function onClick(event) {
@@ -227,48 +250,49 @@
       }, React.createElement("img", {
         src: "img/proxy.png"
       })), React.createElement("a", {
-        "class": "video-link",
-        href: links.video_link,
+        "class": "media-link",
+        href: links.media_link,
         onClick: function onClick(event) {
-          return process_click(event, links.video_link);
+          return process_click(event, links.media_link);
         },
-        title: "direct link to video"
+        title: "direct link to media item"
       }, React.createElement("img", {
-        src: "img/video_link.png"
+        src: "img/media_link.png"
       }))), React.createElement("div", {
         "class": "text-container"
       }, React.createElement("a", {
         "class": "entrypoint",
         href: links.entrypoint,
         onClick: function onClick(event) {
-          return process_click(event, links.entrypoint);
+          return process_click(event, is_audio_video(media_item.media_type) ? links.entrypoint : links.media_link);
         },
-        title: links.video_link
-      }, links.video_link)));
-    })), React.createElement("div", null, React.createElement("button", {
-      onClick: process_clear_videos
-    }, "Clear videos list")));
+        title: links.media_link
+      }, links.media_link)));
+    })), React.createElement("div", {
+      id: "actions"
+    }, React.createElement("button", {
+      onClick: process_clear_media
+    }, "Clear ", media_type, " list")));
   };
 
   var get_props = function get_props() {
-    var videos = state.bg_window.get_videos(state.tab_id);
-    return {
-      videos: videos
-    };
+    return state.bg_window.get_media(state.tab_id);
   };
 
   var draw_list = function draw_list() {
     var props = get_props();
-    if (props.videos === state.videos) return;
-    if (!props.videos || !props.videos.length) return close_popup();
-    state.videos = props.videos;
+    if (props.media_type === state.media_type && props.media === state.media) return;
+    state.media_type = props.media_type;
+    state.media = props.media;
+    if (!props.media || !props.media.length) return close_popup();
     ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
   };
 
   var close_popup = function close_popup() {
     if (state.timer) clearInterval(state.timer);
     state.timer = null;
-    state.videos = null;
+    state.media_type = null;
+    state.media = null;
     state.bg_window = null;
     window.close();
   };

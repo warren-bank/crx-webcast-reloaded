@@ -24,6 +24,28 @@ body {
   color: #999;
 }
 
+/* -----------------------------------------------------------------------------
+ * top navbar: media types
+ */
+
+#app > #media-type-options {
+  width: 550px; /* same as each media-item */
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+#app > #media-type-options > button {
+  display: inline-block;
+  width: 182px; /* (550 - (N+1) (horizontal margin)) / N => where N is the number of horizontal buttons */
+  margin: 1px;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------------
+ * headings, container for all links
+ */
+
 #app > h3 {
   color: #000;
   font-size: 1.25em;
@@ -36,12 +58,16 @@ body {
 }
 #app > #links {
   margin: 10px 0;
-  max-height: 426px; /* multiple of 71 (height of video-item): (71)(6) */
+  max-height: 426px; /* multiple of 71 (height of media-item): (71)(6) */
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-#app > #links > .video-item {
+/* -----------------------------------------------------------------------------
+ * defaults: audios, videos
+ */
+
+#app > #links > .media-item {
   display: block;
   width: 550px;
   height: 60px;
@@ -51,19 +77,19 @@ body {
   border-bottom: 1px solid #000;
   margin-bottom: 5px;
 }
-#app > #links > .video-item:last-child {
+#app > #links > .media-item:last-child {
   border-bottom: none;
 }
 
-#app > #links > .video-item > .icons-container,
-#app > #links > .video-item > .text-container {
+#app > #links > .media-item > .icons-container,
+#app > #links > .media-item > .text-container {
   display: inline-block;
   height: 60px;
   max-height: 60px;
   vertical-align: top;
 }
 
-#app > #links > .video-item > .icons-container {
+#app > #links > .media-item > .icons-container {
   position: relative;
   z-index: 0;
   width: 60px;
@@ -73,62 +99,90 @@ body {
   border-radius: 14px;
 }
 
-#app > #links > .video-item > .text-container {
-  width: 480px; /* 550 (width of video-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
+#app > #links > .media-item > .text-container {
+  width: 480px; /* 550 (width of media-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
 }
-#app > #links > .video-item > .text-container > a {
+#app > #links > .media-item > .text-container > a {
   color: inherit;
   text-decoration: none;
   word-wrap: break-word;
   font-size: 1em;
   line-height: 60px;
 }
-#app > #links > .video-item > .text-container > a:hover {
+#app > #links > .media-item > .text-container > a:hover {
   color: #000;
 }
 
-#app > #links > .video-item > .icons-container > a.chromecast,
-#app > #links > .video-item > .icons-container > a.chromecast > img,
-#app > #links > .video-item > .icons-container > a.airplay,
-#app > #links > .video-item > .icons-container > a.airplay > img,
-#app > #links > .video-item > .icons-container > a.proxy,
-#app > #links > .video-item > .icons-container > a.proxy > img,
-#app > #links > .video-item > .icons-container > a.video-link,
-#app > #links > .video-item > .icons-container > a.video-link > img {
+#app > #links > .media-item > .icons-container > a.chromecast,
+#app > #links > .media-item > .icons-container > a.chromecast > img,
+#app > #links > .media-item > .icons-container > a.airplay,
+#app > #links > .media-item > .icons-container > a.airplay > img,
+#app > #links > .media-item > .icons-container > a.proxy,
+#app > #links > .media-item > .icons-container > a.proxy > img,
+#app > #links > .media-item > .icons-container > a.media-link,
+#app > #links > .media-item > .icons-container > a.media-link > img {
   display: block;
   width: 25px;
   height: 25px;
 }
 
-#app > #links > .video-item > .icons-container > a.chromecast,
-#app > #links > .video-item > .icons-container > a.airplay,
-#app > #links > .video-item > .icons-container > a.proxy,
-#app > #links > .video-item > .icons-container > a.video-link {
+#app > #links > .media-item > .icons-container > a.chromecast,
+#app > #links > .media-item > .icons-container > a.airplay,
+#app > #links > .media-item > .icons-container > a.proxy,
+#app > #links > .media-item > .icons-container > a.media-link {
   position: absolute;
   z-index: 1;
   text-decoration: none;
 }
 
-#app > #links > .video-item > .icons-container > a.chromecast,
-#app > #links > .video-item > .icons-container > a.airplay {
+#app > #links > .media-item > .icons-container > a.chromecast,
+#app > #links > .media-item > .icons-container > a.airplay {
   top: 0;
 }
-#app > #links > .video-item > .icons-container > a.proxy,
-#app > #links > .video-item > .icons-container > a.video-link {
+#app > #links > .media-item > .icons-container > a.proxy,
+#app > #links > .media-item > .icons-container > a.media-link {
   bottom: 0;
 }
 
-#app > #links > .video-item > .icons-container > a.chromecast,
-#app > #links > .video-item > .icons-container > a.proxy {
+#app > #links > .media-item > .icons-container > a.chromecast,
+#app > #links > .media-item > .icons-container > a.proxy {
   left: 0;
 }
-#app > #links > .video-item > .icons-container > a.airplay,
-#app > #links > .video-item > .icons-container > a.video-link {
+#app > #links > .media-item > .icons-container > a.airplay,
+#app > #links > .media-item > .icons-container > a.media-link {
   right: 0;
 }
-#app > #links > .video-item > .icons-container > a.airplay + a.video-link {
+#app > #links > .media-item > .icons-container > a.airplay + a.media-link {
   right: 17px; /* (60 - 25)/2 to center when there is no proxy icon */
 }
+
+/* -----------------------------------------------------------------------------
+ * captions
+ */
+
+#app > #links > .non-av.media-item,
+#app > #links > .non-av.media-item > .icons-container,
+#app > #links > .non-av.media-item > .text-container {
+  height: 45px;
+  max-height: 45px;
+}
+
+#app > #links > .non-av.media-item > .icons-container {
+  width: 45px;
+}
+
+#app > #links > .non-av.media-item > .icons-container > a.media-link {
+  bottom: 10px;
+  right: 10px;
+}
+
+#app > #links > .non-av.media-item > .text-container > a {
+  line-height: 45px;
+}
+
+/* -----------------------------------------------------------------------------
+ * buttons: top navbar, actions
+ */
 
 #app > div > button {
   cursor: pointer;
@@ -140,7 +194,8 @@ body {
   transition: border 0.5s;
   transition: border-color 0.5s;
 }
-#app > div > button:hover {
+#app > div > button:hover,
+#app > div > button[disabled] {
   color: #999;
   border-color: #999;
 }
