@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.3.1
+// @version      0.3.2
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.surge.sh/*
 // @match        *://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
@@ -22,6 +22,19 @@ var user_options = {
   "script_enabled":             true,
   "script_injection_delay_ms":  0,
   "webcast_reloaded_external_website_helper": {
+    "always_redirect_to_endpoint": {
+      "script_enabled":             false,
+      "endpoint":                   "/airplay_sender.html"
+        /*
+         * examples:
+         *   "/airplay_sender.html"
+         *   "/airplay_sender.es5.html"
+         *   "/proxy.html"
+         *   "/chromecast_sender.html"
+         *   "/4-clappr/index.html"
+         *   "/6-clappr-latest/index.html"
+         */
+    },
     "workaround_issue_01": {
       "script_enabled":             true,
       "prioritize_cast_over_watch": true
@@ -48,6 +61,42 @@ var user_options = {
 }
 
 // -----------------------------------------------------------------------------
+// conditionally redirect to specific SPA endpoint
+
+var always_redirect_to_endpoint = function(){
+
+  // ===========================================================================
+
+  var get_endpoint = function(){
+    var endpoint = new RegExp('^.*(/(?:chromecast_sender|airplay_sender|airplay_sender\\.es5|proxy|(?:.+/)?index)\\.html)$')
+    var pathname = window.location.pathname
+    var matches  = endpoint.exec(pathname)
+
+    return (matches && matches.length)
+      ? matches[1]
+      : null
+  }
+
+  // ===========================================================================
+
+  var process_page = function(){
+    var endpoints = {
+      current: get_endpoint(),
+      target:  window.webcast_reloaded_external_website_helper.always_redirect_to_endpoint.endpoint
+    }
+
+    if (!endpoints.current || (endpoints.current === endpoints.target))
+      return
+
+    var url = window.location.href.replace(endpoints.current, endpoints.target)
+
+    window.location = url
+  }
+
+  process_page()
+}
+
+// ----------------------------------------------------------------------------- </always_redirect_to_endpoint>
 // conditionally redirect HTTP protocol
 
 var workaround_issue_01 = function(){
@@ -493,6 +542,9 @@ var inject_options = function(){
 
 var bootstrap = function(){
   inject_options()
+
+  if (user_options.webcast_reloaded_external_website_helper.always_redirect_to_endpoint.script_enabled)
+    inject_function(always_redirect_to_endpoint)
 
   if (user_options.webcast_reloaded_external_website_helper.workaround_issue_01.script_enabled)
     inject_function(workaround_issue_01)
