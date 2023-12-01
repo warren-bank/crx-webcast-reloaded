@@ -1,0 +1,20 @@
+https://github.com/videojs/video.js
+https://www.jsdelivr.com/package/npm/video.js
+-----
+https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video.min.js
+https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video-js.min.css
+  8.6.1
+
+https://github.com/videojs/videojs-contrib-eme
+https://www.jsdelivr.com/package/npm/videojs-contrib-eme
+-----
+https://cdn.jsdelivr.net/npm/videojs-contrib-eme@3.11.1/dist/videojs-contrib-eme.min.js
+  3.11.1
+
+https://github.com/silvermine/videojs-chromecast
+https://github.com/silvermine/videojs-chromecast/issues/140
+https://www.jsdelivr.com/package/npm/@silvermine/videojs-chromecast
+-----
+https://cdn.jsdelivr.net/npm/@silvermine/videojs-chromecast@1.5.0/dist/silvermine-videojs-chromecast.min.js
+https://cdn.jsdelivr.net/npm/@silvermine/videojs-chromecast@1.5.0/dist/silvermine-videojs-chromecast.min.css
+  1.5.0
