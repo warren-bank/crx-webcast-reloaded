@@ -17,3 +17,6 @@ set ext_crx_default=%ext_dir%.crx
 set ext_key=%ext_dir_base%\%ext_name%.pem
 set ext_crx2=%ext_dir_base%\%ext_name%.crx2.crx
 set ext_crx3=%ext_dir_base%\%ext_name%.crx3.crx
+set ext_xpi=%ext_dir_base%\%ext_name%.unsigned.xpi
+
+set file_assertion_build_ok=%ext_dir%\popup\js\popup.js

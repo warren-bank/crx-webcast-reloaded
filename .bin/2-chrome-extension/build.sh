@@ -14,6 +14,3 @@ if [ ! -d 'node_modules' ];then
 fi
 
 npm run build
-
-"${DIR}/crx2/pack_crx2_with_openssl.sh"
-"${DIR}/crx3/pack_crx3_with_openssl.sh"

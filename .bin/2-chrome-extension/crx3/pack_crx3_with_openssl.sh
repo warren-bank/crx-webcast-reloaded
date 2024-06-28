@@ -4,10 +4,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source "${DIR}/../.env/constants.sh"
 source "${DIR}/../.env/openssl.sh"
+source "${DIR}/../.common/validate_env.sh"
 
-if [ -z "$ext_name" ];then
-  echo 'script configuration is invalid:'
-  echo 'missing name of browser extension'
+if [ ! -f "$ext_key" ];then
+  echo 'ERROR: pem file path does not exist.'
   exit 1
 fi
 
@@ -33,17 +33,7 @@ function pack_crx3 {
   tosign="${name}.presig"
   binary_crx_id="${name}.crxid"
 
-  if [ ! -d "$ext_dir" ];then
-    echo 'error: extension directory path does not exist'
-    exit 1
-  fi
-
-  if [ ! -f "$ext_key" ];then
-    echo 'error: pem file path does not exist'
-    exit 1
-  fi
-
-  echo "writing "$(basename "$crx")
+  echo "writing: "$(basename "$crx")
 
   # preparation: remove previous crx
   rm -f "$crx"
@@ -91,7 +81,7 @@ function pack_crx3 {
     cat "$binary_crx_id" "$zip"
   ) > "$crx"
 
-  echo 'success: crx3 Chrome extension has been packed'
+  echo 'SUCCESS: crx3 Chrome extension has been packed.'
 }
 
 # ------------------------------------------------------------------------------
