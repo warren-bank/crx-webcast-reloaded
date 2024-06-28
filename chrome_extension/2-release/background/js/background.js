@@ -34,6 +34,21 @@ const no_media_urls   = []
 const all_media_types = ["videos", "audios", "captions"]
 const all_tab_data    = {}  // tab_id => {tab_url, display_media, videos: [{media_url, referer_url}], audios: [{media_url, referer_url}], captions: [{media_url, referer_url}]}
 
+const find_tab_ids_for_origin = (tab_url_origin) => {
+  const tab_ids = []
+
+  if (tab_url_origin) {
+    for (let tab_id in all_tab_data) {
+      const tab_data = all_tab_data[tab_id]
+
+      if (tab_data.tab_url.toLowerCase().startsWith(tab_url_origin.toLowerCase()))
+        tab_ids.push(Number(tab_id))
+    }
+  }
+
+  return tab_ids
+}
+
 const get_new_tab_data = (tab_url) => ({tab_url: (tab_url || ""), display_media: all_media_types[0], videos: [], audios: [], captions: []})
 
 const set_display_media = (tab_id, display_media) => {
@@ -213,96 +228,102 @@ const get_matching_caption_data = (tab_data, media_url) => {
   return tab_data.captions.find(caption_data => caption_data.media_url === media_url)
 }
 
+const process_web_request = (tab_id, details) => {
+  let tab_data = all_tab_data[tab_id]
+
+  // should not occur; tab_data is initialized when the tab_url changes
+  if (!tab_data) {
+    tab_data = get_new_tab_data()
+    all_tab_data[tab_id] = tab_data
+  }
+
+  const request_url = details.url.trim()
+  const referer_url = get_referer_value(details.requestHeaders) || tab_data.tab_url
+  let  is_media_url = false
+
+  // is a video url?
+  if (!is_media_url && video_url_regex_pattern.test(request_url)) {
+
+    // is a duplicate?
+    let video_data = get_matching_video_data(tab_data, request_url)
+    if (video_data) {
+      if (!video_data.referer_url && referer_url) {
+        video_data.referer_url = referer_url
+
+        tab_data.videos = [...tab_data.videos]
+      }
+    }
+    else {
+      video_data = {media_url: request_url, referer_url}
+      tab_data.videos = [...tab_data.videos, video_data]
+    }
+
+    is_media_url = true
+  }
+
+  // is a audio url?
+  if (!is_media_url && audio_url_regex_pattern.test(request_url)) {
+
+    // is a duplicate?
+    let audio_data = get_matching_audio_data(tab_data, request_url)
+    if (audio_data) {
+      if (!audio_data.referer_url && referer_url) {
+        audio_data.referer_url = referer_url
+
+        tab_data.audios = [...tab_data.audios]
+      }
+    }
+    else {
+      audio_data = {media_url: request_url, referer_url}
+      tab_data.audios = [...tab_data.audios, audio_data]
+    }
+
+    is_media_url = true
+  }
+
+  // is a caption url?
+  if (!is_media_url && caption_url_regex_pattern.test(request_url)) {
+
+    // is a duplicate?
+    let caption_data = get_matching_caption_data(tab_data, request_url)
+    if (caption_data) {
+      if (!caption_data.referer_url && referer_url) {
+        caption_data.referer_url = referer_url
+
+        tab_data.captions = [...tab_data.captions]
+      }
+    }
+    else {
+      caption_data = {media_url: request_url, referer_url}
+      tab_data.captions = [...tab_data.captions, caption_data]
+    }
+
+    is_media_url = true
+  }
+
+  if (is_media_url) {
+    enable_popup(tab_id)
+  }
+}
+
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#registering-event-listeners
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-ResourceType
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#event-onSendHeaders
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-OnSendHeadersOptions
 chrome.webRequest.onSendHeaders.addListener(
   function(details){
-    const tab_id = details.tabId
-    let tab_data
+    const tab_ids = (details.tabId !== chrome.tabs.TAB_ID_NONE)
+      ? [details.tabId]
+      : find_tab_ids_for_origin(details.initiator)  // support fetch() from service worker
 
-    if (details.tabId !== chrome.tabs.TAB_ID_NONE) {
-      tab_data = all_tab_data[tab_id]
-
-      // should not occur; tab_data is initialized when the tab_url changes
-      if (!tab_data) {
-        tab_data = get_new_tab_data()
-        all_tab_data[tab_id] = tab_data
-      }
-
-      const request_url = details.url.trim()
-      const referer_url = get_referer_value(details.requestHeaders) || tab_data.tab_url
-      let  is_media_url = false
-
-      // is a video url?
-      if (!is_media_url && video_url_regex_pattern.test(request_url)) {
-
-        // is a duplicate?
-        let video_data = get_matching_video_data(tab_data, request_url)
-        if (video_data) {
-          if (!video_data.referer_url && referer_url) {
-            video_data.referer_url = referer_url
-
-            tab_data.videos = [...tab_data.videos]
-          }
-        }
-        else {
-          video_data = {media_url: request_url, referer_url}
-          tab_data.videos = [...tab_data.videos, video_data]
-        }
-
-        is_media_url = true
-      }
-
-      // is a audio url?
-      if (!is_media_url && audio_url_regex_pattern.test(request_url)) {
-
-        // is a duplicate?
-        let audio_data = get_matching_audio_data(tab_data, request_url)
-        if (audio_data) {
-          if (!audio_data.referer_url && referer_url) {
-            audio_data.referer_url = referer_url
-
-            tab_data.audios = [...tab_data.audios]
-          }
-        }
-        else {
-          audio_data = {media_url: request_url, referer_url}
-          tab_data.audios = [...tab_data.audios, audio_data]
-        }
-
-        is_media_url = true
-      }
-
-      // is a caption url?
-      if (!is_media_url && caption_url_regex_pattern.test(request_url)) {
-
-        // is a duplicate?
-        let caption_data = get_matching_caption_data(tab_data, request_url)
-        if (caption_data) {
-          if (!caption_data.referer_url && referer_url) {
-            caption_data.referer_url = referer_url
-
-            tab_data.captions = [...tab_data.captions]
-          }
-        }
-        else {
-          caption_data = {media_url: request_url, referer_url}
-          tab_data.captions = [...tab_data.captions, caption_data]
-        }
-
-        is_media_url = true
-      }
-
-      if (is_media_url) {
-        enable_popup(tab_id)
+    for (let tab_id of tab_ids) {
+      if (tab_id !== chrome.tabs.TAB_ID_NONE) {
+        process_web_request(tab_id, details)
       }
     }
   },
   {
-    urls:["<all_urls>"],
-    types: ["main_frame", "sub_frame", "object", "xmlhttprequest", "media"]
+    urls:["<all_urls>"]
   },
   (get_chrome_major_version() >= 72)
     ? ['requestHeaders', 'extraHeaders']
