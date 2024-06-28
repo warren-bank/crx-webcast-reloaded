@@ -208,10 +208,14 @@
     state.bg_window.clear_media(state.tab_id, true);
   };
 
-  var all_media_types = ["videos", "audios", "captions"];
+  var all_media_types = ["videos", "audios", "captions", "drm_licenses"];
 
   var is_audio_video = function is_audio_video(media_type) {
     return ["videos", "audios"].indexOf(media_type) >= 0;
+  };
+
+  var format_media_type = function format_media_type(media_type) {
+    return media_type.replaceAll('_', ' ');
   };
 
   var hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i;
@@ -234,8 +238,8 @@
         onClick: function onClick(event) {
           return process_set_media_type(event, media_type_option);
         }
-      }, media_type_option);
-    })), React.createElement("h3", null, media.length, " ", media_type, " detected on page."), React.createElement("h4", null, "Click link to transfer the media item to external website in a new tab."), React.createElement("div", {
+      }, format_media_type(media_type_option));
+    })), React.createElement("h3", null, media.length, " ", format_media_type(media_type), " detected on page."), React.createElement("h4", null, "Click link to transfer the media item to external website in a new tab."), React.createElement("div", {
       id: "links"
     }, media.map(function (media_item, index) {
       var links = get_links(media_item);
@@ -294,7 +298,7 @@
       id: "actions"
     }, React.createElement("button", {
       onClick: process_clear_media
-    }, "Clear ", media_type, " list")));
+    }, "Clear list of ", format_media_type(media_type))));
   };
 
   var get_props = function get_props() {

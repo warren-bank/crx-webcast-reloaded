@@ -37,9 +37,10 @@ body {
 
 #app > #media-type-options > button {
   display: inline-block;
-  width: 182px; /* (550 - (N+1) (horizontal margin)) / N => where N is the number of horizontal buttons */
+  width: 135px; /* (550 - (N+1) (horizontal margin)) / N => where N is the number of horizontal buttons */
   margin: 1px;
   text-align: center;
+  text-transform: capitalize;
 }
 
 /* -----------------------------------------------------------------------------

@@ -31,8 +31,8 @@ const get_chrome_major_version = () => {
 // -----------------------------------------------------------------------------
 
 const no_media_urls   = []
-const all_media_types = ["videos", "audios", "captions"]
-const all_tab_data    = {}  // tab_id => {tab_url, display_media, videos: [{media_url, referer_url}], audios: [{media_url, referer_url}], captions: [{media_url, referer_url}]}
+const all_media_types = ["videos", "audios", "captions", "drm_licenses"]
+const all_tab_data    = {}  // tab_id => {tab_url, display_media, videos: [{media_url, referer_url}], audios: [{media_url, referer_url}], captions: [{media_url, referer_url}], drm_licenses: [{media_url, referer_url}]}
 
 const find_tab_ids_for_origin = (tab_url_origin) => {
   const tab_ids = []
@@ -49,7 +49,7 @@ const find_tab_ids_for_origin = (tab_url_origin) => {
   return tab_ids
 }
 
-const get_new_tab_data = (tab_url) => ({tab_url: (tab_url || ""), display_media: all_media_types[0], videos: [], audios: [], captions: []})
+const get_new_tab_data = (tab_url) => ({tab_url: (tab_url || ""), display_media: all_media_types[0], videos: [], audios: [], captions: [], drm_licenses: []})
 
 const set_display_media = (tab_id, display_media) => {
   const tab_data = all_tab_data[tab_id]
@@ -94,6 +94,15 @@ const get_captions = (tab_id) => {
     : tab_data.captions
 }
 
+// return: [{media_url, referer_url}]
+const get_drm_licenses = (tab_id) => {
+  const tab_data = all_tab_data[tab_id]
+
+  return (!tab_data || !tab_data.drm_licenses || !tab_data.drm_licenses.length)
+    ? no_media_urls
+    : tab_data.drm_licenses
+}
+
 const delete_tab_data = (tab_id, hide_popup) => {
   delete all_tab_data[tab_id]
 
@@ -122,6 +131,13 @@ const clear_captions = (tab_id) => {
     tab_data.captions = []
 }
 
+const clear_drm_licenses = (tab_id) => {
+  const tab_data = all_tab_data[tab_id]
+
+  if (tab_data && Array.isArray(tab_data.drm_licenses))
+    tab_data.drm_licenses = []
+}
+
 const get_media = (tab_id) => {
   const media_type = get_display_media(tab_id)
   let   media      = no_media_urls
@@ -136,6 +152,9 @@ const get_media = (tab_id) => {
     case all_media_types[2]:
       media = get_captions(tab_id)
       break
+    case all_media_types[3]:
+      media = get_drm_licenses(tab_id)
+      break
   }
 
   return {media_type, media}
@@ -146,13 +165,16 @@ const clear_media = (tab_id, hide_popup) => {
 
   switch(media_type) {
     case all_media_types[0]:
-      media = clear_videos(tab_id)
+      clear_videos(tab_id)
       break
     case all_media_types[1]:
-      media = clear_audios(tab_id)
+      clear_audios(tab_id)
       break
     case all_media_types[2]:
-      media = clear_captions(tab_id)
+      clear_captions(tab_id)
+      break
+    case all_media_types[3]:
+      clear_drm_licenses(tab_id)
       break
   }
 
@@ -212,9 +234,10 @@ const get_referer_value = (headers) => {
   return referer
 }
 
-const video_url_regex_pattern   = /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i
-const audio_url_regex_pattern   = /\.(?:mp3|m4a|m4b|ogg|wav|flac)(?:[\?#].*)?$/i
-const caption_url_regex_pattern = /\.(?:srt|ttml|dfxp|vtt|webvtt|ssa|ass)(?:[\?#].*)?$/i
+const video_url_regex_pattern       = /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i
+const audio_url_regex_pattern       = /\.(?:mp3|m4a|m4b|ogg|wav|flac)(?:[\?#].*)?$/i
+const caption_url_regex_pattern     = /\.(?:srt|ttml|dfxp|vtt|webvtt|ssa|ass)(?:[\?#].*)?$/i
+const drm_license_url_regex_pattern = /(?:widevine|clearkey|playready|drm|license)/i
 
 const get_matching_video_data = (tab_data, media_url) => {
   return tab_data.videos.find(video_data => video_data.media_url === media_url)
@@ -226,6 +249,10 @@ const get_matching_audio_data = (tab_data, media_url) => {
 
 const get_matching_caption_data = (tab_data, media_url) => {
   return tab_data.captions.find(caption_data => caption_data.media_url === media_url)
+}
+
+const get_matching_drm_license_data = (tab_data, media_url) => {
+  return tab_data.drm_licenses.find(drm_license_data => drm_license_data.media_url === media_url)
 }
 
 const process_web_request = (tab_id, details) => {
@@ -296,6 +323,26 @@ const process_web_request = (tab_id, details) => {
     else {
       caption_data = {media_url: request_url, referer_url}
       tab_data.captions = [...tab_data.captions, caption_data]
+    }
+
+    is_media_url = true
+  }
+
+  // is a DRM license url?
+  if (!is_media_url && drm_license_url_regex_pattern.test(request_url)) {
+
+    // is a duplicate?
+    let drm_license_data = get_matching_drm_license_data(tab_data, request_url)
+    if (drm_license_data) {
+      if (!drm_license_data.referer_url && referer_url) {
+        drm_license_data.referer_url = referer_url
+
+        tab_data.drm_licenses = [...tab_data.drm_licenses]
+      }
+    }
+    else {
+      drm_license_data = {media_url: request_url, referer_url}
+      tab_data.drm_licenses = [...tab_data.drm_licenses, drm_license_data]
     }
 
     is_media_url = true

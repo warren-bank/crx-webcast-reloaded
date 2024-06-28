@@ -159,9 +159,11 @@ const process_clear_media = (event) => {
   state.bg_window.clear_media( state.tab_id, true )
 }
 
-const all_media_types = ["videos", "audios", "captions"]
+const all_media_types = ["videos", "audios", "captions", "drm_licenses"]
 
 const is_audio_video = (media_type) => ((["videos", "audios"]).indexOf(media_type) >= 0)
+
+const format_media_type = (media_type) => media_type.replaceAll('_', ' ')
 
 const hls_regex_pattern = /\.m3u8(?:[#\?]|$)/i
 
@@ -175,11 +177,11 @@ const App = ({media_type, media}) => {
       <div id="media-type-options">
         {all_media_types.map((media_type_option, index) => {
           return (
-            <button disabled={(media_type_option === media_type)} onClick={(event) => process_set_media_type(event, media_type_option)}>{media_type_option}</button>
+            <button disabled={(media_type_option === media_type)} onClick={(event) => process_set_media_type(event, media_type_option)}>{format_media_type(media_type_option)}</button>
           )
         })}
       </div>
-      <h3>{media.length} {media_type} detected on page.</h3>
+      <h3>{media.length} {format_media_type(media_type)} detected on page.</h3>
       <h4>Click link to transfer the media item to external website in a new tab.</h4>
       <div id="links">
         {media.map((media_item, index) => {
@@ -223,7 +225,7 @@ const App = ({media_type, media}) => {
         })}
       </div>
       <div id="actions">
-        <button onClick={process_clear_media}>Clear {media_type} list</button>
+        <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
       </div>
     </div>
   )
