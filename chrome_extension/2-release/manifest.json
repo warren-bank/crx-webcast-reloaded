@@ -1,8 +1,9 @@
 {
   "name": "WebCast-Reloaded",
   "short_name": "WebCast-Reloaded",
-  "version": "0.7.5",
   "description": "Cast web videos to Google Chromecast from any Chromium-based desktop browser.",
+  "version": "0.7.6",
+  "manifest_version": 2,
   "icons": {
     "16":  "icons/icon16.png",
     "48":  "icons/icon48.png",
@@ -35,5 +36,9 @@
     "popup/popup.html", "popup/vendor/*.js", "popup/js/*.js", "popup/js/*.map", "popup/css/*.css", "popup/img/*.png",
     "options/options.html", "options/js/*.js", "options/css/*.css"
   ],
-  "manifest_version": 2
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "webcast-reloaded@warren-bank.github.io"
+    }
+  }
 }

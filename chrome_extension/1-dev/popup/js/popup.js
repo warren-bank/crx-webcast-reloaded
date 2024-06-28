@@ -5,7 +5,7 @@ const state = {}
 // https://developer.chrome.com/docs/extensions/reference/storage/#usage
 const get_options = () => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(
+    chrome.storage.local.get(
       ['user_options_json'],
       function(items){
         try {
@@ -52,10 +52,20 @@ const get_background_window = () => {
 }
 
 const initialize_state = async () => {
-  await get_options()
-  await get_tab_id()
-
   get_background_window()
+
+  if (!state.bg_window)
+    throw new Error('')
+
+  try {
+    await get_options()
+  }
+  catch(e) {
+    await state.bg_window.reset_options()
+    await get_options()
+  }
+
+  await get_tab_id()
 }
 
 // -----------------------------------------------------------------------------

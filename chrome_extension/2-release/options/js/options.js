@@ -26,7 +26,7 @@ const save_options = () => {
 
   const user_options_json = JSON.stringify(data)
 
-  chrome.storage.sync.set(
+  chrome.storage.local.set(
     {user_options_json},
     function(){
       // Add success notification
@@ -74,22 +74,47 @@ const restore_contexts = (contexts) => {
   })
 }
 
-// Restore option form field values from chrome.storage
-const restore_options = () => {
-  chrome.storage.sync.get(
-    ['user_options_json'],
-    function(items){
-      try {
-        const data = JSON.parse(items.user_options_json)
-        if (!data || !Array.isArray(data.urls) || !data.contexts)
-          throw new Error('bad data format')
+// https://developer.chrome.com/docs/extensions/reference/storage/#usage
+const get_options = () => {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(
+      ['user_options_json'],
+      function(items){
+        try {
+          const data = JSON.parse(items.user_options_json)
+          if (!data || !Array.isArray(data.urls) || !data.urls.length || !data.contexts)
+            throw new Error('bad data format')
 
-        restore_urls(data.urls)
-        restore_contexts(data.contexts)
+          resolve(data)
+        }
+        catch(e) {
+          reject()
+        }
       }
-      catch(e) {}
+    )
+  })
+}
+
+// Restore option form field values from chrome.storage
+const restore_options = async () => {
+  let data
+
+  try {
+    data = await get_options()
+  }
+  catch(e) {
+    const bg_window = chrome.extension.getBackgroundPage()
+
+    if (bg_window) {
+      await bg_window.reset_options()
+      data = await get_options()
     }
-  )
+  }
+
+  if (data) {
+    restore_urls(data.urls)
+    restore_contexts(data.contexts)
+  }
 }
 
 document.addEventListener('DOMContentLoaded', restore_options)

@@ -43,7 +43,7 @@
 
   var get_options = function get_options() {
     return new Promise(function (resolve, reject) {
-      chrome.storage.sync.get(['user_options_json'], function (items) {
+      chrome.storage.local.get(['user_options_json'], function (items) {
         try {
           var data = JSON.parse(items.user_options_json);
           if (!data || !Array.isArray(data.urls) || !data.urls.length || !data.contexts) throw new Error('bad data format');
@@ -84,22 +84,44 @@
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return get_options();
-
-            case 2:
-              _context.next = 4;
-              return get_tab_id();
-
-            case 4:
               get_background_window();
 
-            case 5:
+              if (state.bg_window) {
+                _context.next = 3;
+                break;
+              }
+
+              throw new Error('');
+
+            case 3:
+              _context.prev = 3;
+              _context.next = 6;
+              return get_options();
+
+            case 6:
+              _context.next = 14;
+              break;
+
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](3);
+              _context.next = 12;
+              return state.bg_window.reset_options();
+
+            case 12:
+              _context.next = 14;
+              return get_options();
+
+            case 14:
+              _context.next = 16;
+              return get_tab_id();
+
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, null, [[3, 8]]);
     }));
 
     return function initialize_state() {
@@ -184,7 +206,6 @@
     event.preventDefault();
     event.stopPropagation();
     state.bg_window.clear_media(state.tab_id, true);
-    close_popup();
   };
 
   var all_media_types = ["videos", "audios", "captions"];
@@ -202,6 +223,7 @@
   var App = function App(_ref2) {
     var media_type = _ref2.media_type,
         media = _ref2.media;
+    var av_media_type = is_audio_video(media_type);
     return React.createElement("div", {
       id: "app"
     }, React.createElement("div", {
@@ -218,11 +240,11 @@
     }, media.map(function (media_item, index) {
       var links = get_links(media_item);
       return React.createElement("div", {
-        "class": "media-item",
+        "class": av_media_type ? "media-item" : "non-av media-item",
         key: index
       }, React.createElement("div", {
         "class": "icons-container"
-      }, !is_audio_video(media_item.media_type) ? null : React.createElement("a", {
+      }, !av_media_type ? null : React.createElement("a", {
         "class": "chromecast",
         href: links.chromecast,
         onClick: function onClick(event) {
@@ -231,7 +253,7 @@
         title: "Chromecast Sender"
       }, React.createElement("img", {
         src: "img/chromecast.png"
-      })), !is_audio_video(media_item.media_type) ? null : React.createElement("a", {
+      })), !av_media_type ? null : React.createElement("a", {
         "class": "airplay",
         href: links.airplay,
         onClick: function onClick(event) {
@@ -240,7 +262,7 @@
         title: "ExoAirPlayer Sender"
       }, React.createElement("img", {
         src: "img/airplay.png"
-      })), !is_audio_video(media_item.media_type) || !is_hls(media_item.media_url) ? null : React.createElement("a", {
+      })), !av_media_type || !is_hls(media_item.media_url) ? null : React.createElement("a", {
         "class": "proxy",
         href: links.proxy,
         onClick: function onClick(event) {
@@ -264,7 +286,7 @@
         "class": "entrypoint",
         href: links.entrypoint,
         onClick: function onClick(event) {
-          return process_click(event, is_audio_video(media_item.media_type) ? links.entrypoint : links.media_link);
+          return process_click(event, av_media_type ? links.entrypoint : links.media_link);
         },
         title: links.media_link
       }, links.media_link)));
@@ -284,7 +306,6 @@
     if (props.media_type === state.media_type && props.media === state.media) return;
     state.media_type = props.media_type;
     state.media = props.media;
-    if (!props.media || !props.media.length) return close_popup();
     ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
   };
 
