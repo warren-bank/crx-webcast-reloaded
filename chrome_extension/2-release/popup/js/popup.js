@@ -193,13 +193,29 @@
     draw_list();
   };
 
-  var process_click = function process_click(event, url) {
+  var is_Firefox = navigator.appCodeName === 'Mozilla';
+  var is_Fenix = is_Firefox && navigator.appVersion.indexOf('Android') >= 0;
+
+  var process_click_open = function process_click_open(event, url) {
     event.preventDefault();
     event.stopPropagation();
-    chrome.tabs.create({
-      windowId: chrome.windows.WINDOW_ID_CURRENT,
-      url: url
-    });
+
+    try {
+      var options = {
+        url: url
+      };
+      if (!is_Fenix) options.windowId = chrome.windows.WINDOW_ID_CURRENT;
+      chrome.tabs.create(options);
+    } catch (e) {}
+  };
+
+  var process_click_copy = function process_click_copy(event, url) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      navigator.clipboard.writeText(url);
+    } catch (e) {}
   };
 
   var process_clear_media = function process_clear_media(event) {
@@ -252,7 +268,7 @@
         "class": "chromecast",
         href: links.chromecast,
         onClick: function onClick(event) {
-          return process_click(event, links.chromecast);
+          return process_click_open(event, links.chromecast);
         },
         title: "Chromecast Sender"
       }, React.createElement("img", {
@@ -261,7 +277,7 @@
         "class": "airplay",
         href: links.airplay,
         onClick: function onClick(event) {
-          return process_click(event, links.airplay);
+          return process_click_open(event, links.airplay);
         },
         title: "ExoAirPlayer Sender"
       }, React.createElement("img", {
@@ -270,7 +286,7 @@
         "class": "proxy",
         href: links.proxy,
         onClick: function onClick(event) {
-          return process_click(event, links.proxy);
+          return process_click_open(event, links.proxy);
         },
         title: "HLS-Proxy Configuration"
       }, React.createElement("img", {
@@ -279,7 +295,7 @@
         "class": "media-link",
         href: links.media_link,
         onClick: function onClick(event) {
-          return process_click(event, links.media_link);
+          return process_click_open(event, links.media_link);
         },
         title: "direct link to media item"
       }, React.createElement("img", {
@@ -290,9 +306,9 @@
         "class": "entrypoint",
         href: links.entrypoint,
         onClick: function onClick(event) {
-          return process_click(event, av_media_type ? links.entrypoint : links.media_link);
+          return process_click_copy(event, av_media_type ? links.entrypoint : links.media_link);
         },
-        title: links.media_link
+        title: "copy link to clipboard"
       }, links.media_link)));
     })), React.createElement("div", {
       id: "actions"

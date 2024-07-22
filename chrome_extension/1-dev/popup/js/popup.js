@@ -142,14 +142,39 @@ const process_set_media_type = (event, media_type) => {
   draw_list()
 }
 
-const process_click = (event, url) => {
+const is_Firefox = (navigator.appCodeName === 'Mozilla')
+const is_Fenix   = is_Firefox && (navigator.appVersion.indexOf('Android') >= 0)
+
+const process_click_open = (event, url) => {
   event.preventDefault()
   event.stopPropagation()
 
-  chrome.tabs.create({
-    windowId: chrome.windows.WINDOW_ID_CURRENT,
-    url
-  })
+  // https://developer.chrome.com/docs/extensions/reference/api/tabs#method-create
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/windows/WINDOW_ID_CURRENT#browser_compatibility
+
+  try {
+    const options = {url}
+
+    if (!is_Fenix)
+      options.windowId = chrome.windows.WINDOW_ID_CURRENT
+
+    chrome.tabs.create(options)
+  }
+  catch(e) {
+  }
+}
+
+const process_click_copy = (event, url) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
+
+  try {
+    navigator.clipboard.writeText(url)
+  }
+  catch(e) {
+  }
 }
 
 const process_clear_media = (event) => {
@@ -192,31 +217,31 @@ const App = ({media_type, media}) => {
               <div class="icons-container">
                 {
                   (!av_media_type) ? null : (
-                    <a class="chromecast" href={links.chromecast} onClick={(event) => process_click(event, links.chromecast)} title="Chromecast Sender">
+                    <a class="chromecast" href={links.chromecast} onClick={(event) => process_click_open(event, links.chromecast)} title="Chromecast Sender">
                       <img src="img/chromecast.png" />
                     </a>
                   )
                 }
                 {
                   (!av_media_type) ? null : (
-                    <a class="airplay" href={links.airplay} onClick={(event) => process_click(event, links.airplay)} title="ExoAirPlayer Sender">
+                    <a class="airplay" href={links.airplay} onClick={(event) => process_click_open(event, links.airplay)} title="ExoAirPlayer Sender">
                       <img src="img/airplay.png" />
                     </a>
                   )
                 }
                 {
                   (!av_media_type || !is_hls(media_item.media_url)) ? null : (
-                    <a class="proxy" href={links.proxy} onClick={(event) => process_click(event, links.proxy)} title="HLS-Proxy Configuration">
+                    <a class="proxy" href={links.proxy} onClick={(event) => process_click_open(event, links.proxy)} title="HLS-Proxy Configuration">
                       <img src="img/proxy.png" />
                     </a>
                   )
                 }
-                <a class="media-link" href={links.media_link} onClick={(event) => process_click(event, links.media_link)} title="direct link to media item">
+                <a class="media-link" href={links.media_link} onClick={(event) => process_click_open(event, links.media_link)} title="direct link to media item">
                   <img src="img/media_link.png" />
                 </a>
               </div>
               <div class="text-container">
-                <a class="entrypoint" href={links.entrypoint} onClick={(event) => process_click(event, (av_media_type ? links.entrypoint : links.media_link))} title={links.media_link}>
+                <a class="entrypoint" href={links.entrypoint} onClick={(event) => process_click_copy(event, (av_media_type ? links.entrypoint : links.media_link))} title="copy link to clipboard">
                   {links.media_link}
                 </a>
               </div>
