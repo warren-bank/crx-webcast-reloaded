@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.3.2
+// @version      0.3.3
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.surge.sh/*
-// @match        *://gitcdn.link/cdn/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
+// @match        *://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
 // @icon         https://warren-bank.github.io/crx-webcast-reloaded/external_website/4-clappr/img/favicon.ico
 // @run-at       document-idle
 // @homepage     https://github.com/warren-bank/crx-webcast-reloaded/tree/gh-pages/external_website_helper
@@ -44,18 +44,45 @@ var user_options = {
       "redirect_to_es5":            false,
       "redirect_to_es6":            false
     },
-    "prepopulate_incognito_forms": {
+    "prepopulate_form_fields": {
       "script_enabled":             true,
-      "airplay_sender": {
-        "host":                     "192.168.0.100",
-        "port":                     "8192",
-        "tls":                      false
-      },
-      "proxy": {
-        "host":                     "192.168.0.100",
-        "port":                     "8080",
-        "tls":                      false
-      }
+      "script_delay_ms":            500,
+      "airplay_sender": [
+        {
+          "host":                   "192.168.0.2",
+          "port":                   "8192",
+          "tls":                    false
+        },
+        {
+          "host":                   "192.168.0.3",
+          "port":                   "8192",
+          "tls":                    false,
+          "default":                true
+        },
+        {
+          "host":                   "192.168.0.4",
+          "port":                   "8192",
+          "tls":                    false
+        }
+      ],
+      "proxy": [
+        {
+          "host":                   "192.168.0.2",
+          "port":                   "8080",
+          "tls":                    false
+        },
+        {
+          "host":                   "192.168.0.3",
+          "port":                   "8080",
+          "tls":                    false,
+          "default":                true
+        },
+        {
+          "host":                   "192.168.0.4",
+          "port":                   "8080",
+          "tls":                    false
+        }
+      ]
     }
   }
 }
@@ -378,10 +405,12 @@ var prioritize_script_language = function(){
 }
 
 // ----------------------------------------------------------------------------- </prioritize_script_language>
-// prepopulate form fields in incognito with preconfigured values,
-// since form fields in normal windows are prepopulated from persistent cookies
+// prepopulate form fields with preconfigured values.
+//
+// since pages use cookies to conditionally prepopulate form fields,
+// a timer is used to delay DOM inspection and updates only occur when fields are empty.
 
-var prepopulate_incognito_forms = function(){
+var prepopulate_form_fields = function(){
 
   // ===========================================================================
 
@@ -437,71 +466,97 @@ var prepopulate_incognito_forms = function(){
 
   // ===========================================================================
 
+  var add_configs_dropdown = function(all_configs, id, onchange_callback){
+    var $select = document.createElement('select')
+    var label_id = '-1'
+    var $option
+
+    {
+      $option = document.createElement('option')
+      $option.value = label_id
+      $option.textContent = '-- Bookmarks --'
+
+      $select.appendChild($option)
+    }
+
+    for (var i=0; i < all_configs.length; i++) {
+      $option = document.createElement('option')
+      $option.value = '' + i
+      $option.textContent = all_configs[i].host
+
+      $select.appendChild($option)
+    }
+
+    $select.addEventListener('change', function(event) {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if ($select.value === label_id) return
+
+      var index = parseInt($select.value, 10)
+      $select.value = label_id
+
+      var configs = all_configs[index]
+      onchange_callback(configs)
+    })
+
+    document.getElementById(id).parentNode.appendChild($select)
+  }
+
+  var process_page_now = function(all_configs, id, callback){
+    var process_now = (document.getElementById(id).value === '') && (all_configs.length > 0)
+    var default_configs
+
+    if (process_now) {
+      default_configs = all_configs.find(function(configs){
+        return !!configs.default
+      })
+
+      if (!default_configs)
+        default_configs = all_configs[0]
+
+      callback(default_configs)
+    }
+  }
+
+  var process_airplay_sender_page = function(all_configs){
+    var id = 'airplay_host'
+
+    add_configs_dropdown(all_configs, id, process_airplay_sender)
+    process_page_now(    all_configs, id, process_airplay_sender)
+  }
+
+  var process_proxy_page = function(all_configs){
+    var id = 'host'
+
+    add_configs_dropdown(all_configs, id, process_proxy)
+    process_page_now(    all_configs, id, process_proxy)
+  }
+
+  // ===========================================================================
+
   var process_page = function(){
     var endpoint       = get_endpoint()
     var airplay_sender = endpoint.airplay_sender || endpoint.airplay_sender_es5
 
     if (airplay_sender) {
-      process_airplay_sender(window.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.airplay_sender)
+      process_airplay_sender_page(window.webcast_reloaded_external_website_helper.prepopulate_form_fields.airplay_sender)
       return
     }
 
     if (endpoint.proxy) {
-      process_proxy(window.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.proxy)
+      process_proxy_page(window.webcast_reloaded_external_website_helper.prepopulate_form_fields.proxy)
       return
     }
   }
 
-  var get_chrome_major_version = function(){
-    var useragent = navigator.userAgent
-    var regex     = /^.*\bChrome\/(\d+)\..*$/
-    var version
-
-    version = useragent.replace(regex, '$1')
-    version = Number(version)
-
-    return isNaN(version) ? 0 : version
-  }
-
-  var process_page_in_incognito_window = function(){
-    // updated detection strategy, based on:
-    //   https://mishravikas.com/articles/2019-07/bypassing-anti-incognito-detection-google-chrome.html
-
-    var chrome_major_version = get_chrome_major_version()
-
-    var callback = function(is_incognito){
-      if (is_incognito)
-        process_page()
-    }
-
-    if (chrome_major_version <= 73) {
-      var fs = window.RequestFileSystem || window.webkitRequestFileSystem
-
-      if (!fs)
-        return
-
-      fs(window.TEMPORARY,
-        100,
-        callback.bind(undefined, false),
-        callback.bind(undefined, true)
-      )
-    }
-    else { // Chrome 74+
-      if (!navigator.webkitTemporaryStorage || !navigator.webkitTemporaryStorage.queryUsageAndQuota)
-        return
-
-      navigator.webkitTemporaryStorage.queryUsageAndQuota(function(usage, quota){
-        var is_incognito = ((typeof quota === "number") && (quota > 0) && (quota < 175000000))
-
-        callback(is_incognito)
-      })
-    }
-  }
-
-  process_page_in_incognito_window()
+  setTimeout(
+    process_page,
+    window.webcast_reloaded_external_website_helper.prepopulate_form_fields.script_delay_ms
+  )
 }
 
-// ----------------------------------------------------------------------------- </prepopulate_incognito_forms>
+// ----------------------------------------------------------------------------- </prepopulate_form_fields>
 
 var get_hash_code = function(str){
   var hash, i, char
@@ -552,8 +607,8 @@ var bootstrap = function(){
   if (user_options.webcast_reloaded_external_website_helper.prioritize_script_language.script_enabled)
     inject_function(prioritize_script_language)
 
-  if (user_options.webcast_reloaded_external_website_helper.prepopulate_incognito_forms.script_enabled)
-    inject_function(prepopulate_incognito_forms)
+  if (user_options.webcast_reloaded_external_website_helper.prepopulate_form_fields.script_enabled)
+    inject_function(prepopulate_form_fields)
 }
 
 if (user_options['script_enabled']) {
