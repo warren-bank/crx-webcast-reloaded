@@ -59,21 +59,22 @@ body {
 }
 #app > #links {
   margin: 10px 0;
-  max-height: 426px; /* multiple of 71 (height of media-item): (71)(6) */
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 /* -----------------------------------------------------------------------------
  * defaults: audios, videos
  */
 
+#app > #links > .media-item,
+#app > #links > .media-item > .text-container {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 #app > #links > .media-item {
   display: block;
   width: 550px;
   height: 60px;
-  white-space: nowrap;
-  overflow: hidden;
   padding-bottom: 5px;
   border-bottom: 1px solid #000;
   margin-bottom: 5px;
@@ -102,6 +103,7 @@ body {
 
 #app > #links > .media-item > .text-container {
   width: 480px; /* 550 (width of media-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
+  text-overflow: ellipsis;
 }
 #app > #links > .media-item > .text-container > a {
   color: inherit;
