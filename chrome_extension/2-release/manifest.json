@@ -10,7 +10,9 @@
     "128": "icons/icon128.png"
   },
   "background": {
-    "scripts": ["background/js/background.js"],
+    "scripts": [
+      "background/js/background.js"
+    ],
     "persistent": true
   },
   "page_action": {
@@ -34,8 +36,16 @@
   },
   "incognito": "spanning",
   "web_accessible_resources": [
-    "popup/popup.html", "popup/vendor/*.js", "popup/js/*.js", "popup/js/*.map", "popup/css/*.css", "popup/img/*.png",
-    "options/options.html", "options/js/*.js", "options/css/*.css"
+    "icons/*.png",
+    "options/options.html",
+    "options/css/*.css",
+    "options/js/*.js",
+    "popup/popup.html",
+    "popup/css/*.css",
+    "popup/img/*.png",
+    "popup/js/*.js",
+    "popup/js/*.map",
+    "popup/vendor/*.js"
   ],
   "browser_specific_settings": {
     "gecko": {
