@@ -267,7 +267,7 @@ const App = ({media_type, media}) => {
                 </a>
               </div>
               <div class="text-container">
-                <a class="entrypoint" href={links.entrypoint} onClick={(event) => process_click_copy(event, (av_media_type ? links.entrypoint : links.media_link))} title="copy link to clipboard">
+                <a class="entrypoint" href={links.media_link} onClick={(event) => process_click_copy(event, links.media_link)} title="copy link to clipboard">
                   {links.media_link}
                 </a>
               </div>
