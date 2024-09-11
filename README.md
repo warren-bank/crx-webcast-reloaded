@@ -1,5 +1,12 @@
 ### [WebCast-Reloaded](https://github.com/warren-bank/crx-webcast-reloaded)
 
+#### Description:
+
+Detect multimedia URLs in each tab. Present them as organized lists. Each list item includes links to either forward the corresponding multimedia URL to an external website or copy its value to the clipboard. The external website provides additional tools to utilize the forwarded multimedia URL; such tools include: HTML5 video players, a Chromecast client sender, an AirPlay <sup>[1]</sup> client sender, and an [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>.
+
+* <sup>[1]</sup> The AirPlay client sender uses the AirPlay v1 protocol. The only AirPlay v1 receiver that is officially supported is the Android application: [ExoAirPlayer](https://github.com/warren-bank/Android-ExoPlayer-AirPlay-Receiver/releases).
+* <sup>[2]</sup> After the multimedia URL for an HLS manifest has been configured for use with [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy), it can then be forwarded to any of the other tools&hellip; and its multimedia will be streamed through the proxy.
+
 #### Background:
 
 * [WebCast](https://chrome.google.com/webstore/detail/webcast/gmenldaghgogpiajaipajaphcjbankna?hl=en) is a really nice enhancement to [Chromium-based desktop web browsers](https://en.wikipedia.org/wiki/Chromium_(web_browser)#Other_browsers_based_on_Chromium)
