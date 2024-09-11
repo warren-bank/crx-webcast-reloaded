@@ -46,16 +46,42 @@ const get_tab_id = () => {
   })
 }
 
+const ff_private_bg_window_proxy = {
+  reset_options: () => {
+    // Promise
+    return browser.runtime.sendMessage({"method": "reset_options"})
+  },
+
+  set_media_type: (tab_id, display_media) => {
+    // Promise
+    return browser.runtime.sendMessage({"method": "set_media_type", "params": {tab_id, display_media}})
+  },
+
+  clear_media: (tab_id, hide_popup) => {
+    // Promise
+    return browser.runtime.sendMessage({"method": "clear_media", "params": {tab_id, hide_popup}})
+  },
+
+  get_media: (tab_id) => {
+    // Promise
+    return browser.runtime.sendMessage({"method": "get_media", "params": {tab_id}})
+  }
+}
+
 // https://developer.chrome.com/docs/extensions/reference/extension/#method-getBackgroundPage
 const get_background_window = () => {
   state.bg_window = chrome.extension.getBackgroundPage()
+
+  if (!state.bg_window) {
+    if (typeof browser !== 'undefined')
+      state.bg_window = ff_private_bg_window_proxy
+    else
+      throw new Error('')
+  }
 }
 
 const initialize_state = async () => {
   get_background_window()
-
-  if (!state.bg_window)
-    throw new Error('')
 
   try {
     await get_options()
@@ -134,11 +160,11 @@ const get_links = (media_item) => {
   return links
 }
 
-const process_set_media_type = (event, media_type) => {
+const process_set_media_type = async (event, media_type) => {
   event.preventDefault()
   event.stopPropagation()
 
-  state.bg_window.set_media_type( state.tab_id, media_type )
+  await state.bg_window.set_media_type( state.tab_id, media_type )
   draw_list()
 }
 
@@ -258,12 +284,12 @@ const App = ({media_type, media}) => {
 
 // -----------------------------------------------------------------------------
 
-const get_props = () => {
-  return state.bg_window.get_media( state.tab_id )
+const get_props = async () => {
+  return await state.bg_window.get_media( state.tab_id )
 }
 
-const draw_list = () => {
-  const props = get_props()
+const draw_list = async () => {
+  const props = await get_props()
 
   if (
     (props.media_type === state.media_type) &&
