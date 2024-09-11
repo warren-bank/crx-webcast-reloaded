@@ -74,8 +74,46 @@
     });
   };
 
+  var ff_private_bg_window_proxy = {
+    reset_options: function reset_options() {
+      return browser.runtime.sendMessage({
+        "method": "reset_options"
+      });
+    },
+    set_media_type: function set_media_type(tab_id, display_media) {
+      return browser.runtime.sendMessage({
+        "method": "set_media_type",
+        "params": {
+          tab_id: tab_id,
+          display_media: display_media
+        }
+      });
+    },
+    clear_media: function clear_media(tab_id, hide_popup) {
+      return browser.runtime.sendMessage({
+        "method": "clear_media",
+        "params": {
+          tab_id: tab_id,
+          hide_popup: hide_popup
+        }
+      });
+    },
+    get_media: function get_media(tab_id) {
+      return browser.runtime.sendMessage({
+        "method": "get_media",
+        "params": {
+          tab_id: tab_id
+        }
+      });
+    }
+  };
+
   var get_background_window = function get_background_window() {
     state.bg_window = chrome.extension.getBackgroundPage();
+
+    if (!state.bg_window) {
+      if (typeof browser !== 'undefined') state.bg_window = ff_private_bg_window_proxy;else throw new Error('');
+    }
   };
 
   var initialize_state = function () {
@@ -85,43 +123,34 @@
           switch (_context.prev = _context.next) {
             case 0:
               get_background_window();
-
-              if (state.bg_window) {
-                _context.next = 3;
-                break;
-              }
-
-              throw new Error('');
-
-            case 3:
-              _context.prev = 3;
-              _context.next = 6;
+              _context.prev = 1;
+              _context.next = 4;
               return get_options();
 
-            case 6:
-              _context.next = 14;
+            case 4:
+              _context.next = 12;
               break;
 
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](3);
-              _context.next = 12;
+            case 6:
+              _context.prev = 6;
+              _context.t0 = _context["catch"](1);
+              _context.next = 10;
               return state.bg_window.reset_options();
+
+            case 10:
+              _context.next = 12;
+              return get_options();
 
             case 12:
               _context.next = 14;
-              return get_options();
-
-            case 14:
-              _context.next = 16;
               return get_tab_id();
 
-            case 16:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 8]]);
+      }, _callee, null, [[1, 6]]);
     }));
 
     return function initialize_state() {
@@ -186,12 +215,32 @@
     return links;
   };
 
-  var process_set_media_type = function process_set_media_type(event, media_type) {
-    event.preventDefault();
-    event.stopPropagation();
-    state.bg_window.set_media_type(state.tab_id, media_type);
-    draw_list();
-  };
+  var process_set_media_type = function () {
+    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(event, media_type) {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              event.preventDefault();
+              event.stopPropagation();
+              _context2.next = 4;
+              return state.bg_window.set_media_type(state.tab_id, media_type);
+
+            case 4:
+              draw_list();
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function process_set_media_type(_x, _x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   var is_Firefox = navigator.appCodeName === 'Mozilla';
   var is_Fenix = is_Firefox && navigator.appVersion.indexOf('Android') >= 0;
@@ -240,9 +289,9 @@
     return hls_regex_pattern.test(url);
   };
 
-  var App = function App(_ref2) {
-    var media_type = _ref2.media_type,
-        media = _ref2.media;
+  var App = function App(_ref3) {
+    var media_type = _ref3.media_type,
+        media = _ref3.media;
     var av_media_type = is_audio_video(media_type);
     return React.createElement("div", {
       id: "app"
@@ -304,9 +353,9 @@
         "class": "text-container"
       }, React.createElement("a", {
         "class": "entrypoint",
-        href: links.entrypoint,
+        href: links.media_link,
         onClick: function onClick(event) {
-          return process_click_copy(event, av_media_type ? links.entrypoint : links.media_link);
+          return process_click_copy(event, links.media_link);
         },
         title: "copy link to clipboard"
       }, links.media_link)));
@@ -317,17 +366,68 @@
     }, "Clear list of ", format_media_type(media_type))));
   };
 
-  var get_props = function get_props() {
-    return state.bg_window.get_media(state.tab_id);
-  };
+  var get_props = function () {
+    var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return state.bg_window.get_media(state.tab_id);
 
-  var draw_list = function draw_list() {
-    var props = get_props();
-    if (props.media_type === state.media_type && props.media === state.media) return;
-    state.media_type = props.media_type;
-    state.media = props.media;
-    ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
-  };
+            case 2:
+              return _context3.abrupt("return", _context3.sent);
+
+            case 3:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function get_props() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  var draw_list = function () {
+    var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      var props;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return get_props();
+
+            case 2:
+              props = _context4.sent;
+
+              if (!(props.media_type === state.media_type && props.media === state.media)) {
+                _context4.next = 5;
+                break;
+              }
+
+              return _context4.abrupt("return");
+
+            case 5:
+              state.media_type = props.media_type;
+              state.media = props.media;
+              ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
+
+            case 8:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function draw_list() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
 
   var close_popup = function close_popup() {
     if (state.timer) clearInterval(state.timer);
@@ -339,36 +439,36 @@
   };
 
   var initialize_popup = function () {
-    var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
+              _context5.prev = 0;
+              _context5.next = 3;
               return initialize_state();
 
             case 3:
               draw_list();
               state.timer = setInterval(draw_list, 500);
-              _context2.next = 10;
+              _context5.next = 10;
               break;
 
             case 7:
-              _context2.prev = 7;
-              _context2.t0 = _context2["catch"](0);
+              _context5.prev = 7;
+              _context5.t0 = _context5["catch"](0);
               close_popup();
 
             case 10:
             case "end":
-              return _context2.stop();
+              return _context5.stop();
           }
         }
-      }, _callee2, null, [[0, 7]]);
+      }, _callee5, null, [[0, 7]]);
     }));
 
     return function initialize_popup() {
-      return _ref3.apply(this, arguments);
+      return _ref6.apply(this, arguments);
     };
   }();
 
