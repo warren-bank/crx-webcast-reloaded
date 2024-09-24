@@ -6,7 +6,7 @@ const state = {}
 const get_options = () => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(
-      ['user_options_json'],
+      ['user_options_json', 'selected_website'],
       function(items){
         try {
           const data = JSON.parse(items.user_options_json)
@@ -14,6 +14,7 @@ const get_options = () => {
             throw new Error('bad data format')
 
           state.user_options = data
+          state.selected_website = items.selected_website || 0
           resolve()
         }
         catch(e) {
@@ -22,6 +23,14 @@ const get_options = () => {
       }
     )
   })
+}
+
+const update_selected_website = (new_value) => {
+  const selected_website = Number(new_value)
+
+  state.selected_website = selected_website
+
+  chrome.storage.local.set({selected_website})
 }
 
 // https://developer.chrome.com/docs/extensions/reference/tabs/#method-query
@@ -114,7 +123,7 @@ const is_https = (url) => (url.substring(0,6).toLowerCase() === 'https:')
 
 const baseurl_suffix_regex_pattern = /\/(index\.html)?$/i
 
-const get_contextualized_baseurls = (https) => {
+const get_contextualized_baseurls_automatic = (https) => {
   const urls = {
     entrypoint: '_text_link',
     chromecast: '_chromecast',
@@ -135,6 +144,21 @@ const get_contextualized_baseurls = (https) => {
   urls.proxy      = urls.proxy.replace(     baseurl_suffix_regex_pattern, '/proxy.html')
 
   return urls
+}
+
+const get_contextualized_baseurls = (https) => {
+  if (!state.selected_website)
+    return get_contextualized_baseurls_automatic(https)
+
+  const url_index = state.selected_website - 1
+  const url       = state.user_options.urls[ url_index ]
+
+  return {
+    entrypoint: url,
+    chromecast: url.replace(baseurl_suffix_regex_pattern, '/chromecast_sender.html'),
+    airplay:    url.replace(baseurl_suffix_regex_pattern, '/airplay_sender.html'),
+    proxy:      url.replace(baseurl_suffix_regex_pattern, '/proxy.html')
+  }
 }
 
 const get_links = (media_item) => {
@@ -210,6 +234,14 @@ const process_clear_media = (event) => {
   state.bg_window.clear_media( state.tab_id, true )
 }
 
+const process_selected_website = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  update_selected_website(event.target.value)
+  draw_list(true)
+}
+
 const all_media_types = ["videos", "audios", "captions", "drm_licenses"]
 
 const is_audio_video = (media_type) => ((["videos", "audios"]).indexOf(media_type) >= 0)
@@ -235,52 +267,75 @@ const App = ({media_type, media}) => {
       <h3>{media.length} {format_media_type(media_type)} detected on page.</h3>
       {
         (!media.length) ? null : (
-          <div id="actions">
-            <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
-          </div>
-          <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
-          <h4>Click link to copy URL to clipboard.</h4>
-          <div id="links">
-            {media.map((media_item, index) => {
-              const links = get_links(media_item)
+          <>
+            <div id="actions">
+              <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
+              {
+                (state.user_options.urls.length <= 1) ? null : (
+                  <div className="selected_website">
+                    <h4>External Website:</h4>
+                    <div>
+                      <select onChange={process_selected_website}>
+                        <option value="0" selected={state.selected_website === 0}>Automatic</option>
 
-              return (
-                <div class={av_media_type ? "media-item" : "non-av media-item"} key={index}>
-                  <div class="icons-container">
-                    {
-                      (!av_media_type) ? null : (
-                        <a class="chromecast" href={links.chromecast} onClick={(event) => process_click_open(event, links.chromecast)} title="Chromecast Sender">
-                          <img src="img/chromecast.png" />
-                        </a>
-                      )
-                    }
-                    {
-                      (!av_media_type) ? null : (
-                        <a class="airplay" href={links.airplay} onClick={(event) => process_click_open(event, links.airplay)} title="ExoAirPlayer Sender">
-                          <img src="img/airplay.png" />
-                        </a>
-                      )
-                    }
-                    {
-                      (!av_media_type || !is_hls(media_item.media_url)) ? null : (
-                        <a class="proxy" href={links.proxy} onClick={(event) => process_click_open(event, links.proxy)} title="HLS-Proxy Configuration">
-                          <img src="img/proxy.png" />
-                        </a>
-                      )
-                    }
-                    <a class="media-link" href={links.media_link} onClick={(event) => process_click_open(event, links.media_link)} title="direct link to media item">
-                      <img src="img/media_link.png" />
-                    </a>
+                        {state.user_options.urls.map((url_string, index) => {
+                          const value = index + 1
+                          const url  = new URL(url_string)
+                          const name = `[${url.protocol.toUpperCase().replace(/:$/, '')}] ${url.hostname.replace('webcast-reloaded.', '').replace('warren-bank.', '')}`
+                          return (
+                            <option value={value} selected={state.selected_website === value}>{name}</option>
+                          )
+                        })}
+                      </select>
+                    </div>
                   </div>
-                  <div class="text-container">
-                    <a class="entrypoint" href={links.media_link} onClick={(event) => process_click_copy(event, links.media_link)} title="copy link to clipboard">
-                      {links.media_link}
-                    </a>
+                )
+              }
+            </div>
+            <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
+            <h4>Click link to copy URL to clipboard.</h4>
+            <div id="links">
+              {media.map((media_item, index) => {
+                const links = get_links(media_item)
+
+                return (
+                  <div className={av_media_type ? "media-item" : "non-av media-item"} key={index}>
+                    <div className="icons-container">
+                      {
+                        (!av_media_type) ? null : (
+                          <a className="chromecast" href={links.chromecast} onClick={(event) => process_click_open(event, links.chromecast)} title="Chromecast Sender">
+                            <img src="img/chromecast.png" />
+                          </a>
+                        )
+                      }
+                      {
+                        (!av_media_type) ? null : (
+                          <a className="airplay" href={links.airplay} onClick={(event) => process_click_open(event, links.airplay)} title="ExoAirPlayer Sender">
+                            <img src="img/airplay.png" />
+                          </a>
+                        )
+                      }
+                      {
+                        (!av_media_type || !is_hls(media_item.media_url)) ? null : (
+                          <a className="proxy" href={links.proxy} onClick={(event) => process_click_open(event, links.proxy)} title="HLS-Proxy Configuration">
+                            <img src="img/proxy.png" />
+                          </a>
+                        )
+                      }
+                      <a className="media-link" href={links.media_link} onClick={(event) => process_click_open(event, links.media_link)} title="direct link to media item">
+                        <img src="img/media_link.png" />
+                      </a>
+                    </div>
+                    <div className="text-container">
+                      <a className="entrypoint" href={links.media_link} onClick={(event) => process_click_copy(event, links.media_link)} title="copy link to clipboard">
+                        {links.media_link}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          </>
         )
       }
     </div>
@@ -293,10 +348,11 @@ const get_props = async () => {
   return await state.bg_window.get_media( state.tab_id )
 }
 
-const draw_list = async () => {
+const draw_list = async (force = false) => {
   const props = await get_props()
 
   if (
+    !force &&
     (props.media_type === state.media_type) &&
     (props.media === state.media)
   )
