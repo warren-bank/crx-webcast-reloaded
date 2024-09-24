@@ -199,6 +199,7 @@ const reset_default_options = () => {
     const data = {
       urls:     [
         'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html',
+        'http://webcast-reloaded.frii.site/index.html',
         'http://webcast-reloaded.surge.sh/index.html'
       ],
       contexts: {
