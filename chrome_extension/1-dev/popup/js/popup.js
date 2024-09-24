@@ -233,7 +233,8 @@ const App = ({media_type, media}) => {
         })}
       </div>
       <h3>{media.length} {format_media_type(media_type)} detected on page.</h3>
-      <h4>Click link to transfer the media item to external website in a new tab.</h4>
+      <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
+      <h4>Click link to copy URL to clipboard.</h4>
       <div id="links">
         {media.map((media_item, index) => {
           const links = get_links(media_item)
