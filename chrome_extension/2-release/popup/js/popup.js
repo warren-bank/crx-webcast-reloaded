@@ -43,16 +43,25 @@
 
   var get_options = function get_options() {
     return new Promise(function (resolve, reject) {
-      chrome.storage.local.get(['user_options_json'], function (items) {
+      chrome.storage.local.get(['user_options_json', 'selected_website'], function (items) {
         try {
           var data = JSON.parse(items.user_options_json);
           if (!data || !Array.isArray(data.urls) || !data.urls.length || !data.contexts) throw new Error('bad data format');
           state.user_options = data;
+          state.selected_website = items.selected_website || 0;
           resolve();
         } catch (e) {
           reject();
         }
       });
+    });
+  };
+
+  var update_selected_website = function update_selected_website(new_value) {
+    var selected_website = Number(new_value);
+    state.selected_website = selected_website;
+    chrome.storage.local.set({
+      selected_website: selected_website
     });
   };
 
@@ -176,7 +185,7 @@
 
   var baseurl_suffix_regex_pattern = /\/(index\.html)?$/i;
 
-  var get_contextualized_baseurls = function get_contextualized_baseurls(https) {
+  var get_contextualized_baseurls_automatic = function get_contextualized_baseurls_automatic(https) {
     var urls = {
       entrypoint: '_text_link',
       chromecast: '_chromecast',
@@ -195,6 +204,18 @@
     urls.airplay = urls.airplay.replace(baseurl_suffix_regex_pattern, '/airplay_sender.html');
     urls.proxy = urls.proxy.replace(baseurl_suffix_regex_pattern, '/proxy.html');
     return urls;
+  };
+
+  var get_contextualized_baseurls = function get_contextualized_baseurls(https) {
+    if (!state.selected_website) return get_contextualized_baseurls_automatic(https);
+    var url_index = state.selected_website - 1;
+    var url = state.user_options.urls[url_index];
+    return {
+      entrypoint: url,
+      chromecast: url.replace(baseurl_suffix_regex_pattern, '/chromecast_sender.html'),
+      airplay: url.replace(baseurl_suffix_regex_pattern, '/airplay_sender.html'),
+      proxy: url.replace(baseurl_suffix_regex_pattern, '/proxy.html')
+    };
   };
 
   var get_links = function get_links(media_item) {
@@ -273,6 +294,13 @@
     state.bg_window.clear_media(state.tab_id, true);
   };
 
+  var process_selected_website = function process_selected_website(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    update_selected_website(event.target.value);
+    draw_list(true);
+  };
+
   var all_media_types = ["videos", "audios", "captions", "drm_licenses"];
 
   var is_audio_video = function is_audio_video(media_type) {
@@ -304,17 +332,36 @@
           return process_set_media_type(event, media_type_option);
         }
       }, format_media_type(media_type_option));
-    })), React.createElement("h3", null, media.length, " ", format_media_type(media_type), " detected on page."), React.createElement("h4", null, "Click link to transfer the media item to external website in a new tab."), React.createElement("div", {
+    })), React.createElement("h3", null, media.length, " ", format_media_type(media_type), " detected on page."), !media.length ? null : React.createElement(React.Fragment, null, React.createElement("div", {
+      id: "actions"
+    }, React.createElement("button", {
+      onClick: process_clear_media
+    }, "Clear list of ", format_media_type(media_type)), state.user_options.urls.length <= 1 ? null : React.createElement("div", {
+      className: "selected_website"
+    }, React.createElement("h4", null, "External Website:"), React.createElement("div", null, React.createElement("select", {
+      onChange: process_selected_website
+    }, React.createElement("option", {
+      value: "0",
+      selected: state.selected_website === 0
+    }, "Automatic"), state.user_options.urls.map(function (url_string, index) {
+      var value = index + 1;
+      var url = new URL(url_string);
+      var name = "[".concat(url.protocol.toUpperCase().replace(/:$/, ''), "] ").concat(url.hostname.replace('webcast-reloaded.', '').replace('warren-bank.', ''));
+      return React.createElement("option", {
+        value: value,
+        selected: state.selected_website === value
+      }, name);
+    }))))), React.createElement("h4", null, "Click ", av_media_type ? 'icons' : 'icon', " to transfer to external website."), React.createElement("h4", null, "Click link to copy URL to clipboard."), React.createElement("div", {
       id: "links"
     }, media.map(function (media_item, index) {
       var links = get_links(media_item);
       return React.createElement("div", {
-        "class": av_media_type ? "media-item" : "non-av media-item",
+        className: av_media_type ? "media-item" : "non-av media-item",
         key: index
       }, React.createElement("div", {
-        "class": "icons-container"
+        className: "icons-container"
       }, !av_media_type ? null : React.createElement("a", {
-        "class": "chromecast",
+        className: "chromecast",
         href: links.chromecast,
         onClick: function onClick(event) {
           return process_click_open(event, links.chromecast);
@@ -323,7 +370,7 @@
       }, React.createElement("img", {
         src: "img/chromecast.png"
       })), !av_media_type ? null : React.createElement("a", {
-        "class": "airplay",
+        className: "airplay",
         href: links.airplay,
         onClick: function onClick(event) {
           return process_click_open(event, links.airplay);
@@ -332,7 +379,7 @@
       }, React.createElement("img", {
         src: "img/airplay.png"
       })), !av_media_type || !is_hls(media_item.media_url) ? null : React.createElement("a", {
-        "class": "proxy",
+        className: "proxy",
         href: links.proxy,
         onClick: function onClick(event) {
           return process_click_open(event, links.proxy);
@@ -341,7 +388,7 @@
       }, React.createElement("img", {
         src: "img/proxy.png"
       })), React.createElement("a", {
-        "class": "media-link",
+        className: "media-link",
         href: links.media_link,
         onClick: function onClick(event) {
           return process_click_open(event, links.media_link);
@@ -350,20 +397,16 @@
       }, React.createElement("img", {
         src: "img/media_link.png"
       }))), React.createElement("div", {
-        "class": "text-container"
+        className: "text-container"
       }, React.createElement("a", {
-        "class": "entrypoint",
+        className: "entrypoint",
         href: links.media_link,
         onClick: function onClick(event) {
           return process_click_copy(event, links.media_link);
         },
         title: "copy link to clipboard"
       }, links.media_link)));
-    })), React.createElement("div", {
-      id: "actions"
-    }, React.createElement("button", {
-      onClick: process_clear_media
-    }, "Clear list of ", format_media_type(media_type))));
+    }))));
   };
 
   var get_props = function () {
@@ -393,30 +436,33 @@
 
   var draw_list = function () {
     var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
-      var props;
+      var force,
+          props,
+          _args4 = arguments;
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.next = 2;
+              force = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : false;
+              _context4.next = 3;
               return get_props();
 
-            case 2:
+            case 3:
               props = _context4.sent;
 
-              if (!(props.media_type === state.media_type && props.media === state.media)) {
-                _context4.next = 5;
+              if (!(!force && props.media_type === state.media_type && props.media === state.media)) {
+                _context4.next = 6;
                 break;
               }
 
               return _context4.abrupt("return");
 
-            case 5:
+            case 6:
               state.media_type = props.media_type;
               state.media = props.media;
               ReactDOM.render(React.createElement(App, props), document.getElementById('root'));
 
-            case 8:
+            case 9:
             case "end":
               return _context4.stop();
           }
