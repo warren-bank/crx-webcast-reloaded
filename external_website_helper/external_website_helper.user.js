@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.3.3
+// @version      0.3.4
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
+// @match        *://webcast-reloaded.frii.site/*
 // @match        *://webcast-reloaded.surge.sh/*
 // @match        *://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/*
 // @icon         https://warren-bank.github.io/crx-webcast-reloaded/external_website/4-clappr/img/favicon.ico
@@ -19,12 +20,27 @@
 // https://www.chromium.org/developers/design-documents/user-scripts
 
 var user_options = {
-  "script_enabled":             true,
-  "script_injection_delay_ms":  0,
+  "script_enabled":                   true,
+  "script_injection_delay_ms":        0,
   "webcast_reloaded_external_website_helper": {
+    "always_redirect_to_webhost": {
+      "script_enabled":               true,
+      "webhost": {
+        "http":                       "webcast-reloaded.frii.site/",
+        "https":                      "warren-bank.github.io/crx-webcast-reloaded/external_website/"
+        /*
+         * examples (http):
+         *   "webcast-reloaded.frii.site/"
+         *   "webcast-reloaded.surge.sh/"
+         *   "raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/"
+         * examples (https):
+         *   "warren-bank.github.io/crx-webcast-reloaded/external_website/"
+         */
+      }
+    },
     "always_redirect_to_endpoint": {
-      "script_enabled":             false,
-      "endpoint":                   "/airplay_sender.html"
+      "script_enabled":               false,
+      "endpoint":                     "/airplay_sender.html"
         /*
          * examples:
          *   "/airplay_sender.html"
@@ -36,51 +52,56 @@ var user_options = {
          */
     },
     "workaround_issue_01": {
-      "script_enabled":             true,
-      "prioritize_cast_over_watch": true
+      "script_enabled":               true,
+      "airplay_sender": {
+        "block_mixed_content":        true
+      },
+      "chromecast_sender": {
+        "prioritize_cast_over_watch": true
+      }
     },
     "prioritize_script_language": {
-      "script_enabled":             true,
-      "redirect_to_es5":            false,
-      "redirect_to_es6":            false
+      "script_enabled":               false,
+      "redirect_to_es5":              true,
+      "redirect_to_es6":              false
     },
     "prepopulate_form_fields": {
-      "script_enabled":             true,
-      "script_delay_ms":            500,
+      "script_enabled":               true,
+      "script_delay_ms":              500,
       "airplay_sender": [
         {
-          "host":                   "192.168.0.2",
-          "port":                   "8192",
-          "tls":                    false
+          "host":                     "192.168.0.2",
+          "port":                     "8192",
+          "tls":                      false
         },
         {
-          "host":                   "192.168.0.3",
-          "port":                   "8192",
-          "tls":                    false,
-          "default":                true
+          "host":                     "192.168.0.3",
+          "port":                     "8192",
+          "tls":                      false,
+          "default":                  true
         },
         {
-          "host":                   "192.168.0.4",
-          "port":                   "8192",
-          "tls":                    false
+          "host":                     "192.168.0.4",
+          "port":                     "8192",
+          "tls":                      false
         }
       ],
       "proxy": [
         {
-          "host":                   "192.168.0.2",
-          "port":                   "8080",
-          "tls":                    false
+          "host":                     "192.168.0.2",
+          "port":                     "8080",
+          "tls":                      false
         },
         {
-          "host":                   "192.168.0.3",
-          "port":                   "8080",
-          "tls":                    false,
-          "default":                true
+          "host":                     "192.168.0.3",
+          "port":                     "8080",
+          "tls":                      false,
+          "default":                  true
         },
         {
-          "host":                   "192.168.0.4",
-          "port":                   "8080",
-          "tls":                    false
+          "host":                     "192.168.0.4",
+          "port":                     "8080",
+          "tls":                      false
         }
       ]
     }
@@ -88,6 +109,48 @@ var user_options = {
 }
 
 // -----------------------------------------------------------------------------
+// conditionally redirect to specific webhost
+
+var always_redirect_to_webhost = function(){
+
+  // ===========================================================================
+
+  var is_tls_endpoint = function(){
+    return window.location.protocol.trim().toLowerCase().startsWith('https')
+  }
+
+  var get_current_webhost = function(){
+    var needle = '/external_website/'
+    var index  = window.location.pathname.indexOf(needle)
+
+    return window.location.hostname + (
+      (index >= 0)
+        ? window.location.pathname.substring(0, index + needle.length)
+        : '/'
+    )
+  }
+
+  // ===========================================================================
+
+  var process_page = function(){
+    var target = is_tls_endpoint()
+      ? window.webcast_reloaded_external_website_helper.always_redirect_to_webhost.webhost.https
+      : window.webcast_reloaded_external_website_helper.always_redirect_to_webhost.webhost.http
+
+    if (!target || (window.location.href.indexOf(target) >= 0))
+      return
+
+    var current = get_current_webhost()
+
+    var url = window.location.href.replace(current, target)
+
+    window.location = url
+  }
+
+  process_page()
+}
+
+// ----------------------------------------------------------------------------- </always_redirect_to_webhost>
 // conditionally redirect to specific SPA endpoint
 
 var always_redirect_to_endpoint = function(){
@@ -297,7 +360,7 @@ var workaround_issue_01 = function(){
       // cast:  YES
       // watch: NO  (not allowed to load insecure content from a secure context)
 
-      if (!window.webcast_reloaded_external_website_helper.workaround_issue_01.prioritize_cast_over_watch)
+      if (!window.webcast_reloaded_external_website_helper.workaround_issue_01.chromecast_sender.prioritize_cast_over_watch)
         redirect(endpoint)
 
       // =============================
@@ -317,7 +380,7 @@ var workaround_issue_01 = function(){
       // watch: YES
 
       if (chrome_major_version >= 72) {
-        if (window.webcast_reloaded_external_website_helper.workaround_issue_01.prioritize_cast_over_watch)
+        if (window.webcast_reloaded_external_website_helper.workaround_issue_01.chromecast_sender.prioritize_cast_over_watch)
           redirect(endpoint)
 
         // =============================
@@ -340,13 +403,7 @@ var workaround_issue_01 = function(){
     var airplay_sender = endpoint.airplay_sender || endpoint.airplay_sender_es5
 
     // airplay_sender => HTTP only
-    if (airplay_sender && tls_endpoint) {
-      redirect(endpoint)
-      return
-    }
-
-    // proxy => HTTP only
-    if (endpoint.proxy && tls_endpoint) {
+    if (airplay_sender && tls_endpoint && window.webcast_reloaded_external_website_helper.workaround_issue_01.airplay_sender.block_mixed_content) {
       redirect(endpoint)
       return
     }
@@ -597,6 +654,9 @@ var inject_options = function(){
 
 var bootstrap = function(){
   inject_options()
+
+  if (user_options.webcast_reloaded_external_website_helper.always_redirect_to_webhost.script_enabled)
+    inject_function(always_redirect_to_webhost)
 
   if (user_options.webcast_reloaded_external_website_helper.always_redirect_to_endpoint.script_enabled)
     inject_function(always_redirect_to_endpoint)
