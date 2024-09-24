@@ -235,6 +235,9 @@ const App = ({media_type, media}) => {
       <h3>{media.length} {format_media_type(media_type)} detected on page.</h3>
       {
         (!media.length) ? null : (
+          <div id="actions">
+            <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
+          </div>
           <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
           <h4>Click link to copy URL to clipboard.</h4>
           <div id="links">
@@ -277,9 +280,6 @@ const App = ({media_type, media}) => {
                 </div>
               )
             })}
-          </div>
-          <div id="actions">
-            <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
           </div>
         )
       }
