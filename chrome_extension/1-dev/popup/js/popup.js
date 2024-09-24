@@ -233,52 +233,56 @@ const App = ({media_type, media}) => {
         })}
       </div>
       <h3>{media.length} {format_media_type(media_type)} detected on page.</h3>
-      <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
-      <h4>Click link to copy URL to clipboard.</h4>
-      <div id="links">
-        {media.map((media_item, index) => {
-          const links = get_links(media_item)
+      {
+        (!media.length) ? null : (
+          <h4>Click {av_media_type ? 'icons' : 'icon'} to transfer to external website.</h4>
+          <h4>Click link to copy URL to clipboard.</h4>
+          <div id="links">
+            {media.map((media_item, index) => {
+              const links = get_links(media_item)
 
-          return (
-            <div class={av_media_type ? "media-item" : "non-av media-item"} key={index}>
-              <div class="icons-container">
-                {
-                  (!av_media_type) ? null : (
-                    <a class="chromecast" href={links.chromecast} onClick={(event) => process_click_open(event, links.chromecast)} title="Chromecast Sender">
-                      <img src="img/chromecast.png" />
+              return (
+                <div class={av_media_type ? "media-item" : "non-av media-item"} key={index}>
+                  <div class="icons-container">
+                    {
+                      (!av_media_type) ? null : (
+                        <a class="chromecast" href={links.chromecast} onClick={(event) => process_click_open(event, links.chromecast)} title="Chromecast Sender">
+                          <img src="img/chromecast.png" />
+                        </a>
+                      )
+                    }
+                    {
+                      (!av_media_type) ? null : (
+                        <a class="airplay" href={links.airplay} onClick={(event) => process_click_open(event, links.airplay)} title="ExoAirPlayer Sender">
+                          <img src="img/airplay.png" />
+                        </a>
+                      )
+                    }
+                    {
+                      (!av_media_type || !is_hls(media_item.media_url)) ? null : (
+                        <a class="proxy" href={links.proxy} onClick={(event) => process_click_open(event, links.proxy)} title="HLS-Proxy Configuration">
+                          <img src="img/proxy.png" />
+                        </a>
+                      )
+                    }
+                    <a class="media-link" href={links.media_link} onClick={(event) => process_click_open(event, links.media_link)} title="direct link to media item">
+                      <img src="img/media_link.png" />
                     </a>
-                  )
-                }
-                {
-                  (!av_media_type) ? null : (
-                    <a class="airplay" href={links.airplay} onClick={(event) => process_click_open(event, links.airplay)} title="ExoAirPlayer Sender">
-                      <img src="img/airplay.png" />
+                  </div>
+                  <div class="text-container">
+                    <a class="entrypoint" href={links.media_link} onClick={(event) => process_click_copy(event, links.media_link)} title="copy link to clipboard">
+                      {links.media_link}
                     </a>
-                  )
-                }
-                {
-                  (!av_media_type || !is_hls(media_item.media_url)) ? null : (
-                    <a class="proxy" href={links.proxy} onClick={(event) => process_click_open(event, links.proxy)} title="HLS-Proxy Configuration">
-                      <img src="img/proxy.png" />
-                    </a>
-                  )
-                }
-                <a class="media-link" href={links.media_link} onClick={(event) => process_click_open(event, links.media_link)} title="direct link to media item">
-                  <img src="img/media_link.png" />
-                </a>
-              </div>
-              <div class="text-container">
-                <a class="entrypoint" href={links.media_link} onClick={(event) => process_click_copy(event, links.media_link)} title="copy link to clipboard">
-                  {links.media_link}
-                </a>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      <div id="actions">
-        <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
-      </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <div id="actions">
+            <button onClick={process_clear_media}>Clear list of {format_media_type(media_type)}</button>
+          </div>
+        )
+      }
     </div>
   )
 }
