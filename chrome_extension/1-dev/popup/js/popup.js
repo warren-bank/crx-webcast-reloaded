@@ -249,6 +249,13 @@ const process_toggle_pin = (event) => {
   document.documentElement.classList.toggle('pin')
 }
 
+const process_toggle_full_url = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  document.documentElement.classList.toggle('full-url')
+}
+
 const all_media_types = ["videos", "audios", "captions", "drm_licenses"]
 
 const is_audio_video = (media_type) => ((["videos", "audios"]).indexOf(media_type) >= 0)
@@ -300,7 +307,8 @@ const App = ({media_type, media}) => {
                   )
                 }
                 <div className="toggles">
-                  <div className="toggle" id="pin" onClick={process_toggle_pin}></div>
+                  <div className="toggle" id="pin"      onClick={process_toggle_pin}      title="pin/unpin header"></div>
+                  <div className="toggle" id="full-url" onClick={process_toggle_full_url} title="expand/collapse URLs"></div>
                 </div>
               </div>
             </>

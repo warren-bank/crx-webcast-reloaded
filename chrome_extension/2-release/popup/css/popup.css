@@ -90,6 +90,9 @@ html > body > #root > #app > header > #actions > .toggles > .toggle {
   background-repeat: no-repeat;
   background-size: 24px 24px;
 }
+html > body > #root > #app > header > #actions > .toggles > .toggle + .toggle {
+  margin-left: 6px;
+}
 
 /* -----------------------------------------------------------------------------
  * defaults: audios, videos
@@ -276,4 +279,30 @@ html.pin > body > #root > #app > section {
   height: calc(100vh - 20px - 155px);
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* -----------------------------------------------------------------------------
+ * toggle: full-url
+ */
+
+html > body > #root > #app > header > #actions > .toggles > .toggle#full-url {
+  background-image: url("../img/toggle-full-url-on.png");
+}
+
+html.full-url > body > #root > #app > header > #actions > .toggles > .toggle#full-url {
+  background-image: url("../img/toggle-full-url-off.png");
+}
+html.full-url > body > #root > #app > section > #links > .media-item,
+html.full-url > body > #root > #app > section > #links > .media-item > .text-container {
+  height: auto;
+  min-height: 45px;
+  max-height: unset;
+}
+html.full-url > body > #root > #app > section > #links > .media-item > .text-container {
+  white-space: normal;
+  text-overflow: unset;
+}
+html.full-url > body > #root > #app > section > #links > .media-item > .text-container > a {
+  line-height: 1em;
+  line-break: anywhere;
 }
