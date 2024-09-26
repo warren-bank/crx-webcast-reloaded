@@ -301,6 +301,18 @@
     draw_list(true);
   };
 
+  var process_toggle_pin = function process_toggle_pin(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.documentElement.classList.toggle('pin');
+  };
+
+  var process_toggle_full_url = function process_toggle_full_url(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.documentElement.classList.toggle('full-url');
+  };
+
   var all_media_types = ["videos", "audios", "captions", "drm_licenses"];
 
   var is_audio_video = function is_audio_video(media_type) {
@@ -323,7 +335,7 @@
     var av_media_type = is_audio_video(media_type);
     return React.createElement("div", {
       id: "app"
-    }, React.createElement("div", {
+    }, React.createElement("header", null, React.createElement("div", {
       id: "media-type-options"
     }, all_media_types.map(function (media_type_option, index) {
       return React.createElement("button", {
@@ -351,7 +363,19 @@
         value: value,
         selected: state.selected_website === value
       }, name);
-    }))))), React.createElement("h4", null, "Click ", av_media_type ? 'icons' : 'icon', " to transfer to external website."), React.createElement("h4", null, "Click link to copy URL to clipboard."), React.createElement("div", {
+    })))), React.createElement("div", {
+      className: "toggles"
+    }, React.createElement("div", {
+      className: "toggle",
+      id: "pin",
+      onClick: process_toggle_pin,
+      title: "pin/unpin header"
+    }), React.createElement("div", {
+      className: "toggle",
+      id: "full-url",
+      onClick: process_toggle_full_url,
+      title: "expand/collapse URLs"
+    }))))), React.createElement("section", null, !media.length ? null : React.createElement(React.Fragment, null, React.createElement("h4", null, "Click ", av_media_type ? 'icons' : 'icon', " to transfer to external website."), React.createElement("h4", null, "Click link to copy URL to clipboard."), React.createElement("div", {
       id: "links"
     }, media.map(function (media_item, index) {
       var links = get_links(media_item);
@@ -406,7 +430,7 @@
         },
         title: "copy link to clipboard"
       }, links.media_link)));
-    }))));
+    })))));
   };
 
   var get_props = function () {

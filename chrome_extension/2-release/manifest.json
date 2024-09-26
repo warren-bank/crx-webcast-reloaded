@@ -2,7 +2,7 @@
   "name": "WebCast-Reloaded",
   "short_name": "WebCast-Reloaded",
   "description": "Detect multimedia URLs in each tab.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "manifest_version": 2,
   "icons": {
     "16":  "icons/icon16.png",
