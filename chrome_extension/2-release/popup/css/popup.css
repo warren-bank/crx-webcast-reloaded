@@ -3,6 +3,12 @@
   padding: 0;
 }
 
+html {
+  width: 100%;
+  min-width: 600px;
+  overflow-x: hidden;
+}
+
 html > body > #root > #app {
   padding: 10px;
   box-sizing: border-box;
@@ -12,25 +18,12 @@ html > body > #root > #app {
   color: #999;
 }
 
-::-webkit-scrollbar {
-  height: 12px;
-  width: 12px;
-  background: #fbfbfb;
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 1px;
-  background: #f5f5f5;
-}
-::-webkit-scrollbar-corner {
-  background: #fbfbfb;
-}
-
 /* -----------------------------------------------------------------------------
  * top navbar: media types
  */
 
 html > body > #root > #app > header > #media-type-options {
-  width: 550px; /* same as each media-item */
+  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   margin-bottom: 10px;
@@ -38,8 +31,8 @@ html > body > #root > #app > header > #media-type-options {
 
 html > body > #root > #app > header > #media-type-options > button {
   display: inline-block;
-  width: 135px; /* (550 - (N+1) (horizontal margin)) / N => where N is the number of horizontal buttons */
   margin: 1px;
+  width: calc(25% - 2px);
   text-align: center;
   text-transform: capitalize;
 }
@@ -110,7 +103,6 @@ html > body > #root > #app > section > #links > .media-item > .text-container {
 
 html > body > #root > #app > section > #links > .media-item {
   display: block;
-  width: 550px;
   height: 60px;
   padding-bottom: 5px;
   border-bottom: 1px solid #000;
@@ -139,7 +131,7 @@ html > body > #root > #app > section > #links > .media-item > .icons-container {
 }
 
 html > body > #root > #app > section > #links > .media-item > .text-container {
-  width: 480px; /* 550 (width of media-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
+  max-width: calc(100% - 70px);
   text-overflow: ellipsis;
 }
 html > body > #root > #app > section > #links > .media-item > .text-container > a {
@@ -252,12 +244,11 @@ html > body,
 html > body > #root,
 html > body > #root > #app {
   height: 100%;
-  min-height: 600px;
+  min-height: 500px;
   overflow-y: auto;
 }
 html > body > #root > #app > header,
 html > body > #root > #app > section {
-  position: static;
   height: auto;
 }
 
@@ -268,11 +259,14 @@ html.pin,
 html.pin > body,
 html.pin > body > #root,
 html.pin > body > #root > #app {
-  height: 100vh;
   overflow-y: hidden;
+}
+html.pin > body > #root > #app {
+  height: calc(100vh - 20px);
 }
 html.pin > body > #root > #app > header {
   position: fixed;
+  width: calc(100% - 20px);
   height: 155px;
   overflow-y: hidden;
 }
@@ -280,5 +274,6 @@ html.pin > body > #root > #app > section {
   position: relative;
   top: 155px;
   height: calc(100vh - 20px - 155px);
+  overflow-x: hidden;
   overflow-y: auto;
 }
