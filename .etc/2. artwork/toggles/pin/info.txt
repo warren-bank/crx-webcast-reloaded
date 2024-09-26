@@ -1,0 +1,16 @@
+https://thenounproject.com/browse/icons/term/pin/
+https://thenounproject.com/icon/pin-4752696/
+https://static.thenounproject.com/png/4752696-200.png
+  => popup/img/toggle-pin-on.png
+
+https://thenounproject.com/browse/icons/term/unpin/
+https://thenounproject.com/icon/unpin-4752697/
+https://static.thenounproject.com/png/4752697-200.png
+  => popup/img/toggle-pin-off.png
+
+https://thenounproject.com/legal/terms-of-use/#icon-licenses
+https://creativecommons.org/licenses/by/3.0/
+  license: Creative Commons Attribution License (CC BY 3.0)
+  summary: allows you to use the Icon for free, as long as you attribute it to the Icon creator
+  creator: Creative Studio
+           https://thenounproject.com/creator/meharbadsha2211/

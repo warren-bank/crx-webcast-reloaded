@@ -1,3 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html > body > #root > #app {
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-family: "Verdana", sans-serif;
+  font-size: 14px;
+  color: #999;
+}
+
 ::-webkit-scrollbar {
   height: 12px;
   width: 12px;
@@ -11,31 +25,18 @@
   background: #fbfbfb;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  padding: 10px;
-  background-color: #fff;
-  font-family: "Verdana", sans-serif;
-  font-size: 14px;
-  color: #999;
-}
-
 /* -----------------------------------------------------------------------------
  * top navbar: media types
  */
 
-#app > #media-type-options {
+html > body > #root > #app > header > #media-type-options {
   width: 550px; /* same as each media-item */
   white-space: nowrap;
   overflow: hidden;
   margin-bottom: 10px;
 }
 
-#app > #media-type-options > button {
+html > body > #root > #app > header > #media-type-options > button {
   display: inline-block;
   width: 135px; /* (550 - (N+1) (horizontal margin)) / N => where N is the number of horizontal buttons */
   margin: 1px;
@@ -47,57 +48,67 @@ body {
  * headings, container for all links
  */
 
-#app > h3 {
+html > body > #root > #app > header > h3 {
   color: #000;
   font-size: 1.25em;
 }
-#app > h4 {
+html > body > #root > #app > header > #actions {
+  margin: 10px 0;
+}
+
+html > body > #root > #app > section > h4 {
   font-size: 1.10em;
 }
-#app > h3 + h4 {
-  margin-top: 10px;
-}
-#app > #actions,
-#app > #links {
+html > body > #root > #app > section > #links {
   margin: 10px 0;
 }
 
 /* -----------------------------------------------------------------------------
- * actions
+ * actions, toggles
  */
 
-#app > #actions {
+html > body > #root > #app > header > #actions {
   border-bottom: 1px solid #000;
   padding-bottom: 10px;
 }
-#app > #actions > button,
-#app > #actions > .selected_website {
+html > body > #root > #app > header > #actions > button,
+html > body > #root > #app > header > #actions > .selected_website,
+html > body > #root > #app > header > #actions > .toggles {
   display: inline-block;
   vertical-align: top;
 }
-#app > #actions > .selected_website {
+html > body > #root > #app > header > #actions > .selected_website,
+html > body > #root > #app > header > #actions > .toggles {
   margin-left: 1em;
 }
-#app > #actions > .selected_website > h4 {
+html > body > #root > #app > header > #actions > .selected_website > h4 {
   color: #000;
   font-size: 1.10em;
   margin-bottom: 6px;
 }
-#app > #actions > .selected_website select > option {
+html > body > #root > #app > header > #actions > .selected_website select > option {
   font-family: monospace;
+}
+html > body > #root > #app > header > #actions > .toggles > .toggle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
 }
 
 /* -----------------------------------------------------------------------------
  * defaults: audios, videos
  */
 
-#app > #links > .media-item,
-#app > #links > .media-item > .text-container {
+html > body > #root > #app > section > #links > .media-item,
+html > body > #root > #app > section > #links > .media-item > .text-container {
   white-space: nowrap;
   overflow: hidden;
 }
 
-#app > #links > .media-item {
+html > body > #root > #app > section > #links > .media-item {
   display: block;
   width: 550px;
   height: 60px;
@@ -105,19 +116,19 @@ body {
   border-bottom: 1px solid #000;
   margin-bottom: 5px;
 }
-#app > #links > .media-item:last-child {
+html > body > #root > #app > section > #links > .media-item:last-child {
   border-bottom: none;
 }
 
-#app > #links > .media-item > .icons-container,
-#app > #links > .media-item > .text-container {
+html > body > #root > #app > section > #links > .media-item > .icons-container,
+html > body > #root > #app > section > #links > .media-item > .text-container {
   display: inline-block;
   height: 60px;
   max-height: 60px;
   vertical-align: top;
 }
 
-#app > #links > .media-item > .icons-container {
+html > body > #root > #app > section > #links > .media-item > .icons-container {
   position: relative;
   z-index: 0;
   width: 60px;
@@ -127,61 +138,61 @@ body {
   border-radius: 14px;
 }
 
-#app > #links > .media-item > .text-container {
+html > body > #root > #app > section > #links > .media-item > .text-container {
   width: 480px; /* 550 (width of media-item) - 60 (width of icons-container) - 10 (margin-right of icons-container) */
   text-overflow: ellipsis;
 }
-#app > #links > .media-item > .text-container > a {
+html > body > #root > #app > section > #links > .media-item > .text-container > a {
   color: inherit;
   text-decoration: none;
   word-wrap: break-word;
   font-size: 1em;
   line-height: 60px;
 }
-#app > #links > .media-item > .text-container > a:hover {
+html > body > #root > #app > section > #links > .media-item > .text-container > a:hover {
   color: #000;
 }
 
-#app > #links > .media-item > .icons-container > a.chromecast,
-#app > #links > .media-item > .icons-container > a.chromecast > img,
-#app > #links > .media-item > .icons-container > a.airplay,
-#app > #links > .media-item > .icons-container > a.airplay > img,
-#app > #links > .media-item > .icons-container > a.proxy,
-#app > #links > .media-item > .icons-container > a.proxy > img,
-#app > #links > .media-item > .icons-container > a.media-link,
-#app > #links > .media-item > .icons-container > a.media-link > img {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.chromecast,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.chromecast > img,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay > img,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.proxy,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.proxy > img,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.media-link,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.media-link > img {
   display: block;
   width: 25px;
   height: 25px;
 }
 
-#app > #links > .media-item > .icons-container > a.chromecast,
-#app > #links > .media-item > .icons-container > a.airplay,
-#app > #links > .media-item > .icons-container > a.proxy,
-#app > #links > .media-item > .icons-container > a.media-link {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.chromecast,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.proxy,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.media-link {
   position: absolute;
   z-index: 1;
   text-decoration: none;
 }
 
-#app > #links > .media-item > .icons-container > a.chromecast,
-#app > #links > .media-item > .icons-container > a.airplay {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.chromecast,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay {
   top: 0;
 }
-#app > #links > .media-item > .icons-container > a.proxy,
-#app > #links > .media-item > .icons-container > a.media-link {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.proxy,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.media-link {
   bottom: 0;
 }
 
-#app > #links > .media-item > .icons-container > a.chromecast,
-#app > #links > .media-item > .icons-container > a.proxy {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.chromecast,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.proxy {
   left: 0;
 }
-#app > #links > .media-item > .icons-container > a.airplay,
-#app > #links > .media-item > .icons-container > a.media-link {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay,
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.media-link {
   right: 0;
 }
-#app > #links > .media-item > .icons-container > a.airplay + a.media-link {
+html > body > #root > #app > section > #links > .media-item > .icons-container > a.airplay + a.media-link {
   right: 17px; /* (60 - 25)/2 to center when there is no proxy icon */
 }
 
@@ -189,23 +200,23 @@ body {
  * captions
  */
 
-#app > #links > .non-av.media-item,
-#app > #links > .non-av.media-item > .icons-container,
-#app > #links > .non-av.media-item > .text-container {
+html > body > #root > #app > section > #links > .non-av.media-item,
+html > body > #root > #app > section > #links > .non-av.media-item > .icons-container,
+html > body > #root > #app > section > #links > .non-av.media-item > .text-container {
   height: 45px;
   max-height: 45px;
 }
 
-#app > #links > .non-av.media-item > .icons-container {
+html > body > #root > #app > section > #links > .non-av.media-item > .icons-container {
   width: 45px;
 }
 
-#app > #links > .non-av.media-item > .icons-container > a.media-link {
+html > body > #root > #app > section > #links > .non-av.media-item > .icons-container > a.media-link {
   bottom: 10px;
   right: 10px;
 }
 
-#app > #links > .non-av.media-item > .text-container > a {
+html > body > #root > #app > section > #links > .non-av.media-item > .text-container > a {
   line-height: 45px;
 }
 
@@ -213,7 +224,7 @@ body {
  * buttons: top navbar, actions
  */
 
-#app > div > button {
+html > body > #root > #app > header > div > button {
   cursor: pointer;
   padding: 10px;
   font-size: 1.25em;
@@ -223,8 +234,51 @@ body {
   transition: border 0.5s;
   transition: border-color 0.5s;
 }
-#app > div > button:hover,
-#app > div > button[disabled] {
+html > body > #root > #app > header > div > button:hover,
+html > body > #root > #app > header > div > button[disabled] {
   color: #999;
   border-color: #999;
+}
+
+/* -----------------------------------------------------------------------------
+ * toggle: pin
+ */
+
+html > body > #root > #app > header > #actions > .toggles > .toggle#pin {
+  background-image: url("../img/toggle-pin-on.png");
+}
+html,
+html > body,
+html > body > #root,
+html > body > #root > #app {
+  height: 100%;
+  min-height: 600px;
+  overflow-y: auto;
+}
+html > body > #root > #app > header,
+html > body > #root > #app > section {
+  position: static;
+  height: auto;
+}
+
+html.pin > body > #root > #app > header > #actions > .toggles > .toggle#pin {
+  background-image: url("../img/toggle-pin-off.png");
+}
+html.pin,
+html.pin > body,
+html.pin > body > #root,
+html.pin > body > #root > #app {
+  height: 100vh;
+  overflow-y: hidden;
+}
+html.pin > body > #root > #app > header {
+  position: fixed;
+  height: 155px;
+  overflow-y: hidden;
+}
+html.pin > body > #root > #app > section {
+  position: relative;
+  top: 155px;
+  height: calc(100vh - 20px - 155px);
+  overflow-y: auto;
 }
