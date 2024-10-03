@@ -255,6 +255,12 @@ const get_media = (tab_id) => {
   return {media_type, media}
 }
 
+/*
+ * parameter: hide_popup
+ * behavior for specified input:
+ *   (number) 1: force hide
+ *   (any) true: hide only if tab has no additional URLs for any media type
+ */
 const clear_media = (tab_id, hide_popup) => {
   const media_type = get_display_media(tab_id)
 
@@ -273,8 +279,20 @@ const clear_media = (tab_id, hide_popup) => {
       break
   }
 
-  if (hide_popup)
+  if ((hide_popup === 1) || (hide_popup && !count_all_media_urls(tab_id)))
     disable_popup(tab_id)
+}
+
+const count_all_media_urls = (tab_id) => {
+  let count = 0
+  const tab_data = all_tab_data[tab_id]
+  if (tab_data) {
+    for (let media_type of all_media_types) {
+      if (Array.isArray(tab_data[media_type]) && tab_data[media_type].length)
+        count += tab_data[media_type].length
+    }
+  }
+  return count
 }
 
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-HttpHeaders
