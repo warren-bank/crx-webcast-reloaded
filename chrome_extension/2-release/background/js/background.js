@@ -307,7 +307,8 @@ const get_matching_drm_license_data = (tab_data, media_url) => {
   return tab_data.drm_licenses.find(drm_license_data => drm_license_data.media_url === media_url)
 }
 
-const test_is_media_url = (request_url, default_regex_pattern, user_regex_option) => {
+const test_is_media_url = (request_url, default_regex_pattern, user_regex_option_key) => {
+  const user_regex_option = (user_options && user_options.regexs) ? user_options.regexs[user_regex_option_key] : {}
   let is_match = false
 
   if (!is_match && !user_regex_option.override)
@@ -324,10 +325,10 @@ const audio_url_regex_pattern       = /\.(?:mp3|m4a|m4b|ogg|wav|flac)(?:[\?#].*)
 const caption_url_regex_pattern     = /\.(?:srt|ttml|dfxp|vtt|webvtt|ssa|ass)(?:[\?#].*)?$/i
 const drm_license_url_regex_pattern = /(?:widevine|clearkey|playready|drm|license)/i
 
-const test_is_video_url       = (request_url) => test_is_media_url(request_url, video_url_regex_pattern,       user_options.regexs.videos)
-const test_is_audio_url       = (request_url) => test_is_media_url(request_url, audio_url_regex_pattern,       user_options.regexs.audios)
-const test_is_caption_url     = (request_url) => test_is_media_url(request_url, caption_url_regex_pattern,     user_options.regexs.captions)
-const test_is_drm_license_url = (request_url) => test_is_media_url(request_url, drm_license_url_regex_pattern, user_options.regexs.drm_licenses)
+const test_is_video_url       = (request_url) => test_is_media_url(request_url, video_url_regex_pattern,       'videos')
+const test_is_audio_url       = (request_url) => test_is_media_url(request_url, audio_url_regex_pattern,       'audios')
+const test_is_caption_url     = (request_url) => test_is_media_url(request_url, caption_url_regex_pattern,     'captions')
+const test_is_drm_license_url = (request_url) => test_is_media_url(request_url, drm_license_url_regex_pattern, 'drm_licenses')
 
 const process_web_request = (tab_id, details) => {
   let tab_data = all_tab_data[tab_id]
