@@ -45,6 +45,65 @@
       <input type="text" class="context" size="2" id="http_proxy"      value="2" /><label for="http_proxy"       >Index of URL for HTTP icons for HLS-Proxy Configuration</label>
     </div>
   </div>
+  <div class="row">
+    <h4>RegExp Patterns:</h4>
+  </div>
+  <div id="regexs">
+    <ul>
+      <li>
+        <div id="videos">
+          <div class="row">
+            <h5>Videos</h5>
+          </div>
+          <div class="row override">
+            <input type="checkbox" id="regexs_videos_override" /><label for="regexs_videos_override">Override default</label>
+          </div>
+          <div class="row pattern">
+            <input type="text" id="regexs_videos_pattern" placeholder="Custom RegExp Pattern" />
+          </div>
+        </div>
+      </li>
+      <li>
+        <div id="audios">
+          <div class="row">
+            <h5>Audios</h5>
+          </div>
+          <div class="row override">
+            <input type="checkbox" id="regexs_audios_override" /><label for="regexs_audios_override">Override default</label>
+          </div>
+          <div class="row pattern">
+            <input type="text" id="regexs_audios_pattern" placeholder="Custom RegExp Pattern" />
+          </div>
+        </div>
+      </li>
+      <li>
+        <div id="captions">
+          <div class="row">
+            <h5>Captions</h5>
+          </div>
+          <div class="row override">
+            <input type="checkbox" id="regexs_captions_override" /><label for="regexs_captions_override">Override default</label>
+          </div>
+          <div class="row pattern">
+            <input type="text" id="regexs_captions_pattern" placeholder="Custom RegExp Pattern" />
+          </div>
+        </div>
+      </li>
+      <li>
+        <div id="drm_licenses">
+          <div class="row">
+            <h5>Drm Licenses</h5>
+          </div>
+          <div class="row override">
+            <input type="checkbox" id="regexs_drm_licenses_override" /><label for="regexs_drm_licenses_override">Override default</label>
+          </div>
+          <div class="row pattern">
+            <input type="text" id="regexs_drm_licenses_pattern" placeholder="Custom RegExp Pattern" />
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
 
   <div id="status"></div>
   <button id="save">Save</button>

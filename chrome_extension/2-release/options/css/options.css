@@ -34,8 +34,9 @@ button#add_url {
 }
 
 #urls,
-#contexts {
-  margin: 0.5em 0;
+#contexts,
+#regexs {
+  margin: 0.5em 0 1.5em 0;
 }
 button#save {
   margin-top: 0.5em;
@@ -54,4 +55,25 @@ button#save {
 }
 #contexts > .row > input.context + label {
   margin-left: 0.5em;
+}
+
+#regexs {
+  padding-left: 2em;
+}
+#regexs > ul > li + li > div {
+  margin-top: 0.75em;
+}
+#regexs .override,
+#regexs .pattern {
+  margin-top: 0.5em;
+}
+#regexs h5 {
+  font-size: 1.05em;
+  line-height: 1em;
+}
+#regexs .override > label {
+  margin-left: 0.5em;
+}
+#regexs .pattern > input {
+  width: calc(100% - 3em) !important;
 }

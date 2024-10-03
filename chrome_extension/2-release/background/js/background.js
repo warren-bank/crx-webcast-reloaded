@@ -18,6 +18,101 @@ const disable_popup = (tab_id) => {
 
 // -----------------------------------------------------------------------------
 
+let user_options = null
+
+// https://developer.chrome.com/docs/extensions/reference/storage/#usage
+const get_options = () => {
+  chrome.storage.local.get(
+    ['user_options_json'],
+    function(items){
+      update_user_options(items.user_options_json)
+    }
+  )
+}
+
+const update_user_options = (user_options_json, skip_reset = false) => {
+  try {
+    const data = JSON.parse(user_options_json)
+    if (!data || !data.regexs)
+      throw new Error('bad data format')
+
+    data.regexs.videos       = update_regex(data.regexs.videos)
+    data.regexs.audios       = update_regex(data.regexs.audios)
+    data.regexs.captions     = update_regex(data.regexs.captions)
+    data.regexs.drm_licenses = update_regex(data.regexs.drm_licenses)
+
+    user_options = data
+  }
+  catch(e) {
+    if (!skip_reset)
+      reset_default_options()
+  }
+}
+
+const update_regex = (regex) => {
+  try {
+    if (!regex || !regex.pattern)
+      throw ''
+
+    if (regex.pattern instanceof RegExp)
+      return regex
+
+    regex.pattern = new RegExp(regex.pattern.toLowerCase())
+
+    return regex
+  }
+  catch(e) {
+    return {
+      override: (regex && !!regex.override),
+      pattern: null
+    }
+  }
+}
+
+const reset_default_options = () => {
+  return new Promise(resolve => {
+    const chrome_version = get_chrome_major_version()
+
+    const data = {
+      urls: [
+        'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html',
+        'http://webcast-reloaded.frii.site/index.html',
+        'http://webcast-reloaded.surge.sh/index.html'
+      ],
+      contexts: {
+        "https_text_link":  1,
+        "https_chromecast": 1,
+        "https_airplay":    2,
+        "https_proxy":      2,
+
+        "http_text_link":   (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
+        "http_chromecast":  (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
+        "http_airplay":     2,
+        "http_proxy":       2
+      },
+      regexs: {}
+    }
+
+    const user_options_json = JSON.stringify(data)
+
+    update_user_options(user_options_json, true)
+
+    chrome.storage.local.set({user_options_json}, resolve)
+  })
+}
+
+// https://developer.chrome.com/docs/extensions/reference/api/storage#event-onChanged
+chrome.storage.onChanged.addListener(
+  function(changes, areaName){
+    if ((areaName === 'local') && changes.user_options_json && changes.user_options_json.newValue) {
+      update_user_options(changes.user_options_json.newValue)
+    }
+  }
+)
+
+// -----------------------------------------------------------------------------
+
+
 const user_agent_regex_pattern = /^.*Chrome\/(\d+)\..*$/i
 
 const get_chrome_major_version = () => {
@@ -182,45 +277,6 @@ const clear_media = (tab_id, hide_popup) => {
     disable_popup(tab_id)
 }
 
-// https://developer.chrome.com/docs/extensions/reference/runtime/#event-onInstalled
-chrome.runtime.onInstalled.addListener(
-  function(details){
-    if (details.reason === "install"){
-      // initialize default option value(s)
-      reset_default_options()
-    }
-  }
-)
-
-const reset_default_options = () => {
-  return new Promise(resolve => {
-    const chrome_version = get_chrome_major_version()
-
-    const data = {
-      urls:     [
-        'https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html',
-        'http://webcast-reloaded.frii.site/index.html',
-        'http://webcast-reloaded.surge.sh/index.html'
-      ],
-      contexts: {
-        "https_text_link":  1,
-        "https_chromecast": 1,
-        "https_airplay":    2,
-        "https_proxy":      2,
-
-        "http_text_link":   (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
-        "http_chromecast":  (chrome_version >= 72) ? 1 : 2,  // Chrome 72+: Cannot cast to Chromecast from an insecure URL. For a video served over HTTP: If sent to HTTPS page, can cast but cannot watch. If sent to HTTP page, cannot cast (72+) but can watch. By default, prioritizing ability to cast over ability to watch in Chrome browser.
-        "http_airplay":     2,
-        "http_proxy":       2
-      }
-    }
-
-    const user_options_json = JSON.stringify(data)
-
-    chrome.storage.local.set({user_options_json}, resolve)
-  })
-}
-
 // https://developer.chrome.com/docs/extensions/reference/webRequest/#type-HttpHeaders
 const get_referer_value = (headers) => {
   let referer = ''
@@ -234,11 +290,6 @@ const get_referer_value = (headers) => {
 
   return referer
 }
-
-const video_url_regex_pattern       = /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i
-const audio_url_regex_pattern       = /\.(?:mp3|m4a|m4b|ogg|wav|flac)(?:[\?#].*)?$/i
-const caption_url_regex_pattern     = /\.(?:srt|ttml|dfxp|vtt|webvtt|ssa|ass)(?:[\?#].*)?$/i
-const drm_license_url_regex_pattern = /(?:widevine|clearkey|playready|drm|license)/i
 
 const get_matching_video_data = (tab_data, media_url) => {
   return tab_data.videos.find(video_data => video_data.media_url === media_url)
@@ -256,6 +307,28 @@ const get_matching_drm_license_data = (tab_data, media_url) => {
   return tab_data.drm_licenses.find(drm_license_data => drm_license_data.media_url === media_url)
 }
 
+const test_is_media_url = (request_url, default_regex_pattern, user_regex_option) => {
+  let is_match = false
+
+  if (!is_match && !user_regex_option.override)
+    is_match = default_regex_pattern.test(request_url)
+
+  if (!is_match && user_regex_option.pattern)
+    is_match = user_regex_option.pattern.test(request_url)
+
+  return is_match
+}
+
+const video_url_regex_pattern       = /\.(?:mp4|mp4v|mpv|m1v|m4v|mpg|mpg2|mpeg|xvid|webm|3gp|avi|mov|mkv|ogv|ogm|m3u8|mpd|ism(?:[vc]|\/manifest)?)(?:[\?#].*)?$/i
+const audio_url_regex_pattern       = /\.(?:mp3|m4a|m4b|ogg|wav|flac)(?:[\?#].*)?$/i
+const caption_url_regex_pattern     = /\.(?:srt|ttml|dfxp|vtt|webvtt|ssa|ass)(?:[\?#].*)?$/i
+const drm_license_url_regex_pattern = /(?:widevine|clearkey|playready|drm|license)/i
+
+const test_is_video_url       = (request_url) => test_is_media_url(request_url, video_url_regex_pattern,       user_options.regexs.videos)
+const test_is_audio_url       = (request_url) => test_is_media_url(request_url, audio_url_regex_pattern,       user_options.regexs.audios)
+const test_is_caption_url     = (request_url) => test_is_media_url(request_url, caption_url_regex_pattern,     user_options.regexs.captions)
+const test_is_drm_license_url = (request_url) => test_is_media_url(request_url, drm_license_url_regex_pattern, user_options.regexs.drm_licenses)
+
 const process_web_request = (tab_id, details) => {
   let tab_data = all_tab_data[tab_id]
 
@@ -270,7 +343,7 @@ const process_web_request = (tab_id, details) => {
   let  is_media_url = false
 
   // is a video url?
-  if (!is_media_url && video_url_regex_pattern.test(request_url)) {
+  if (!is_media_url && test_is_video_url(request_url)) {
 
     // is a duplicate?
     let video_data = get_matching_video_data(tab_data, request_url)
@@ -290,7 +363,7 @@ const process_web_request = (tab_id, details) => {
   }
 
   // is a audio url?
-  if (!is_media_url && audio_url_regex_pattern.test(request_url)) {
+  if (!is_media_url && test_is_audio_url(request_url)) {
 
     // is a duplicate?
     let audio_data = get_matching_audio_data(tab_data, request_url)
@@ -310,7 +383,7 @@ const process_web_request = (tab_id, details) => {
   }
 
   // is a caption url?
-  if (!is_media_url && caption_url_regex_pattern.test(request_url)) {
+  if (!is_media_url && test_is_caption_url(request_url)) {
 
     // is a duplicate?
     let caption_data = get_matching_caption_data(tab_data, request_url)
@@ -330,7 +403,7 @@ const process_web_request = (tab_id, details) => {
   }
 
   // is a DRM license url?
-  if (!is_media_url && drm_license_url_regex_pattern.test(request_url)) {
+  if (!is_media_url && test_is_drm_license_url(request_url)) {
 
     // is a duplicate?
     let drm_license_data = get_matching_drm_license_data(tab_data, request_url)
@@ -462,3 +535,6 @@ window.reset_options  = reset_default_options
 window.set_media_type = set_display_media
 window.get_media      = get_media
 window.clear_media    = clear_media
+
+// initialize
+get_options()
