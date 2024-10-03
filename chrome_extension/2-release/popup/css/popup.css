@@ -3,7 +3,10 @@
   padding: 0;
 }
 
-html {
+html,
+html > body,
+html > body > #root,
+html > body > #root > #app {
   width: 100%;
   min-width: 600px;
   overflow-x: hidden;
