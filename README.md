@@ -2,7 +2,7 @@
 
 #### Description:
 
-Detect multimedia URLs in each tab. Present them as organized lists. Each list item includes links to either forward the corresponding multimedia URL to an external website or copy its value to the clipboard. The external website provides additional tools to utilize the forwarded multimedia URL; such tools include: HTML5 video players, a Chromecast client sender, an AirPlay <sup>[1]</sup> client sender, and an [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>.
+Detect multimedia URLs in each tab. Present them as organized lists. Each list item includes links to either forward the corresponding multimedia URL to an external website or copy its value to the clipboard. The external website provides additional tools to utilize the forwarded multimedia URL; such tools include: HTML5 video players with integrated Chromecast client sender, an AirPlay <sup>[1]</sup> client sender, and an [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>.
 
 * <sup>[1]</sup> The AirPlay client sender uses the AirPlay v1 protocol. The only AirPlay v1 receiver that is officially supported is the Android application: [ExoAirPlayer](https://github.com/warren-bank/Android-ExoPlayer-AirPlay-Receiver/releases).
 * <sup>[2]</sup> After the multimedia URL for an HLS manifest has been configured for use with [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy), it can then be forwarded to any of the other tools&hellip; and its multimedia will be streamed through the proxy.
@@ -78,37 +78,56 @@ Detect multimedia URLs in each tab. Present them as organized lists. Each list i
     * [original WebCast player](http://web-cast.appspot.com/)
     * [_GitHub Pages_](https://pages.github.com/) (HTTPS)
       * [main entry-point](https://warren-bank.github.io/crx-webcast-reloaded/external_website/index.html)
-        * [mirror of WebCast player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/1-webcast/index.html)
-        * [VisualOn HTML5 Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/2-visualon/index.html)
-        * [THEOplayer HTML5 Video Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/3-theoplayer/index.html)
-        * [Clappr HTML5 Video Player - stable release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/4-clappr/index.html)
-        * [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](https://warren-bank.github.io/crx-webcast-reloaded/external_website/5-clappr-captions/index.html)
-        * [Clappr HTML5 Video Player - latest release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/6-clappr-latest/index.html)
-        * [Video.js HTML5 Video Player - stable release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/7-videojs/index.html)
-        * [Video.js HTML5 Video Player - latest release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/8-videojs-latest/index.html)
-      * [redirect entry-point](https://warren-bank.github.io/crx-webcast-reloaded/external_website/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy)
+        * [entry-point](https://warren-bank.github.io/crx-webcast-reloaded/external_website/chromecast_sender.html) for HTML5 video players with integrated Chromecast client sender
+          1. [mirror of WebCast player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/1-webcast/index.html)
+          2. [VisualOn HTML5 Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/2-visualon/index.html)
+          3. [THEOplayer HTML5 Video Player](https://warren-bank.github.io/crx-webcast-reloaded/external_website/3-theoplayer/index.html)
+          4. [Clappr HTML5 Video Player - stable release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/4-clappr/index.html)
+          5. [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](https://warren-bank.github.io/crx-webcast-reloaded/external_website/5-clappr-captions/index.html)
+          6. [Clappr HTML5 Video Player - latest release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/6-clappr-latest/index.html)
+          7. [Video.js HTML5 Video Player - stable release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/7-videojs/index.html)
+          8. [Video.js HTML5 Video Player - latest release](https://warren-bank.github.io/crx-webcast-reloaded/external_website/8-videojs-latest/index.html)
+        * [entry-point](https://warren-bank.github.io/crx-webcast-reloaded/external_website/airplay_sender.html) for AirPlay <sup>[1]</sup> client sender
+        * [entry-point](https://warren-bank.github.io/crx-webcast-reloaded/external_website/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>
+    * mirror: [_frii.site_ subdomain](https://www.frii.site/) (HTTP)
+      * [main entry-point](http://webcast-reloaded.frii.site/index.html)
+        * [entry-point](http://webcast-reloaded.frii.site/chromecast_sender.html) for HTML5 video players with integrated Chromecast client sender
+          1. [mirror of WebCast player](http://webcast-reloaded.frii.site/1-webcast/index.html)
+          2. [VisualOn HTML5 Player](http://webcast-reloaded.frii.site/2-visualon/index.html)
+          3. [THEOplayer HTML5 Video Player](http://webcast-reloaded.frii.site/3-theoplayer/index.html)
+          4. [Clappr HTML5 Video Player - stable release](http://webcast-reloaded.frii.site/4-clappr/index.html)
+          5. [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](http://webcast-reloaded.frii.site/5-clappr-captions/index.html)
+          6. [Clappr HTML5 Video Player - latest release](http://webcast-reloaded.frii.site/6-clappr-latest/index.html)
+          7. [Video.js HTML5 Video Player - stable release](http://webcast-reloaded.frii.site/7-videojs/index.html)
+          8. [Video.js HTML5 Video Player - latest release](http://webcast-reloaded.frii.site/8-videojs-latest/index.html)
+        * [entry-point](http://webcast-reloaded.frii.site/airplay_sender.html) for AirPlay <sup>[1]</sup> client sender
+        * [entry-point](http://webcast-reloaded.frii.site/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>
     * mirror: [_surge.sh_ CDN](https://github.com/sintaxi/surge) (HTTP)
       * [main entry-point](http://webcast-reloaded.surge.sh/index.html)
-        * [mirror of WebCast player](http://webcast-reloaded.surge.sh/1-webcast/index.html)
-        * [VisualOn HTML5 Player](http://webcast-reloaded.surge.sh/2-visualon/index.html)
-        * [THEOplayer HTML5 Video Player](http://webcast-reloaded.surge.sh/3-theoplayer/index.html)
-        * [Clappr HTML5 Video Player - stable release](http://webcast-reloaded.surge.sh/4-clappr/index.html)
-        * [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](http://webcast-reloaded.surge.sh/5-clappr-captions/index.html)
-        * [Clappr HTML5 Video Player - latest release](http://webcast-reloaded.surge.sh/6-clappr-latest/index.html)
-        * [Video.js HTML5 Video Player - stable release](http://webcast-reloaded.surge.sh/7-videojs/index.html)
-        * [Video.js HTML5 Video Player - latest release](http://webcast-reloaded.surge.sh/8-videojs-latest/index.html)
-      * [redirect entry-point](http://webcast-reloaded.surge.sh/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy)
+        * [entry-point](http://webcast-reloaded.surge.sh/chromecast_sender.html) for HTML5 video players with integrated Chromecast client sender
+          1. [mirror of WebCast player](http://webcast-reloaded.surge.sh/1-webcast/index.html)
+          2. [VisualOn HTML5 Player](http://webcast-reloaded.surge.sh/2-visualon/index.html)
+          3. [THEOplayer HTML5 Video Player](http://webcast-reloaded.surge.sh/3-theoplayer/index.html)
+          4. [Clappr HTML5 Video Player - stable release](http://webcast-reloaded.surge.sh/4-clappr/index.html)
+          5. [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](http://webcast-reloaded.surge.sh/5-clappr-captions/index.html)
+          6. [Clappr HTML5 Video Player - latest release](http://webcast-reloaded.surge.sh/6-clappr-latest/index.html)
+          7. [Video.js HTML5 Video Player - stable release](http://webcast-reloaded.surge.sh/7-videojs/index.html)
+          8. [Video.js HTML5 Video Player - latest release](http://webcast-reloaded.surge.sh/8-videojs-latest/index.html)
+        * [entry-point](http://webcast-reloaded.surge.sh/airplay_sender.html) for AirPlay <sup>[1]</sup> client sender
+        * [entry-point](http://webcast-reloaded.surge.sh/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>
     * mirror: [_raw.githack.com_ CDN](https://raw.githack.com/) (HTTP)
       * [main entry-point](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/index.html)
-        * [mirror of WebCast player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/1-webcast/index.html)
-        * [VisualOn HTML5 Player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/2-visualon/index.html)
-        * [THEOplayer HTML5 Video Player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/3-theoplayer/index.html)
-        * [Clappr HTML5 Video Player - stable release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/4-clappr/index.html)
-        * [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/5-clappr-captions/index.html)
-        * [Clappr HTML5 Video Player - latest release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/6-clappr-latest/index.html)
-        * [Video.js HTML5 Video Player - stable release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/7-videojs/index.html)
-        * [Video.js HTML5 Video Player - latest release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/8-videojs-latest/index.html)
-      * [redirect entry-point](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy)
+        * [entry-point](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/chromecast_sender.html) for HTML5 video players with integrated Chromecast client sender
+          1. [mirror of WebCast player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/1-webcast/index.html)
+          2. [VisualOn HTML5 Player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/2-visualon/index.html)
+          3. [THEOplayer HTML5 Video Player](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/3-theoplayer/index.html)
+          4. [Clappr HTML5 Video Player - stable release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/4-clappr/index.html)
+          5. [Clappr HTML5 Video Player - stable release w/ experimental support for using external subtitles on Chromecast](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/5-clappr-captions/index.html)
+          6. [Clappr HTML5 Video Player - latest release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/6-clappr-latest/index.html)
+          7. [Video.js HTML5 Video Player - stable release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/7-videojs/index.html)
+          8. [Video.js HTML5 Video Player - latest release](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/8-videojs-latest/index.html)
+        * [entry-point](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/airplay_sender.html) for AirPlay <sup>[1]</sup> client sender
+        * [entry-point](http://raw.githack.com/warren-bank/crx-webcast-reloaded/gh-pages/external_website/proxy.html) for [HLS-Proxy](https://github.com/warren-bank/HLS-Proxy) configuration utility <sup>[2]</sup>
 
 #### Possible To-Dos:
 
