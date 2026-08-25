@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WebCast-Reloaded Helper
 // @description  Attempts to workaround issue #1 by automatically redirecting video between secure and insecure external website hosts depending upon the desired behavior.
-// @version      0.3.4
+// @version      0.3.5
 // @match        *://warren-bank.github.io/crx-webcast-reloaded/external_website/*
 // @match        *://webcast-reloaded.frii.site/*
 // @match        *://webcast-reloaded.surge.sh/*
@@ -26,7 +26,7 @@ var user_options = {
     "always_redirect_to_webhost": {
       "script_enabled":               true,
       "webhost": {
-        "http":                       "webcast-reloaded.frii.site/",
+        "http":                       "webcast-reloaded.surge.sh/",
         "https":                      "warren-bank.github.io/crx-webcast-reloaded/external_website/"
         /*
          * examples (http):
@@ -141,10 +141,13 @@ var always_redirect_to_webhost = function(){
       return
 
     var current = get_current_webhost()
+    var url
 
-    var url = window.location.href.replace(current, target)
+    if (current !== target) {
+      url = window.location.href.replace(current, target)
 
-    window.location = url
+      window.location = url
+    }
   }
 
   process_page()
